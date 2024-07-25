@@ -17,11 +17,11 @@
 		--colore-titoli: var(--bs-white);
 		--sfondo-dropdown: var(--bs-gray);
     }
-	.btn-outline-dark, .btn-outline-dark:hover {
-		color: var(--bs-light);
+	.btn-outline-dark, .btn-outline-dark:hover, .btn-dark, .btn-dark:hover {
+		color: var(--bs-light)!important;
 		border-color: #7c7c7c;
 	}
-	.btn-outline-dark:hover {
+	.btn-outline-dark:hover, .btn-dark:hover, .btn-check:checked+.btn-outline-dark {
 		background-color: #5c6064;
 	}
 	a.dropdown-item {
