@@ -196,7 +196,7 @@ function mostra_partita($row, $edit) {
 					if ($edit) {
 						$out .= '<button class="btn btn-outline-dark btn-sm atext-truncate" style="width: 100%; padding: 2px 0px;" onclick="modalannullacambio(' . ($i + 1) . ', ' . ($j + 1) . ', [\'' . addslashes($nomi[0]) . '\', \'' . addslashes($nomi[1]) . '\']);">&nbsp;<span class="longx">' . $nome . '</span></button>';
 					} else {
-						$out .= '<h6 style="margin: 0px;"><a class="longx text-dark text-decoration-none" href="giocatori.php?id=' . $partita[2][$i][$j] . '">' . $nome . '</a></h6>';
+						$out .= '<h6 style="margin: 0px;"><a class="longx text-tema text-decoration-none" href="giocatori.php?id=' . $partita[2][$i][$j] . '">' . $nome . '</a></h6>';
 					}
 					$out .= '</div>';
 				} else {

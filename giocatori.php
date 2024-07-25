@@ -47,8 +47,13 @@
 										var nome = document.getElementById("nome").value;
 										var cognome = document.getElementById("cognome").value;
 										var alias = document.getElementById("alias").value;
-										var pwd1 = document.getElementById("pwd1").value;
-										var pwd2 = document.getElementById("pwd2").value;
+										if (document.getElementById("pwd1") != null) {
+											var pwd1 = document.getElementById("pwd1").value;
+											var pwd2 = document.getElementById("pwd2").value;
+										} else {
+											var pwd1 = '';
+											var pwd2 = '';
+										}
 
 										if (nome.length == 0) {
 											$('#erroreaggiorna').html('Inserire un nome');
