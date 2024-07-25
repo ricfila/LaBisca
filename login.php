@@ -11,7 +11,7 @@
 			$err = "Giuocatore non trovato";
 		} else {
 			if ($res->fetch_assoc()['Password'] != $pwd) {
-				$err = "Parola chiave erronea";
+				$err = '<img src="img/gif/vecia.gif"><br><strong>Parola chiave erronea</strong>';
 			} else {
 				$durata = time() + (86400 * 365);
 				$posizione = "/";
@@ -42,7 +42,7 @@
 					<input name="password" id="password" type="password" class="form-control" placeholder="Parola chiave" style="display: none;" onkeyup="if (event.keyCode == 13) login();" />
 				</form>
 				<br>
-				<?php if (isset($err)) echo '<span class="text-danger">' . $err . '</span><br>'; ?>
+				<p id="err" class="text-danger text-center"><?php if (isset($err)) echo $err; ?></p>
 
 				<div style="text-align: right;">
 					<button id="btnaccedi" class="btn btn-primary" onclick="login();" style="display: none;">Accedi</button>
@@ -72,13 +72,18 @@
 		xhttp.send("ajax=cercagiocatorilogin&testo=" + testo);
 	}
 
-	function salvagioc(id, nome) {
-		$('#inputg').hide();
-		$('#giocatori').hide();
-		$('#btng').html('<div class="row"><div class="col"><i class="bi bi-person-fill"></i> ' + nome + '</div><div class="col-auto my-auto"><i class="bi bi-x-lg"></i></div></div>').show();
-		$('#giocatore').val(id);
-		$('#password').show().focus();
-		$('#btnaccedi').show();
+	function scegligioc(id, nome, abilitato) {
+		if (abilitato) {
+			$('#inputg').hide();
+			$('#giocatori').hide();
+			$('#btng').html('<div class="row"><div class="col"><i class="bi bi-person-fill"></i> ' + nome + '</div><div class="col-auto my-auto"><i class="bi bi-x-lg"></i></div></div>').show();
+			$('#giocatore').val(id);
+			$('#password').show().focus();
+			$('#btnaccedi').show();
+			$('#err').html('');
+		} else {
+			$('#err').html('<img src="img/gif/vecia.gif"><br><strong>Non sei autorizzato ad accedere al sito</strong>');
+		}
 	}
 
 	function ripristinainput() {
@@ -88,6 +93,7 @@
 		$('#inputg').focus();
 		$('#password').hide().val();
 		$('#btnaccedi').hide();
+		$('#err').html('');
 	}
 
 	function login() {

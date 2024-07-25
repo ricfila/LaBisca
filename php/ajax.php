@@ -63,7 +63,7 @@ switch ($ajax) {
 		$res = $conn->query("SELECT * FROM giocatori WHERE Nome LIKE '%$testo%' OR Alias LIKE '%$testo%';");
 		echo $res->num_rows . '&';
 		while ($row = $res->fetch_assoc()) {
-			echo '<button class="btn btn-outline-dark" style="width: 50%;" onclick="salvagioc(' . $row['IdGiocatore'] . ', \'' . nomecognome($row['Nome'], $row['Cognome']) . '\');"><i class="bi bi-person-fill"></i> ' . nomedi($row['IdGiocatore']) . '</button>';
+			echo '<button class="btn btn-outline-dark" style="width: 50%;" onclick="scegligioc(' . $row['IdGiocatore'] . ', \'' . nomecognome($row['Nome'], $row['Cognome']) . '\', ' . ($row['Password'] != null) . ');"><i class="bi bi-person-fill"></i> ' . nomedi($row['IdGiocatore']) . '</button>';
 		}
 		break;
 	case 'salvagioc':

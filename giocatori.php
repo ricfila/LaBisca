@@ -269,10 +269,10 @@
 		if ($res->num_rows > 0) {
 			echo '<div class="row"><div class="col-lg"></div><div class="col-lg-6">';
 			while ($row = $res->fetch_assoc()) {
-				$res2 = $conn->query("select * from partecipazioni join partite on partecipazioni.Partita = partite.IdPartita where partecipazioni.Giocatore = " . $row['IdGiocatore'] . " group by partite.IdPartita order by partite.Data desc;");
+				$res2 = $conn->query("SELECT * FROM partecipazioni JOIN partite ON partecipazioni.Partita = partite.IdPartita WHERE partecipazioni.Giocatore = " . $row['IdGiocatore'] . " GROUP BY partite.IdPartita ORDER BY partite.Data desc;");
 				echo '<a class="dropdown-item" href="giocatori.php?id=' . $row['IdGiocatore'] . '"><div class="row">';
 				echo '<div class="col-2 no-pad" style="text-align: right;">' . $res2->num_rows . '<i class="bi bi-play-fill"></i></div>';
-				echo '<div class="col" style="text-align: left;">' . $row['Nome'] . (!empty($row['Alias']) ? ' – <i class="chiaro">' . $row['Alias'] : '') . '</i></div>';
+				echo '<div class="col" style="text-align: left;">' . nomecognome($row['Nome'], $row['Cognome']) . (!empty($row['Alias']) ? ' – <i class="chiaro">' . $row['Alias'] : '') . '</i></div>';
 				echo '</div></a>';
 			}
 			echo '<br></div><div class="col-lg"></div></div>';

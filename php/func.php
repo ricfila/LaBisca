@@ -45,7 +45,7 @@ function nomedi($id, $array = false) {
 }
 
 function nomecognome($nome, $cognome) {
-	return $nome . (empty($cognome) ? '' : ' ' . $cognome);
+	return $nome . (empty($cognome) ? '' : ' ' . (isset($_SESSION['id']) ? $cognome : substr($cognome, 0, 1) . '.'));
 }
 
 function checkalias() {
