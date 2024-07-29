@@ -160,28 +160,14 @@ function mostra_partita($row, $edit) {
 	}
 	
 	$out .= '</div>';
-	//$out .= '<div class="row"><div class="col-lg-2"></div><div class="col">';
+	$out .= '<div class="row"><div class="col-lg-2"></div><div class="col">';
 	
 	if (count($partita[0]) > 1) {
-		$chiamanti = array();
-		$soci = array();
-		foreach ($partita[3][0] as $k => $v) {
-			$chiamanti[$k] = 0;
-			$soci[$k] = 0;
-		}
-		for ($z = 1; $z <= 3; $z++)
-			foreach ($partita[3][$z] as $k => $v)
-				$chiamanti[$k] += $v;
-		for ($z = 10; $z <= 12; $z++)
-			foreach ($partita[3][$z] as $k => $v)
-				$soci[$k] += $v;
-		arsort($chiamanti);
-		arsort($soci);
-
-		// Classifiche
 		$out .= '<br><h3 class="text-primary">Classifiche</h3><hr><div class="row" style="text-align: left;">';
+
+		// Medaglie
 		if (count($partita[0]) >= $minimomedaglie) {
-			$out .= '<div class="col-sm-4 mb-4"><h5><i class="bi bi-award"></i> Medaglie</h5><p style="text-align: justify;">';
+			$out .= '<div class="col-sm mb-4"><h5><i class="bi bi-award"></i> Medaglie</h5><p style="text-align: justify;">';
 			$medaglie = medaglie($partita);
 			while (count($medaglie) > 0) {
 				$min = min($medaglie);
@@ -194,82 +180,97 @@ function mostra_partita($row, $edit) {
 			$out .= '</p></div>';
 		}
 
-		$bestc = array();
-		$bestc_score = 0;
-		$out .= '<div class="col-sm-4 mb-4" id="chiamanti" style="position: relative;"><h5><i class="bi bi-telephone-outbound-fill"></i> Chiamanti più arditi</h5><p class="mb-0">';
-			$prec = null;
-			foreach ($chiamanti as $k => $v) {
-				if ($v == $prec) {
-					$out .= ', ';
-				} else {
-					$prec = $v;
-					$out .= '</p><p style="padding-left: 2em; text-indent: -1em; text-align: left;" class="mb-1"><i><i class="bi bi-dot"></i>' . ($v == 1 ? '<strong>1</strong> chiamata' : ($v == 0 ? '<strong>Pavidi</strong>' : '<strong>' . $v . '</strong> chiamate')) . ':</i> ';
-				}
+		// Chiamate
+		$out .= '<div class="col-sm mb-4"><h5><i class="bi bi-chat-dots"></i> Chiamate</h5><p style="text-align: justify;">Vinte: <strong>' . $partita[4][0] . '</strong><br>Perse: <strong>' . $partita[4][1] . '</strong><br>Patte: <strong>' . $partita[4][2] . '</strong><br>In mano: <strong>' . $partita[4][3] . '</strong><br>Con cappotto: <strong>' . $partita[4][4] . '</strong></p></div>';
 
-				if ($partita[3][9][$k] > $bestc_score) {
-					$bestc = array($k);
-					$bestc_score = $partita[3][9][$k];
-				} else if ($partita[3][9][$k] == $bestc_score) {
-					$bestc[] = $k;
-				}
+		// Estremi dei punteggi
+		$out .= '<div class="col-sm"><h5><i class="bi bi-chevron-expand"></i> Estremi dei punteggi</h5><p style="text-align: justify;">Massimo: <strong>+' . $partita[4][6] . '</strong><br>Minimo: <strong>' . $partita[4][5] . '</strong></p></div>';
 
-				$tooltip = gettooltip($partita[3], $k, false, $partita[3][9][$k]);
-				$out .= '<span href="#" style="white-space: nowrap;"' . (!empty($tooltip) ? ' data-bs-toggle="tooltip" data-bs-title="' . $tooltip . '" data-container="#chiamanti"' : '') . '>' . nomedi($k) . '</span>';
-			}
-			$out .= '</p></div>';
-		
-		$bests = array();
-		$bests_score = 0;
-		$out .= '<div class="col-sm-4 mb-4" id="soci" style="position: relative;"><h5><i class="bi bi-incognito"></i> Soci più ambiti</h5><p class="mb-0">';
-			foreach ($soci as $k => $v) {
-				if ($v == $prec) {
-					$out .= ', ';
-				} else {
-					$prec = $v;
-					$out .= '</p><p style="padding-left: 2em; text-indent: -1em; text-align: left;" class="mb-1"><i><i class="bi bi-dot"></i>' . ($v == 1 ? '<strong>1</strong> alleanza' : ($v == 0 ? '<strong>Dissidenti</strong>' : '<strong>' . $v . '</strong> alleanze')) . ':</i> ';
-				}
-				
-				if ($partita[3][15][$k] > $bests_score) {
-					$bests = array($k);
-					$bests_score = $partita[3][15][$k];
-				} else if ($partita[3][15][$k] == $bests_score) {
-					$bests[] = $k;
-				}
-
-				$tooltip = gettooltip($partita[3], $k, true, $partita[3][15][$k]);
-				$out .= '<span style="white-space: nowrap;"' . (!empty($tooltip) ? ' data-bs-toggle="tooltip" data-bs-title="' . $tooltip . '" data-container="#soci"' : '') . '>' . nomedi($k) . '</span>';
-			}
-			$out .= '</p></div>';
 		$out .= '</div>';
 
-		// Campioni
-		$out .= '<br><h3 class="text-primary">Campioni</h3><hr><div class="row" style="text-align: left;">';
-		$out .= '<div class="col-sm mb-4"><h5><i class="bi bi-trophy"></i> Chiamanti e soci</h5><p style="text-align: left;">';
-			$out .= (count($bestc) > 1 ? 'Migliori chiamanti: ' : 'Miglior chiamante: ');
-			foreach ($bestc as $i => $g) {
-				$out .= ($i > 0 ? ', ' : '') . '<strong>' . nomedi($g) . '</strong>';
-			}
-			$out .= '<br>&emsp;<i>Punteggio:</i> <strong>' . punti($bestc_score) . '</strong>';
-		$out .= '</p><p style="text-align: left;">';
-			$out .= (count($bests) > 1 ? 'Migliori soci: ' : 'Miglior socio: ');
-			foreach ($bests as $i => $g) {
-				$out .= ($i > 0 ? ', ' : '') . '<strong>' . nomedi($g) . '</strong>';
-			}
-			$out .= '<br>&emsp;<i>Punteggio:</i> <strong>' . punti($bests_score) . '</strong>';
-		$out .= '</p></div>';
+		$out .= '<hr class="mt-0"><div class="row" style="text-align: left;">';
+		$out .= mostra_chiamantisoci($partita);
+		$out .= '</div>';
 		
+		$out .= '<hr><div class="row" style="text-align: left;">';
 		$out .= mostra_coppie($partita);
-
-		// Statistiche
-		$out .= '<br><h3 class="text-primary">Statistiche</h3><hr><div class="row" style="text-align: left;">';
-		$out .= '<div class="col-sm"><h5><i class="bi bi-chat-dots"></i> Chiamate</h5><p style="text-align: justify;">Vinte: <strong>' . $partita[4][0] . '</strong><br>Perse: <strong>' . $partita[4][1] . '</strong><br>Patte: <strong>' . $partita[4][2] . '</strong><br>In mano: <strong>' . $partita[4][3] . '</strong><br>Con cappotto: <strong>' . $partita[4][4] . '</strong></p></div>';
-		$out .= '<div class="col-sm"><h5><i class="bi bi-chevron-expand"></i> Estremi dei punteggi</h5><p style="text-align: justify;">Massimo: <strong>+' . $partita[4][6] . '</strong><br>Minimo: <strong>' . $partita[4][5] . '</strong></p></div>';
-		
 		$out .= '</div>';
 	}
-	//$out .= '</div><div class="col-lg-2"></div></div>';
+	$out .= '</div><div class="col-lg-2"></div></div>';
 	$out .= '</div>';
 	
+	return $out;
+}
+
+function mostra_chiamantisoci($partita) {
+	$out = '';
+	$chiamanti = array();
+	$soci = array();
+
+	$bestc = array();
+	$bestc_score = 0;
+	$bests = array();
+	$bests_score = 0;
+
+	foreach ($partita[3][0] as $k => $v) {
+		$chiamanti[$k] = $partita[3][1][$k] + $partita[3][2][$k] + $partita[3][3][$k];
+		$soci[$k] = $partita[3][10][$k] + $partita[3][11][$k] + $partita[3][12][$k];
+		
+		if ($partita[3][9][$k] > $bestc_score) {
+			$bestc = array($k);
+			$bestc_score = $partita[3][9][$k];
+		} else if ($partita[3][9][$k] == $bestc_score) {
+			$bestc[] = $k;
+		}
+		
+		if ($partita[3][15][$k] > $bests_score) {
+			$bests = array($k);
+			$bests_score = $partita[3][15][$k];
+		} else if ($partita[3][15][$k] == $bests_score) {
+			$bests[] = $k;
+		}
+	}
+	arsort($chiamanti);
+	arsort($soci);
+	if (count($bestc) > 2)
+		$bestc = array();
+	if (count($bests) > 2)
+		$bests = array();
+
+
+	$out .= '<div class="col-sm mb-4" id="chiamanti" style="position: relative;"><h5><i class="bi bi-trophy-fill"></i> Chiamanti più arditi</h5><p class="mb-0">';
+		$prec = null;
+		foreach ($chiamanti as $k => $v) {
+			if ($v == $prec) {
+				$out .= ', ';
+			} else {
+				$prec = $v;
+				$out .= '</p><p style="padding-left: 2em; text-indent: -1em; text-align: left;" class="mb-1"><i><i class="bi bi-dot"></i>' . ($v == 1 ? '<strong>1</strong> chiamata' : ($v == 0 ? '<strong>Pavidi</strong>' : '<strong>' . $v . '</strong> chiamate')) . ':</i> ';
+			}
+
+			$best = in_array($k, $bestc);
+			$tooltip = gettooltip($partita[3], $k, false, $partita[3][9][$k], $best);
+
+			$out .= '<span href="#" style="white-space: nowrap;"' . (!empty($tooltip) ? ' data-bs-toggle="tooltip" data-bs-title="' . $tooltip . '" data-container="#chiamanti"' : '') . '>' . ($best ? '<u>' : '') . nomedi($k) . ($best ? '</u>' : '') . '</span>';
+		}
+	$out .= '</p></div>';
+	
+	$out .= '<div class="col-sm" id="soci" style="position: relative;"><h5><i class="bi bi-incognito"></i> Soci più ambiti</h5><p class="mb-0">';
+		foreach ($soci as $k => $v) {
+			if ($v == $prec) {
+				$out .= ', ';
+			} else {
+				$prec = $v;
+				$out .= '</p><p style="padding-left: 2em; text-indent: -1em; text-align: left;" class="mb-1"><i><i class="bi bi-dot"></i>' . ($v == 1 ? '<strong>1</strong> alleanza' : ($v == 0 ? '<strong>Dissidenti</strong>' : '<strong>' . $v . '</strong> alleanze')) . ':</i> ';
+			}
+			
+			$best = in_array($k, $bests);
+			$tooltip = gettooltip($partita[3], $k, true, $partita[3][15][$k], $best);
+
+			$out .= '<span style="white-space: nowrap;"' . (!empty($tooltip) ? ' data-bs-toggle="tooltip" data-bs-title="' . $tooltip . '" data-container="#soci"' : '') . '>' . ($best ? '<u>' : '') . nomedi($k) . ($best ? '</u>' : '') . '</span>';
+		}
+	$out .= '</p></div>';
+
 	return $out;
 }
 
@@ -323,7 +324,7 @@ function mostra_coppie($partita) {
 	}
 
 	if ($p > 0) {
-		$out .= '<div class="col-sm mb-4" id="peggioricoppie" style="position: relative;"><h5><i class="bi bi-heartbreak"></i> Peggiori coppie</h5><p style="text-align: left;">';
+		$out .= '<div class="col-sm" id="peggioricoppie" style="position: relative;"><h5><i class="bi bi-heartbreak"></i> Peggiori coppie</h5><p style="text-align: left;">';
 		foreach ($peggiori as $i => $coppia) {
 			$giocatori = explode('-', $coppia[0]);
 			$tooltip = tooltip_coppia($coppie, $coppia[0]);
@@ -335,11 +336,10 @@ function mostra_coppie($partita) {
 		$out .= '</p></div>';
 	}
 
-	$out .= '</div>';
 	return $out;
 }
 
-function gettooltip($gstat, $g, $socio, $score) {
+function gettooltip($gstat, $g, $socio, $score, $best) {
 	$offsetsocio = $socio ? 9 : 0;
 	$vinte = $gstat[$offsetsocio + 1][$g];
 	$perse = $gstat[$offsetsocio + 2][$g];
@@ -362,6 +362,9 @@ function gettooltip($gstat, $g, $socio, $score) {
 	$tooltip .= '</div>';
 	if ($score != 0) {
 		$tooltip .= '<hr class=\'my-1\'>' . punti($score) . ' punt' . (abs($score) == 1 ? 'o' : 'i');
+	}
+	if ($best) {
+		$tooltip .= '<br><i class=\'bi bi-award\'></i> Miglior ' . ($socio ? 'socio' : 'chiamante');
 	}
 
 	if ($tooltip == '<div class=\'text-start\'></div>')
