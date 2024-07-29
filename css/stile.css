@@ -24,6 +24,9 @@
 	.btn-outline-dark:hover, .btn-dark:hover, .btn-check:checked+.btn-outline-dark {
 		background-color: #5c6064;
 	}
+	.btn-outline-primary:hover {
+		color: var(--sfondo);
+	}
 	a.dropdown-item {
 		color: var(--colore-tema)!important;
 	}
@@ -52,7 +55,7 @@ h1, h2, h3, h4, h5, h6 {
 	text-decoration: underline;
 }
 
-.btn:not(.btn-outline-dark) {
+.btn:not([class*="btn-outline-"]) {
 	color: var(--sfondo);
 }
 
