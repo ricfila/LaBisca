@@ -2,7 +2,7 @@ create table partite (
 	IdPartita int AUTO_INCREMENT primary key,
 	Data datetime,
 	Occasione varchar(128) default '',
-	Note varchar(1024) default ''
+	Note varchar(2048) default ''
 );
 
 create table giocatori (
