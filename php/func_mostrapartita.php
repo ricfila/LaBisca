@@ -134,7 +134,7 @@ function mostra_partita($row, $edit) {
 				for ($i = 0; $i < count($files); $i++) {
 					$outf .= '<div class="carousel-item' . ($i == 0 ? ' active' : '') . '"><img src="foto/' . $id . '/' . $files[$i] . '" class="d-block" style="max-height: 50vh; max-width: 100%;"></div>';
 				}
-				$outf = '<h3>Foto ricordo</h3><div id="carousel" class="carousel slide" style="padding: 10px; border: 1px solid #8f8f8f;"><div id="carousel-inner" class="carousel-inner" style="background-image: linear-gradient(#d1d1d1, #8f8f8f);">' . $outf . '</div>';
+				$outf = '<h3 class="text-primary">Foto ricordo</h3><div id="carousel" class="carousel slide" style="padding: 10px; border: 1px solid #8f8f8f;"><div id="carousel-inner" class="carousel-inner" style="background-image: linear-gradient(#d1d1d1, #8f8f8f);">' . $outf . '</div>';
 				if (count($files) > 1)
 					$outf .= '<button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
 						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -148,7 +148,7 @@ function mostra_partita($row, $edit) {
 			}
 		}
 	}
-	$note = (!empty($row['Note']) ? '<h3>Note sulle giuocate</h3><p id="note0" style="text-align: justify;">' . $row['Note'] . '</p>' : '<span id="note0"></span>');
+	$note = (!empty($row['Note']) ? '<h3 class="text-primary">Note sulle giuocate</h3><p id="note0" style="text-align: justify;">' . $row['Note'] . '</p>' : '<span id="note0"></span>');
 	
 	$out .= '<div class="row">';
 	if ($foto && !empty($row['Note'])) {
@@ -160,7 +160,7 @@ function mostra_partita($row, $edit) {
 	}
 	
 	$out .= '</div>';
-	$out .= '<div class="row"><div class="col-lg-2"></div><div class="col">';
+	//$out .= '<div class="row"><div class="col-lg-2"></div><div class="col">';
 	
 	if (count($partita[0]) > 1) {
 		$chiamanti = array();
@@ -172,16 +172,16 @@ function mostra_partita($row, $edit) {
 		for ($z = 1; $z <= 3; $z++)
 			foreach ($partita[3][$z] as $k => $v)
 				$chiamanti[$k] += $v;
-		for ($z = 6; $z <= 8; $z++)
+		for ($z = 10; $z <= 12; $z++)
 			foreach ($partita[3][$z] as $k => $v)
 				$soci[$k] += $v;
 		arsort($chiamanti);
 		arsort($soci);
 
 		// Classifiche
-		$out .= '<br><h3>Classifiche</h3><div class="row" style="text-align: left;">';
+		$out .= '<br><h3 class="text-primary">Classifiche</h3><hr><div class="row" style="text-align: left;">';
 		if (count($partita[0]) >= $minimomedaglie) {
-			$out .= '<div class="col-sm-4"><h5><i class="bi bi-trophy"></i> Medaglie</h5><p style="text-align: justify;">';
+			$out .= '<div class="col-sm-4 mb-4"><h5><i class="bi bi-trophy"></i> Medaglie</h5><p style="text-align: justify;">';
 			$medaglie = medaglie($partita);
 			while (count($medaglie) > 0) {
 				$min = min($medaglie);
@@ -193,52 +193,169 @@ function mostra_partita($row, $edit) {
 			}
 			$out .= '</p></div>';
 		}
-		$out .= '<div class="col-sm-4 mb-3" id="chiamanti" style="position: relative;"><h5><i class="bi bi-award"></i> Chiamanti più arditi</h5><p class="mb-0">';
+
+		$bestc = array();
+		$bestc_score = 0;
+		$out .= '<div class="col-sm-4 mb-4" id="chiamanti" style="position: relative;"><h5><i class="bi bi-award"></i> Chiamanti più arditi</h5><p class="mb-0">';
 			$prec = null;
 			foreach ($chiamanti as $k => $v) {
 				if ($v == $prec) {
 					$out .= ', ';
 				} else {
 					$prec = $v;
-					$out .= '</p><p style="padding-left: 2em; text-indent: -1em; text-align: left;" class="mb-1"><strong><i class="bi bi-dot"></i>' . ($v == 1 ? '1 chiamata' : ($v == 0 ? 'Pavidi' : $v . ' chiamate')) . ':</strong> ';
+					$out .= '</p><p style="padding-left: 2em; text-indent: -1em; text-align: left;" class="mb-1"><i><i class="bi bi-dot"></i>' . ($v == 1 ? '<strong>1</strong> chiamata' : ($v == 0 ? '<strong>Pavidi</strong>' : '<strong>' . $v . '</strong> chiamate')) . ':</i> ';
 				}
-				$vinte = $partita[3][1][$k];
-				$perse = $partita[3][2][$k];
-				$patte = $partita[3][3][$k];
-				$mano = $partita[3][4][$k];
-				$cappotto = $partita[3][5][$k];
-				$tooltip = ($vinte > 0 ? '<i class=\'bi bi-dot\'></i>' . $vinte . ' vint' . ($vinte == 1 ? 'a' : 'e') . '<br>' : '');
-				$tooltip .= ($perse > 0 ? '<i class=\'bi bi-dot\'></i>' . $perse . ' pers' . ($perse == 1 ? 'a' : 'e') . '<br>' : '');
-				$tooltip .= ($patte > 0 ? '<i class=\'bi bi-dot\'></i>' . $patte . ' patt' . ($patte == 1 ? 'a' : 'e') . '<br>' : '');
-				$tooltip .= ($mano > 0 ? '<i class=\'bi bi-star-fill\'></i> ' . $mano . ' in mano<br>' : '');
-				$tooltip .= ($cappotto > 0 ? '<i class=\'bi bi-star-fill\'></i> ' . $cappotto . ' con cappotto<br>' : '');
-				$out .= '<span href="#" style="white-space: nowrap;" data-bs-toggle="tooltip" data-bs-title="' . $tooltip . '" data-container="#chiamanti">' . nomedi($k) . '</span>';
+
+				if ($partita[3][9][$k] > $bestc_score) {
+					$bestc = array($k);
+					$bestc_score = $partita[3][9][$k];
+				} else if ($partita[3][9][$k] == $bestc_score) {
+					$bestc[] = $k;
+				}
+
+				$tooltip = gettooltip($partita[3], $k, false, $partita[3][9][$k]);
+				$out .= '<span href="#" style="white-space: nowrap;"' . (!empty($tooltip) ? ' data-bs-toggle="tooltip" data-bs-title="' . $tooltip . '" data-container="#chiamanti"' : '') . '>' . nomedi($k) . '</span>';
 			}
 			$out .= '</p></div>';
-		$out .= '<div class="col-sm-4 mb-3" id="soci" style="position: relative;"><h5><i class="bi bi-compass"></i> Soci più ambiti</h5><p class="mb-0">';
+		
+		$bests = array();
+		$bests_score = 0;
+		$out .= '<div class="col-sm-4 mb-4" id="soci" style="position: relative;"><h5><i class="bi bi-compass"></i> Soci più ambiti</h5><p class="mb-0">';
 			foreach ($soci as $k => $v) {
 				if ($v == $prec) {
 					$out .= ', ';
 				} else {
 					$prec = $v;
-					$out .= '</p><p style="padding-left: 2em; text-indent: -1em; text-align: left;" class="mb-1"><strong><i class="bi bi-dot"></i>' . ($v == 1 ? '1 alleanza' : ($v == 0 ? 'Dissidenti' : $v . ' alleanze')) . ':</strong> ';
+					$out .= '</p><p style="padding-left: 2em; text-indent: -1em; text-align: left;" class="mb-1"><i><i class="bi bi-dot"></i>' . ($v == 1 ? '<strong>1</strong> alleanza' : ($v == 0 ? '<strong>Dissidenti</strong>' : '<strong>' . $v . '</strong> alleanze')) . ':</i> ';
 				}
-				$out .= '<span style="white-space: nowrap;" data-bs-toggle="tooltip" data-bs-title="Tooltip on top" data-container="#soci">' . nomedi($k) . '</span>';
+				
+				if ($partita[3][15][$k] > $bests_score) {
+					$bests = array($k);
+					$bests_score = $partita[3][15][$k];
+				} else if ($partita[3][15][$k] == $bests_score) {
+					$bests[] = $k;
+				}
+
+				$tooltip = gettooltip($partita[3], $k, true, $partita[3][15][$k]);
+				$out .= '<span style="white-space: nowrap;"' . (!empty($tooltip) ? ' data-bs-toggle="tooltip" data-bs-title="' . $tooltip . '" data-container="#soci"' : '') . '>' . nomedi($k) . '</span>';
 			}
 			$out .= '</p></div>';
 		$out .= '</div>';
 
+		// Campioni
+		$out .= '<br><h3 class="text-primary">Campioni</h3><hr><div class="row" style="text-align: left;">';
+		$out .= '<div class="col-sm mb-4"><h5><i class="bi bi-wechat"></i> Chiamanti e soci</h5><p style="text-align: left;">';
+			$out .= (count($bestc) > 1 ? 'Migliori chiamanti: ' : 'Miglior chiamante: ');
+			foreach ($bestc as $i => $g) {
+				$out .= ($i > 0 ? ', ' : '') . '<strong>' . nomedi($g) . '</strong>';
+			}
+			$out .= '<br>&emsp;<i>Punteggio:</i> <strong>' . punti($bestc_score) . '</strong>';
+		$out .= '</p><p style="text-align: left;">';
+			$out .= (count($bests) > 1 ? 'Migliori soci: ' : 'Miglior socio: ');
+			foreach ($bests as $i => $g) {
+				$out .= ($i > 0 ? ', ' : '') . '<strong>' . nomedi($g) . '</strong>';
+			}
+			$out .= '<br>&emsp;<i>Punteggio:</i> <strong>' . punti($bests_score) . '</strong>';
+		$out .= '</p></div>';
+
+		$coppie = coppie($partita);
+		print_r($coppie);
+		arsort($coppie[1]);
+		echo '<br>';
+		print_r($coppie[1]);
+		$migliori = array();
+		$m = 0;
+		$peggiori = array();
+		$p = 0;
+		$last = null;
+
+		$partecipazioni_necessarie = 2;
+		$posizioni_podio = 2;
+
+		foreach ($coppie[1] as $coppia => $punti) {
+			if ($coppie[0][$coppia] >= $partecipazioni_necessarie) {
+				if ($punti > 0) {
+					if ($m < $posizioni_podio || $punti == $last) {
+						$migliori[] = array($coppia, $punti);
+						if ($punti != $last) {
+							$last = $punti;
+							$m++;
+						}
+					}
+				} else {
+					if ($p < $posizioni_podio || $punti == $last) {
+						$peggiori[] = array($coppia, $punti);
+						if ($punti != $last) {
+							$last = $punti;
+							$p++;
+						}
+					}
+				}
+			}
+		}
+		$peggiori = array_reverse($peggiori);
+
+		if ($m > 0) {
+			$out .= '<div class="col-sm mb-4" id="miglioricoppie" style="position: relative;"><h5><i class="bi bi-arrow-through-heart"></i> Migliori coppie</h5><p style="text-align: left;">';
+			foreach ($migliori as $i => $coppia) {
+				$giocatori = explode('-', $coppia[0]);
+				$out .= ($i != 0 ? '<br>' : '') . '<i class="bi bi-dot"></i>' . nomedi($giocatori[0]) . ' <i class="bi bi-x"></i> ' . nomedi($giocatori[1]) . '&emsp;<i class="bi bi-activity"></i> ' . $coppie[0][$coppia[0]];
+				if (!isset($migliori[$i+1]) || $migliori[$i+1][1] != $coppia[1])
+					$out .= '<br>&emsp;&emsp;<i>Punteggio:</i> <strong>' . punti($coppia[1]) . '</strong>';
+			}
+			$out .= '</p></div>';
+		}
+
+		if ($p > 0) {
+			$out .= '<div class="col-sm mb-4" id="peggioricoppie" style="position: relative;"><h5><i class="bi bi-heartbreak"></i> Peggiori coppie</h5><p style="text-align: left;">';
+			foreach ($peggiori as $i => $coppia) {
+				$giocatori = explode('-', $coppia[0]);
+				$out .= ($i != 0 ? '<br>' : '') . nomedi($giocatori[0]) . ' <i class="bi bi-x"></i> ' . nomedi($giocatori[1]);
+				if (!isset($peggiori[$i+1]) || $peggiori[$i+1][1] != $coppia[1])
+					$out .= '<br>&emsp;<i>Punteggio:</i> <strong>' . punti($coppia[1]) . '</strong>';
+			}
+			$out .= '</p></div>';
+		}
+
+
+		$out .= '</div>';
+
 		// Statistiche
-		
-		$out .= '<br><h3>Statistiche</h3><div class="row" style="text-align: left;">';
+		$out .= '<br><h3 class="text-primary">Statistiche</h3><hr><div class="row" style="text-align: left;">';
 		$out .= '<div class="col-sm-3"><h5><i class="bi bi-chat-dots"></i> Chiamate</h5><p style="text-align: justify;">Vinte: <strong>' . $partita[4][0] . '</strong><br>Perse: <strong>' . $partita[4][1] . '</strong><br>Patte: <strong>' . $partita[4][2] . '</strong><br>In mano: <strong>' . $partita[4][3] . '</strong><br>Con cappotto: <strong>' . $partita[4][4] . '</strong></p></div>';
 		$out .= '<div class="col-sm-3"><h5><i class="bi bi-chevron-expand"></i> Estremi dei punteggi</h5><p style="text-align: justify;">Massimo: <strong>+' . $partita[4][6] . '</strong><br>Minimo: <strong>' . $partita[4][5] . '</strong></p></div>';
 		
 		$out .= '</div>';
 	}
-	$out .= '</div><div class="col-lg-2"></div></div>';
+	//$out .= '</div><div class="col-lg-2"></div></div>';
 	$out .= '</div>';
 	
 	return $out;
+}
+
+function gettooltip($gstat, $g, $socio, $score) {
+	$offsetsocio = $socio ? 9 : 0;
+	$vinte = $gstat[$offsetsocio + 1][$g];
+	$perse = $gstat[$offsetsocio + 2][$g];
+	$patte = $gstat[$offsetsocio + 3][$g];
+	
+	$tooltip = '';
+	$tooltip .= ($vinte > 0 ? '<i class=\'bi bi-hand-thumbs-up\'></i> ' . $vinte . ' vint' . ($vinte == 1 ? 'a' : 'e') . '<br>' : '');
+	$tooltip .= ($perse > 0 ? '<i class=\'bi bi-hand-thumbs-down\'></i> ' . $perse . ' pers' . ($perse == 1 ? 'a' : 'e') . '<br>' : '');
+	$tooltip .= ($patte > 0 ? '<i class=\'bi bi-dot\'></i> ' . $patte . ' patt' . ($patte == 1 ? 'a' : 'e') . '<br>' : '');
+	if (!$socio) {
+		$mano = $gstat[4][$g] + $gstat[5][$g] + $gstat[6][$g];
+		$tooltip .= ($mano > 0 ? '<i class=\'bi bi-star-fill\'></i> ' . $mano . ' in mano<br>' : '');
+	}
+
+	$offsetsocio = $socio ? 6 : 0;
+	$cappotto = $gstat[$offsetsocio + 7][$g] + $gstat[$offsetsocio + 8][$g];
+	$tooltip .= ($cappotto > 0 ? '<i class=\'bi bi-star-fill\'></i> ' . $cappotto . ' cappotto<br>' : '');
+
+	if ($score != 0) {
+		$tooltip .= '<hr class=\'my-1\'>' . punti($score) . ' punt' . (abs($score) == 1 ? 'o' : 'i');
+	}
+
+	return $tooltip;
 }
 ?>

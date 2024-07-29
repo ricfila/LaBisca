@@ -54,6 +54,10 @@ function checkalias() {
 	return $out;
 }
 
+function punti($p) {
+	return ($p > 0 ? '+' : '') . $p;
+}
+
 function processafile($file, $directory, $nomefile = null, $estensioni = null) {
 	global $esitoupload;
 	if ($file['error'] != 0) {
