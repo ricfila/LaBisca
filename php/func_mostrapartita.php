@@ -373,13 +373,15 @@ function gettooltip($gstat, $g, $socio, $score, $best) {
 }
 
 function tooltip_coppia($coppie, $coppia) {
-	$out = '<div class=\'text-start\'>';
 	$vinte = $coppie[2][$coppia];
 	$perse = $coppie[3][$coppia];
 	$patte = $coppie[4][$coppia];
 	$cappotto = $coppie[5][$coppia];
 	$benedizioni = $coppie[6][$coppia];
 	$maledizioni = $coppie[7][$coppia];
+
+	$out = '<i class=\'bi bi-activity\'></i> ' . $coppie[0][$coppia] . ' volt' . ($coppie[1][$coppia] == 1 ? 'a' : 'e') . ' insieme<hr class=\'my-1\'>';
+	$out .= '<div class=\'text-start\'>';
 
 	$out .= ($vinte > 0 ? '<i class=\'bi bi-hand-thumbs-up\'></i> ' . $vinte . ' vint' . ($vinte == 1 ? 'a' : 'e') . '<br>' : '');
 	$out .= ($perse > 0 ? '<i class=\'bi bi-hand-thumbs-down\'></i> ' . $perse . ' pers' . ($perse == 1 ? 'a' : 'e') . '<br>' : '');
@@ -388,9 +390,8 @@ function tooltip_coppia($coppie, $coppia) {
 	$out .= ($benedizioni > 0 ? '<i class=\'bi bi-brightness-high-fill\'></i> ' . $benedizioni . ' benedizion' . ($benedizioni == 1 ? 'e' : 'i') . '<br>' : '');
 	$out .= ($maledizioni > 0 ? '<i class=\'bi bi-lightning-fill\'></i> ' . $maledizioni . ' maledizion' . ($maledizioni == 1 ? 'e' : 'i') . '<br>' : '');
 
-	$out .= '</div><hr class=\'my-1\'>';
-	$out .= '<i class=\'bi bi-activity\'></i> ' . $coppie[0][$coppia] . ' volt' . ($coppie[1][$coppia] == 1 ? 'a' : 'e') . ' insieme<br>';
-	$out .= '' . punti($coppie[1][$coppia]) . ' punt' . (abs($coppie[1][$coppia]) == 1 ? 'o' : 'i');
+	$out .= '</div>';
+	//$out .= '' . punti($coppie[1][$coppia]) . ' punt' . (abs($coppie[1][$coppia]) == 1 ? 'o' : 'i');
 	return $out;
 }
 ?>
