@@ -172,7 +172,7 @@
 						}
 						
 						echo '<a class="dropdown-item" href="partite.php?id=' . $row2['IdPartita'] . '"><div class="row">';
-						echo '<div class="col-2 d-inline-block my-auto" style="text-align: right;">' . $partita[3][0][$id] . '<i class="bi bi-play-fill"></i></div>'; // Turni che ha giocato
+						echo '<div class="col-2 d-inline-block my-auto" style="text-align: right;">' . array_sum($partita[3][0][$id]) . '<i class="bi bi-play-fill"></i></div>'; // Turni che ha giocato
 						echo '<div class="col-8 no-pad d-inline-block"><div class="row" style="max-width: 100%;">';
 							echo '<div class="col-md no-pad text-truncate" style="text-align: left; aline-height: 18px;">' . (empty($row2['Occasione']) ? '<span class="chiaro"><i>Occasione sconosciuta</i></span>' : $row2['Occasione']) . '</div>'; // Occasione
 							echo '<div class="col-md-3" style="text-align: left;"><small class="chiaro d-block d-md-none" style="line-height: 15px;"><i>&nbsp;' . $fmt3->format(strtotime($row2['Data'])) . '</i></small><small class="chiaro d-none d-md-block"><i>&nbsp;' . $fmt3->format(strtotime($row2['Data'])) . '</i></small></div>'; // Data
@@ -180,7 +180,7 @@
 						//echo '<div class="col-2 no-pad text-left" style="text-align: left;"><span class="d-block d-sm-none">' . $fmt2->format(strtotime($row2['Data'])) . '</span><span class="d-none d-sm-block">' . $fmt3->format(strtotime($row2['Data'])) . '</span></div>'; // Data
 						
 						// Classifica e punteggio finale
-						if ($partita[3][0][$id] == $numturni) { // Ha iniziato e finito
+						if (array_sum($partita[3][0][$id]) == $numturni) { // Ha iniziato e finito
 							$puntiseri = $partita[1][$row2['Colonna'] - 1];
 						} else { // Un conteggio per ogni intervallo intermedio:
 							$rg1 = $conn->query("select * from partecipazioni where Partita = " . $row2['IdPartita'] . " and Giocatore = $id order by Inizio;");
@@ -208,12 +208,12 @@
 						}
 						
 						echo '<div class="col-2 no-pad my-auto" style="text-align: left;">';
-						if (($partita[3][0][$id] / $numturni) >= 0.5) { // Ha giocato almeno metà dei turni, medaglia
+						if ((array_sum($partita[3][0][$id]) / $numturni) >= 0.5) { // Ha giocato almeno metà dei turni, medaglia
 							echo '<img src="img/Medaglia' . $partita[5][$row2['Colonna'] - 1] . '.png" height=25px>';
 						} else { // Ha giocato poco, icona porta
 							echo '&nbsp;<i class="bi bi-door-open"></i>&nbsp;';
 						}
-						echo ($partita[3][0][$id] == $numturni ? '<strong>' : '') . ($puntiseri > 0 ? '+' : '') . $puntiseri . ($partita[3][0][$id] == $numturni ? '</strong>' : '');
+						echo (array_sum($partita[3][0][$id]) == $numturni ? '<strong>' : '') . ($puntiseri > 0 ? '+' : '') . $puntiseri . (array_sum($partita[3][0][$id]) == $numturni ? '</strong>' : '');
 						echo '</div></div></a>';
 					}
 					echo '<br>';

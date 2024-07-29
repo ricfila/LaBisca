@@ -1,0 +1,244 @@
+<?php
+
+function mostra_partita($row, $edit) {
+	global $conn, $fmt1, $minimomedaglie;
+	$id = $row['IdPartita'];
+	$partita = partita($id);
+	$out = '';
+
+	// Incipit
+	$out .= '<div id="partita">';
+	$out .= '<div class="row"><div class="col-md-9"><h5 style="text-align: left;">Bi$ca in occasione di: <strong><i id="occasione0">' . $row['Occasione'] . '</i></strong>' . (isset($_SESSION['id']) && $_SESSION['editor'] ? ($edit ? '&nbsp;<button class="btn btn-primary" onclick="info();"><i class="bi bi-pencil-fill"></i></button>&nbsp;<a href="partite.php?id=' . $id . '" class="btn btn-info btn-sm"><i class="bi bi-eye-fill"></i> Torna alla visualizzazione</a>' : '&nbsp;<a href="partite.php?id=' . $id . '&edit=true" class="btn btn-primary btn-sm"><i class="bi bi-pencil-fill"></i> Modifica la partita</a>') : '') . '</h5></div>';
+	$out .= '<div class="col-md-3"><h5 style="text-align: right;">' . $fmt1->format(strtotime($row['Data'])) . '</h5><span class="d-none" id="data0">' . date("o-m-d", strtotime($row['Data'])) . '</span></div></div>';
+	$out .= '<hr>';
+	
+	// Giocatori
+	$out .= '<div class="sticky-top" style="top: 56; "><div class="row" style="margin: 0px; background: var(--sfondo);"><div class="col-2 pad-alto border border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
+	foreach ($partita[2][0] as $i => $idg) {
+		$out .= '<div class="col-2 pad-alto border border-start-0 border-primary text-truncate" style="background: var(--sfondo); z-index: 1020; position: relative;">';
+		if ($idg == null) {
+			if ($edit) {
+				$out .= '<button class="btn btn-warning" style="width: 95%;" onclick="primogioc(' . ($i + 1) . ', false);"><i class="bi bi-person-plus-fill"></i></button>';
+			}
+		} else {
+			$nome = nomedi($idg);
+			$nomi = nomedi($idg, true);
+			if ($edit) {
+				$out .= '<button class="btn btn-outline-dark btn-sm atext-truncate" style="width: 100%; padding: 2px 0px;" onclick="primogioc(' . ($i + 1) . ', [\'' . addslashes($nomi[0]) . '\', \'' . addslashes($nomi[1]) . '\']);">&nbsp;<span class="longx">' . $nome . '</span></button>';
+			} else {
+				$out .= '<h6 style="margin: 0px; overflow-x: hidden;"><a class="longx text-tema text-decoration-none" href="giocatori.php?id=' . $idg . '">' . $nome . '</a></h6>';
+			}
+		}
+		$out .= '</div>';
+	}
+	$out .= '</div></div>';
+	
+	// Mani e punteggi
+	$totali = array(0, 0, 0, 0, 0);
+	foreach ($partita[0] as $i => $parz) {
+		// Cambi di giocatori
+		if ($i > 0 && isset($partita[2][$i])) {
+			$out .= '<div class="sticky-top" style="pointer-events: none; top: 57; z-index: ' . (1030 + $i) . ';"><div class="row" style="margin: 0px;"><div class="col-2 pad-alto border-bottom' . (isset($partita[2][$i][0]) ? ' border-end' : '') . ' border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
+			for ($j = 0; $j < 5; $j++) {
+				if (isset($partita[2][$i][$j])) {
+					$nome = nomedi($partita[2][$i][$j]);
+					$nomi = nomedi($partita[2][$i][$j], true);
+					$out .= '<div class="col-2 pad-alto border-end border-bottom border-primary text-truncate" style="pointer-events: auto; background: var(--sfondo); position: relative;">';
+					if ($edit) {
+						$out .= '<button class="btn btn-outline-dark btn-sm atext-truncate" style="width: 100%; padding: 2px 0px;" onclick="modalannullacambio(' . ($i + 1) . ', ' . ($j + 1) . ', [\'' . addslashes($nomi[0]) . '\', \'' . addslashes($nomi[1]) . '\']);">&nbsp;<span class="longx">' . $nome . '</span></button>';
+					} else {
+						$out .= '<h6 style="margin: 0px;"><a class="longx text-tema text-decoration-none" href="giocatori.php?id=' . $partita[2][$i][$j] . '">' . $nome . '</a></h6>';
+					}
+					$out .= '</div>';
+				} else {
+					$out .= '<div class="col-2 border-bottom' . (isset($partita[2][$i][$j + 1]) != 0 ? ' border-end' : '') . ' border-primary pad-alto"></div>';
+				}
+			}
+			$out .= '</div></div>';
+		}
+		$out .= '<div class="row" style="margin: 0px;"><div class="col-2 border border-top-0 border-primary pad-alto">' . ($edit ? '<button class="btn btn-primary no-pad" style="width: 90%;" onclick="turno(' . ($i + 1) . ');">' : '') . '<i class="bi bi-hash"></i>' . ($i + 1) . ($edit ? '</button>' : '') . '</div>';
+		for ($j = 0; $j < 5; $j++) {
+			$totali[$j] += $partita[0][$i][$j];
+			$parz = ($partita[0][$i][$j] > 0 ? '+' : '') . $partita[0][$i][$j];
+			$tot = ($totali[$j] > 0 ? '+' : '') . $totali[$j];
+
+			$sfondo = '';
+			if ($partita[6][$i][0] == ($j + 1)) { // È il chiamante
+				if ($partita[6][$i][1] == ($j + 1)) { // Si è autochiamato
+					if ($partita[6][$i][2] == 1 || $partita[6][$i][2] == null) { // Vittoria o pareggio
+						$sfondo = 'cerchi_luce2';
+					} else { // Sconfitta
+						$sfondo = 'cimitero';
+					}
+				} else { // Chiamata normale
+					if ($partita[6][$i][2] == 1 || $partita[6][$i][2] == null) { // Vittoria o pareggio
+						$sfondo = 'fuoco2';
+					} else { // Sconfitta
+						$sfondo = 'fuoco_blu2';
+					}
+				}
+			} else if ($partita[6][$i][1] == ($j + 1)) { // È il socio
+				if ($partita[6][$i][4] == 1) { // Vecia
+					$sfondo = 'fulmini2';
+				} else {
+					$sfondo = 'cerchi_verdi2';
+				}
+			}
+			$out .= '<div class="col-2 border-end border-bottom border-primary sfondo"' . (!empty($sfondo) ? ' style="background-image: url(\'img/gif/' . $sfondo . '.gif\');"' : '') . '>';
+
+				$out .= '<div class="row d-none d-md-flex">';
+					$out .= '<div class="col-4 bordo4 pad-alto small pt-1 sfondo"' . (!empty($sfondo) ? ' style="background-image: url(\'img/gif/' . $sfondo . '.gif\');"' : '') . '><i class="d-block' . (!empty($sfondo) ? ' ptsfondo' . ($partita[6][$i][3] == 1 ? ' ptcappotto' : '') : '') . '">' . $parz . '</i></div>';
+					$out .= '<div class="col-8 pad-alto" style="font-size: 20px; background-color: var(--sfondo);"><strong>' . $tot . '</strong></div>';
+				$out .= '</div>';
+				$out .= '<div class="d-md-none">';
+					$out .= '<span class="parziale pad-alto' . (!empty($sfondo) ? ' ptsfondo' . ($partita[6][$i][3] == 1 ? ' ptcappotto' : ''): '') . '" style="display: ' . (isset($_COOKIE['parziali']) ? ($_COOKIE['parziali'] == 'true' ? 'block': 'none') : 'block') . ';"><i>' . $parz . '</i></span>';
+					$out .= '<span class="totale pad-alto' . (!empty($sfondo) ? ' ptsfondo' . ($partita[6][$i][3] == 1 ? ' ptcappotto' : '') : '') . '" style="display: ' . (isset($_COOKIE['parziali']) ? ($_COOKIE['parziali'] == 'false' ? 'block': 'none') : 'none') . ';">' . $tot . '</span>';
+				$out .= '</div>';
+
+			$out .= '</div>';
+		}
+		$out .= '</div>';
+	}
+	
+	// Conclusioni
+	if (count($partita[0]) > 0) {
+		$out .= '<div class="row" style="margin: 0px;"><div class="col-2 bordog pad-alto" style="font-size: 20px;"><span class="d-sm-none"><strong>Tot.</strong></span><span class="d-none d-sm-block"><strong>Totale</strong></span></div>';
+		for ($j = 0; $j < 5; $j++) {
+			$out .= '<div class="col-2 bordo2g pad-alto" style="font-size: 20px;"><strong>' . ($totali[$j] > 0 ? '+' : '') . $totali[$j] . '</strong></div>';
+		}
+		$out .= '</div>';
+		$out .= '<div class="sticky-top" style="top: ' . ($edit ? 87 : 79) . ';"><div class="row" style="margin: 0px;"><div class="col-2"></div>';
+
+		for ($j = 0; $j < 5; $j++) {
+			$out .= '<div class="col-2 no-pad"><img src="img/Medaglia' . $partita[5][$j] . '.png" height="40px"' . (count($partita[0]) < $minimomedaglie ? ' class="img-bn"' : '') . '></div>';
+		}
+		$out .= '</div></div>';
+		$out .= '<div class="form-check form-switch d-md-none" style="text-align: left;"><br><input class="form-check-input" type="checkbox" value="" id="cparziali" onchange="parziali(this);"' . (isset($_COOKIE['parziali']) ? ($_COOKIE['parziali'] == 'true' ? 'checked=""': '') : 'checked=""') . '><label class="form-check-label" for="cparziali">Punteggi parziali</label></div>';
+		$out .= checkalias();
+	}
+	
+	if ($edit) {
+		$out .= '<br><div class="row"><div class="col-lg-2"></div><div class="col-sm-6 col-lg-4"><button class="btn btn-lg btn-primary mb-1" style="width: 95%;" onclick="turno();"><i class="bi bi-patch-plus-fill"></i> Nuovo turno</button></div>';
+		$out .= '<div class="col-sm-6 col-lg-4"><button class="btn btn-lg btn-warning mb-1" style="width: 95%;" onclick="cambio();"><i class="bi bi-person-plus-fill"></i> Cambio giocatore</button></div><div class="col-lg-2"></div></div><br>';
+	}
+	
+	// Note e foto
+	$out .= '<br>';
+	$foto = false;
+	if (isset($_SESSION['id'])) {
+		$outf = '';
+		$files;
+		if ($files = listafoto($id)) {
+			if (count($files) > 0) {
+				$foto = true;
+				for ($i = 0; $i < count($files); $i++) {
+					$outf .= '<div class="carousel-item' . ($i == 0 ? ' active' : '') . '"><img src="foto/' . $id . '/' . $files[$i] . '" class="d-block" style="max-height: 50vh; max-width: 100%;"></div>';
+				}
+				$outf = '<h3>Foto ricordo</h3><div id="carousel" class="carousel slide" style="padding: 10px; border: 1px solid #8f8f8f;"><div id="carousel-inner" class="carousel-inner" style="background-image: linear-gradient(#d1d1d1, #8f8f8f);">' . $outf . '</div>';
+				if (count($files) > 1)
+					$outf .= '<button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Precedente</span>
+						</button>
+						<button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Successiva</span>
+						</button>';
+				$outf .= '</div>';
+			}
+		}
+	}
+	$note = (!empty($row['Note']) ? '<h3>Note sulle giuocate</h3><p id="note0" style="text-align: justify;">' . $row['Note'] . '</p>' : '<span id="note0"></span>');
+	
+	$out .= '<div class="row">';
+	if ($foto && !empty($row['Note'])) {
+		$out .= '<div class="col-lg-8">' . $note . '</div><div class="col-lg-4">' . $outf . '</div>';
+	} else if ($foto) {
+		$out .= '<div class="col-lg-3"></div><div class="col">' . $outf . $note . '</div><div class="col-lg-3"></div>';
+	} else {
+		$out .= '<div class="col-lg-2"></div><div class="col">' . $note . '</div><div class="col-lg-2"></div>';
+	}
+	
+	$out .= '</div>';
+	$out .= '<div class="row"><div class="col-lg-2"></div><div class="col">';
+	
+	if (count($partita[0]) > 1) {
+		$chiamanti = array();
+		$soci = array();
+		foreach ($partita[3][0] as $k => $v) {
+			$chiamanti[$k] = 0;
+			$soci[$k] = 0;
+		}
+		for ($z = 1; $z <= 3; $z++)
+			foreach ($partita[3][$z] as $k => $v)
+				$chiamanti[$k] += $v;
+		for ($z = 6; $z <= 8; $z++)
+			foreach ($partita[3][$z] as $k => $v)
+				$soci[$k] += $v;
+		arsort($chiamanti);
+		arsort($soci);
+
+		// Classifiche
+		$out .= '<br><h3>Classifiche</h3><div class="row" style="text-align: left;">';
+		if (count($partita[0]) >= $minimomedaglie) {
+			$out .= '<div class="col-sm-4"><h5><i class="bi bi-trophy"></i> Medaglie</h5><p style="text-align: justify;">';
+			$medaglie = medaglie($partita);
+			while (count($medaglie) > 0) {
+				$min = min($medaglie);
+				$gg = array_keys($medaglie, $min);
+				foreach ($gg as $g) {
+					$out .= '<img src="img/Medaglia' . $min . '.png" height="25px" />&nbsp;' . nomedi($g) . '<br>';
+					unset($medaglie[$g]);
+				}
+			}
+			$out .= '</p></div>';
+		}
+		$out .= '<div class="col-sm-4 mb-3" id="chiamanti" style="position: relative;"><h5><i class="bi bi-award"></i> Chiamanti più arditi</h5><p class="mb-0">';
+			$prec = null;
+			foreach ($chiamanti as $k => $v) {
+				if ($v == $prec) {
+					$out .= ', ';
+				} else {
+					$prec = $v;
+					$out .= '</p><p style="padding-left: 2em; text-indent: -1em; text-align: left;" class="mb-1"><strong><i class="bi bi-dot"></i>' . ($v == 1 ? '1 chiamata' : ($v == 0 ? 'Pavidi' : $v . ' chiamate')) . ':</strong> ';
+				}
+				$vinte = $partita[3][1][$k];
+				$perse = $partita[3][2][$k];
+				$patte = $partita[3][3][$k];
+				$mano = $partita[3][4][$k];
+				$cappotto = $partita[3][5][$k];
+				$tooltip = ($vinte > 0 ? '<i class=\'bi bi-dot\'></i>' . $vinte . ' vint' . ($vinte == 1 ? 'a' : 'e') . '<br>' : '');
+				$tooltip .= ($perse > 0 ? '<i class=\'bi bi-dot\'></i>' . $perse . ' pers' . ($perse == 1 ? 'a' : 'e') . '<br>' : '');
+				$tooltip .= ($patte > 0 ? '<i class=\'bi bi-dot\'></i>' . $patte . ' patt' . ($patte == 1 ? 'a' : 'e') . '<br>' : '');
+				$tooltip .= ($mano > 0 ? '<i class=\'bi bi-star-fill\'></i> ' . $mano . ' in mano<br>' : '');
+				$tooltip .= ($cappotto > 0 ? '<i class=\'bi bi-star-fill\'></i> ' . $cappotto . ' con cappotto<br>' : '');
+				$out .= '<span href="#" style="white-space: nowrap;" data-bs-toggle="tooltip" data-bs-title="' . $tooltip . '" data-container="#chiamanti">' . nomedi($k) . '</span>';
+			}
+			$out .= '</p></div>';
+		$out .= '<div class="col-sm-4 mb-3" id="soci" style="position: relative;"><h5><i class="bi bi-compass"></i> Soci più ambiti</h5><p class="mb-0">';
+			foreach ($soci as $k => $v) {
+				if ($v == $prec) {
+					$out .= ', ';
+				} else {
+					$prec = $v;
+					$out .= '</p><p style="padding-left: 2em; text-indent: -1em; text-align: left;" class="mb-1"><strong><i class="bi bi-dot"></i>' . ($v == 1 ? '1 alleanza' : ($v == 0 ? 'Dissidenti' : $v . ' alleanze')) . ':</strong> ';
+				}
+				$out .= '<span style="white-space: nowrap;" data-bs-toggle="tooltip" data-bs-title="Tooltip on top" data-container="#soci">' . nomedi($k) . '</span>';
+			}
+			$out .= '</p></div>';
+		$out .= '</div>';
+
+		// Statistiche
+		
+		$out .= '<br><h3>Statistiche</h3><div class="row" style="text-align: left;">';
+		$out .= '<div class="col-sm-3"><h5><i class="bi bi-chat-dots"></i> Chiamate</h5><p style="text-align: justify;">Vinte: <strong>' . $partita[4][0] . '</strong><br>Perse: <strong>' . $partita[4][1] . '</strong><br>Patte: <strong>' . $partita[4][2] . '</strong><br>In mano: <strong>' . $partita[4][3] . '</strong><br>Con cappotto: <strong>' . $partita[4][4] . '</strong></p></div>';
+		$out .= '<div class="col-sm-3"><h5><i class="bi bi-chevron-expand"></i> Estremi dei punteggi</h5><p style="text-align: justify;">Massimo: <strong>+' . $partita[4][6] . '</strong><br>Minimo: <strong>' . $partita[4][5] . '</strong></p></div>';
+		
+		$out .= '</div>';
+	}
+	$out .= '</div><div class="col-lg-2"></div></div>';
+	$out .= '</div>';
+	
+	return $out;
+}
+?>

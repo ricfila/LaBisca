@@ -3,3 +3,22 @@
 		<div class="modal-content" id="modal-content" style="background: var(--sfondo);"></div>
 	</div>
 </div>
+
+<script>
+	/*
+	var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+	var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+		return new bootstrap.Tooltip(tooltipTriggerEl)
+	})
+	*/
+	$(document).ready(function(){
+		$('[data-bs-toggle="tooltip"]').each(function(i) {
+			let cont = $(this).attr('data-container');
+			$(this).tooltip({
+				container: cont,
+				html: true,
+				customClass: 'tooltip'
+			});
+		});   
+	});
+</script>

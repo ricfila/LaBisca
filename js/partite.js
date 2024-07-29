@@ -1,11 +1,13 @@
 
 var carousel = document.getElementById('carousel');
-carousel.addEventListener('slide.bs.carousel', function (e) {
-	var nextH = $(e.relatedTarget).height();
-	$('#carousel-inner').animate({
-		height: nextH
-	}, 600);
-});
+if (carousel != null) {
+	carousel.addEventListener('slide.bs.carousel', function (e) {
+		var nextH = $(e.relatedTarget).height();
+		$('#carousel-inner').animate({
+			height: nextH
+		}, 600);
+	});
+}
 
 function parziali(check) {
 	setCookie('parziali', check.checked, 365);
@@ -42,13 +44,15 @@ function salvainfo() {
 	xhttp.send("ajax=salvainfopartita&id=" + id + "&occasione=" + occasione + "&data=" + data + "&note=" + note);
 }
 
-function primogioc(colonna, nome) {
-	modal('Inserisci giocatore', 'Quale giocatore inserire ' + (nome == false ? 'nella colonna ' + colonna : 'al posto di <strong>' + nome[nomealias] + '</strong>') + '?<input class="form-control" type="text" id="primogioc" placeholder="Cerca..." onkeyup="cercagiocatori(this.value, ' + colonna + ');" autofocus><div id="listag"></div>');
-	cercagiocatori('', colonna);
+var colonna;
+function primogioc(col, nome) {
+	modal('Inserisci giocatore', 'Quale giocatore inserire ' + (nome == false ? 'nella colonna ' + col : 'al posto di <strong>' + nome[nomealias] + '</strong>') + '?<input class="form-control" type="text" id="primogioc" placeholder="Cerca..." onkeyup="cercagiocatori(this.value);" autofocus><div id="listag"></div>');
+	colonna = col;
+	cercagiocatori('');
 	document.getElementById('primogioc').focus();
 }
 
-function cercagiocatori(testo, colonna) {
+function cercagiocatori(testo) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
@@ -58,14 +62,15 @@ function cercagiocatori(testo, colonna) {
 	};
 	xhttp.open("POST", "php/ajax.php", true);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("ajax=cercagiocatori&testo=" + testo + "&colonna=" + colonna);
+	xhttp.send("ajax=cercagiocatori&testo=" + testo);
 }
 
-function salvagioc(idg, colonna) {
-	var inizio = 1;
+function salvagioc(idg) {
+	let inizio = 1;
+	let col = colonna;
 	if (colonna == false) {
 		inizio = document.getElementById('cturno').value;
-		colonna = document.getElementById('ccolonna').value;
+		col = document.getElementById('ccolonna').value;
 	}
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
@@ -75,14 +80,14 @@ function salvagioc(idg, colonna) {
 	};
 	xhttp.open("POST", "php/ajax.php", true);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("ajax=salvagioc&id=" + id + "&idg=" + idg + "&colonna=" + colonna + "&inizio=" + inizio);
+	xhttp.send("ajax=salvagioc&id=" + id + "&idg=" + idg + "&colonna=" + col + "&inizio=" + inizio);
 }
 
-function nuovogioc(nome, colonna) {
+function nuovogioc(nome) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			salvagioc(this.responseText, colonna);
+			salvagioc(this.responseText);
 		}
 	};
 	xhttp.open("POST", "php/ajax.php", true);
@@ -197,7 +202,8 @@ function cambio() {
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
 			modal('Cambio giocatore', this.responseText);
-			cercagiocatori('', false);
+			colonna = false;
+			cercagiocatori('');
 			//document.getElementById('primogioc').focus();
 		}
 	};

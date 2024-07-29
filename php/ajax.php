@@ -14,8 +14,8 @@ foreach ($_POST as $key => $value) {
 
 switch ($ajax) {
 	case 'nuovogiocatore':
-		if ($conn->query("select * from giocatori where Nome = '$nome';")->num_rows == 0) {
-			if ($conn->query("insert into giocatori (Nome, Alias) values ('$nome', '$alias');")) {
+		if ($conn->query("SELECT * FROM giocatori WHERE Nome = '$nome';")->num_rows == 0) {
+			if ($conn->query("INSERT INTO giocatori (Nome, Alias) VALUES ('$nome', '$alias');")) {
 				echo $conn->insert_id;
 			} else {
 				echo 'Errore durante l\'inserimento';
@@ -53,10 +53,10 @@ switch ($ajax) {
 	case 'cercagiocatori':
 		$res = $conn->query("SELECT * FROM giocatori WHERE Nome LIKE '%$testo%' OR Alias LIKE '%$testo%';");
 		while ($row = $res->fetch_assoc()) {
-			echo '<button class="btn btn-outline-dark" style="width: 50%;" onclick="salvagioc(' . $row['IdGiocatore'] . ', ' . $colonna . ');"><i class="bi bi-person-fill"></i> ' . nomedi($row['IdGiocatore']) . '</button>';
+			echo '<button class="btn btn-outline-dark" style="width: 50%;" onclick="salvagioc(' . $row['IdGiocatore'] . ');"><i class="bi bi-person-fill"></i> ' . nomedi($row['IdGiocatore']) . '</button>';
 		}
 		if (strlen($testo) > 2) {
-			echo '<button class="btn btn-outline-primary" onclick="nuovogioc(\'' . $testo . '\', ' . $colonna . ');">Crea nuovo giocatore: <i class="bi bi-person-fill"></i> ' . $testo . '</button>';
+			echo '<button class="btn btn-outline-primary" onclick="nuovogioc(\'' . $testo . '\');">Crea nuovo giocatore: <i class="bi bi-person-fill"></i> ' . $testo . '</button>';
 		}
 		break;
 	case 'cercagiocatorilogin':
@@ -69,50 +69,56 @@ switch ($ajax) {
 	case 'salvagioc':
 		$colonna2 = null;
 		if ($idg == -1) {// Cancellazione al turno e colonna
-			$conn->query("delete from partecipazioni where Partita = $id and Inizio = $inizio and Colonna = $colonna;");
+			$conn->query("DELETE FROM partecipazioni WHERE Partita = $id AND Inizio = $inizio AND Colonna = $colonna;");
 		} else {// Inserimento o sostituzione
-			if ($conn->query("select * from partecipazioni where Partita = $id and Inizio = $inizio and Colonna = $colonna;")->num_rows > 0) {// Rimpiazza qualcuno nello stesso inizio e stessa colonna
-				$res = $conn->query("select * from partecipazioni where Partita = $id and Inizio = $inizio and Giocatore = $idg;");
+			if ($conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio = $inizio AND Colonna = $colonna;")->num_rows > 0) {// Rimpiazza qualcuno nello stesso inizio e stessa colonna
+				$res = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio = $inizio AND Giocatore = $idg;");
 				if ($res->num_rows > 0) {// Il giocatore da inserire è già nella riga, scambiarlo di posto
-					$conn->query("delete from partecipazioni where Partita = $id and Inizio = $inizio and Giocatore = $idg;");
+					$conn->query("DELETE FROM partecipazioni WHERE Partita = $id AND Inizio = $inizio AND Giocatore = $idg;");
 					$row = $res->fetch_assoc();
-					$row2 = $conn->query("select * from partecipazioni where Partita = $id and Inizio = $inizio and Colonna = $colonna;")->fetch_assoc();
-					$conn->query("update partecipazioni set Giocatore = $idg where Partita = $id and Inizio = $inizio and Colonna = $colonna;");
+					$row2 = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio = $inizio AND Colonna = $colonna;")->fetch_assoc();
+					$conn->query("UPDATE partecipazioni SET Giocatore = $idg WHERE Partita = $id AND Inizio = $inizio AND Colonna = $colonna;");
 					$colonna2 = $row['Colonna'];
-					$conn->query("insert into partecipazioni (Giocatore, Partita, Inizio, Colonna) values (" . $row2['Giocatore'] . ", $id, $inizio, $colonna2);");
+					$conn->query("INSERT INTO partecipazioni (Giocatore, Partita, Inizio, Colonna) VALUES (" . $row2['Giocatore'] . ", $id, $inizio, $colonna2);");
 				} else {// Il giocatore da inserire non è nella riga, aggiornare il posto...
 					$ingioco = false;
-					$presenze = $conn->query("select * from partecipazioni where Partita = $id and Giocatore = $idg order by Inizio;");
+					$presenze = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Giocatore = $idg order by Inizio;");
 					while ($rowp = $presenze->fetch_assoc()) {
-						if ($conn->query("select * from partecipazioni where Partita = $id and Colonna = " . $rowp['Colonna'] . " and Inizio > " . $rowp['Inizio'] . " and Inizio <= $inizio and Giocatore <> $idg;")->num_rows == 0) {
-							$ingioco = true;
+						if ($rowp['Inizio'] < $inizio) {// Controllare se non è attualmente in gioco altrove
+							if ($conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Colonna = " . $rowp['Colonna'] . " AND Inizio > " . $rowp['Inizio'] . " AND Inizio <= $inizio AND Giocatore <> $idg;")->num_rows == 0) {
+								$ingioco = true;
+							}
+						} else {// Controllare se prima della sua partecipazione futura verrà rimpiazzato qui
+							if ($conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Colonna = $colonna AND Inizio > $inizio AND Inizio <= " . $rowp['Inizio'] . " AND Giocatore <> $idg;")->num_rows == 0) {
+								$ingioco = true;
+							}
 						}
 					}
 					if (!$ingioco) {// ...Se in ogni sua partecipazione è già stato soppiantato
-						$conn->query("update partecipazioni set Giocatore = $idg where Partita = $id and Inizio = $inizio and Colonna = $colonna;");
+						$conn->query("UPDATE partecipazioni SET Giocatore = $idg WHERE Partita = $id AND Inizio = $inizio AND Colonna = $colonna;");
 					}
 				}
 			} else {// Inserisci qualcuno...
-				if ($conn->query("select * from partecipazioni where Partita = $id and Inizio = $inizio and Giocatore = $idg;")->num_rows == 0) {// Se non è già presente nella stessa riga
+				if ($conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio = $inizio AND Giocatore = $idg;")->num_rows == 0) {// Se non è già presente nella stessa riga
 					$ingioco = false;
-					$presenze = $conn->query("select * from partecipazioni where Partita = $id and Giocatore = $idg order by Inizio;");
+					$presenze = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Giocatore = $idg order by Inizio;");
 					while ($rowp = $presenze->fetch_assoc()) {
-						if ($conn->query("select * from partecipazioni where Partita = $id and Colonna = " . $rowp['Colonna'] . " and Inizio > " . $rowp['Inizio'] . " and Inizio <= $inizio and Giocatore <> $idg;")->num_rows == 0) {
+						if ($conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Colonna = " . $rowp['Colonna'] . " AND Inizio > " . $rowp['Inizio'] . " AND Inizio <= $inizio AND Giocatore <> $idg;")->num_rows == 0) {
 							$ingioco = true;
 						}
 					}
 					if (!$ingioco) {// ...Se in ogni sua partecipazione è già stato soppiantato
-						$conn->query("insert into partecipazioni (Giocatore, Partita, Inizio, Colonna) values ($idg, $id, $inizio, $colonna);");
+						$conn->query("INSERT INTO partecipazioni (Giocatore, Partita, Inizio, Colonna) VALUES ($idg, $id, $inizio, $colonna);");
 					}
 				}
 			}
 			$cols = array($colonna, $colonna2);
 			foreach ($cols as $i => $col) {
-				$res = $conn->query("select * from partecipazioni where Partita = $id and Colonna = $col order by Inizio;");
+				$res = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Colonna = $col order by Inizio;");
 				$gioc = 0;
 				while ($row = $res->fetch_assoc()) {
 					if ($row['Giocatore'] == $gioc) {
-						$conn->query("delete from partecipazioni where Partita = $id and Colonna = $col and Inizio = " . $row['Inizio'] . ";");
+						$conn->query("DELETE FROM partecipazioni WHERE Partita = $id AND Colonna = $col AND Inizio = " . $row['Inizio'] . ";");
 					} else {
 						$gioc = $row['Giocatore'];
 					}
@@ -182,7 +188,7 @@ switch ($ajax) {
 		$vittoria = (substr($codice, 2, 1) == '-' ? "null" : substr($codice, 2, 1));
 		$cappotto = (substr($codice, 3, 1) == '-' ? "null" : substr($codice, 3, 1));
 		if ($numero == 'nuovo') {
-			if ($conn->query("INSERT INTO mani (Partita, Numero, Chiamante, Socio, Vittoria, Cappotto) VALUES ($id, " . ($conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows + 1) . ", $chiamante, $socio, $vittoria, $cappotto, $vecia);")) {
+			if ($conn->query("INSERT INTO mani (Partita, Numero, Chiamante, Socio, Vittoria, Cappotto, Vecia) VALUES ($id, " . ($conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows + 1) . ", $chiamante, $socio, $vittoria, $cappotto, $vecia);")) {
 				echo 1;
 			} else {
 				echo $conn->error;
@@ -233,11 +239,12 @@ switch ($ajax) {
 		}
 		break;
 	case 'modalcambio':
-		$resg = $conn->query("select * from partecipazioni where Partita = $id;");
+		$resg = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id;");
 		if ($resg->num_rows > 4) {
-			echo '<div class="row"><div class="col-4">Al turno</div><div class="col"><input type="number" class="form-control" id="cturno" min="2" max="' . ($conn->query("select * from mani where Partita = $id;")->num_rows + 1) . '" value="' . ($conn->query("select * from mani where Partita = $id;")->num_rows + 1) . '"></div></div>';
+			$turno = $conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows + 1;
+			echo '<div class="row"><div class="col-4">Al turno</div><div class="col"><input type="number" class="form-control" id="cturno" min="2" max="' . $turno . '" value="' . $turno . '"></div></div>';
 			echo '<div class="row"><div class="col-4">Nella colonna <strong id="outcolonna">1</strong></div><div class="col"><input type="range" class="form-range" id="ccolonna" min="1" max="5" step="1" value="1" onchange="aggiornaoutcolonna();"></div></div>';
-			echo '<div class="row"><div class="col-4">Entra in gioco</div><div class="col"><input class="form-control" type="text" id="primogioc" placeholder="Cerca..." onkeyup="cercagiocatori(this.value, false);" autofocus></div></div>';
+			echo '<div class="row"><div class="col-4">Entra in gioco</div><div class="col"><input class="form-control" type="text" id="primogioc" placeholder="Cerca..." onkeyup="cercagiocatori(this.value);" autofocus></div></div>';
 			echo '<div id="listag"></div>';
 		} else {
 			echo '<span class="text-danger">Definire prima i cinque giocatori partecipanti</span>';

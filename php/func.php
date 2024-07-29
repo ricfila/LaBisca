@@ -1,6 +1,7 @@
 <?php
 include_once "conn.php";
 include "func_partite.php";
+include "func_mostrapartita.php";
 
 // Gestione (e ripristino) del login
 session_start();

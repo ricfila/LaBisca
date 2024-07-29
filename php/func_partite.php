@@ -2,12 +2,12 @@
 
 function partita($id) {
 	global $conn;
-	$row = $conn->query("select * from partite where IdPartita = '$id';")->fetch_assoc();
+	$row = $conn->query("SELECT * FROM partite WHERE IdPartita = '$id';")->fetch_assoc();
 	
 	// Giocatori
-	$gioc = $conn->query("select * from partecipazioni where Inizio = 1 and Partita = $id order by Colonna;");
+	$gioc = $conn->query("SELECT * FROM partecipazioni WHERE Inizio = 1 AND Partita = $id ORDER BY Colonna;");
 	$giocatori = array(null, null, null, null, null);
-	$gstat = array(array(), // [0] turni giocati,
+	$gstat = array(array(), // [0] turni giocati in ogni colonna,
 		array(), array(), array(), array(), array(), // [1] Chiamate vinte, [2] perse, [3] patte, [4] in mano, [5] con cappotto
 		array(), array(), array(), array()); // [6] Socio vinte, [7] perse, [8] patte, [9] con cappotto
 	$matgiocatori = array();
@@ -15,27 +15,34 @@ function partita($id) {
 	while ($rowg = $gioc->fetch_assoc()) {
 		$giocatori[$rowg['Colonna'] - 1] = $rowg['Giocatore'];
 		$matgiocatori[0][$rowg['Colonna'] - 1] = $rowg['Giocatore'];
-		for ($z = 0; $z < count($gstat); $z++)
-			$gstat[$z][$rowg['Giocatore']] = 0; // Inizializzazione delle statistiche per il giocatore
+
+		// Inizializzazione delle statistiche per il giocatore
+		$gstat[0][$rowg['Giocatore']] = array(0, 0, 0, 0, 0);
+		for ($z = 1; $z < count($gstat); $z++)
+			$gstat[$z][$rowg['Giocatore']] = 0;
 	}
 	
 	// Mani e punteggi
-	$mani = $conn->query("select * from mani where Partita = $id order by Numero;");
-	$cambi = $conn->query("select * from partecipazioni where Partita = $id and Inizio > 1 order by Inizio;");
+	$mani = $conn->query("SELECT * FROM mani WHERE Partita = $id ORDER BY Numero;");
+	$cambi = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio > 1 ORDER BY Inizio;");
 	$i = 0;
 	$parziali = array();
 	$totali = array(0, 0, 0, 0, 0);
 	$codici = array();
 	$rowc = $cambi->fetch_assoc();
 	$stat = array(0, 0, 0, 0, 0, 0, 0); //Vinte, perse, patte, in mano, cappotto, min, max
+	$colonne = array(array(), array(), array(), array(), array());
 	while ($rowm = $mani->fetch_assoc()) {
 		if ($rowc != null && $rowc['Inizio'] == ($i + 1)) {
 			$matgiocatori[$i] = array();
 			while ($rowc != null && $rowc['Inizio'] == ($i + 1)) {
 				$matgiocatori[$i][$rowc['Colonna'] - 1] = $rowc['Giocatore'];
 				$giocatori[$rowc['Colonna'] - 1] = $rowc['Giocatore'];
-				if (!array_key_exists($rowc['Giocatore'], $gstat[0])) { // Inizializzazione del giocatore, se nuovo in questa partita
-					for ($z = 0; $z < count($gstat); $z++)
+
+				// Inizializzazione del giocatore, se nuovo in questa partita
+				if (!array_key_exists($rowc['Giocatore'], $gstat[0])) {
+					$gstat[0][$rowc['Giocatore']] = array(0, 0, 0, 0, 0);
+					for ($z = 1; $z < count($gstat); $z++)
 						$gstat[$z][$rowc['Giocatore']] = 0;
 				}
 				$rowc = $cambi->fetch_assoc();
@@ -79,10 +86,22 @@ function partita($id) {
 			if ($rowm['Chiamante'] != $rowm['Socio'])
 				$gstat[8][$giocatori[$rowm['Socio'] - 1]]++;
 		}
-		for ($z = 0; $z < 5; $z++) // Turni giocati
-			$gstat[0][$giocatori[$z]]++;
 		
 		for ($j = 0; $j < 5; $j++) {
+			// Turni giocati
+			$gstat[0][$giocatori[$j]][$j]++;
+
+			// Turni alle colonne
+			if (!isset($colonne[$j][$giocatori[$j]])) {
+				$colonne[$j][$giocatori[$j]] = array(
+					'id' => $giocatori[$j],
+					'inizio' => $i,
+					'turni' => 0,
+				);
+			}
+			$colonne[$j][$giocatori[$j]]['turni']++;
+			
+			// Punteggi
 			if (($j + 1) == $rowm['Chiamante'])
 				$parziali[$i][$j] = $vittoria * $palio;
 			else if (($j + 1) == $rowm['Socio'])
@@ -119,13 +138,13 @@ function partita($id) {
 		}
 	}
 	
-	return array($parziali, $totali, $matgiocatori, $gstat, $stat, $classifica, $codici);
+	return array($parziali, $totali, $matgiocatori, $gstat, $stat, $classifica, $codici, $colonne);
 	/* Output:
 	[0] parziali: matrice [n][5], con n numero di partite
 	[1] totali: array[5]
 	[2] giocatori: array[5] con gli ultimi giocatori che hanno giocato
 	[3] gstat: matrice di 10 array associativi, uno per ogni statistica, con 5 o più giocatori al loro interno
-		[0] Turni giocati
+		[0] Array[5] con i turni giocati in ogni colonna
 		[1] Chiamate vinte
 		[2] Chiamate perse
 		[3] Chiamate patte
@@ -143,207 +162,111 @@ function partita($id) {
 		[4] Cappotto
 		[5] Punteggio minimo
 		[6] Punteggio massimo
-	[5] classifica: array[5] con la posizione di ogni giocatore
+	[5] classifica: array[5] con la medaglia di ogni colonna
 	[6] codici: matrice [n][4], con n numero di partite
+	[7] colonne: array[5] di array, con un array associativo per ogni giocatore che vi ha giocato riportante il turno in cui ci è entrato ['inizio'] e il numero di turni ['turni']
 	*/
 }
 
+$minimomedaglie = 6;
+function medaglie($partita) {
+	global $minimomedaglie;
+	$medaglie = array();
 
-function mostra_partita($row, $edit) {
-	global $conn, $fmt1;
-	$id = $row['IdPartita'];
-	$partita = partita($id);
-	$out = '';
-
-	// Incipit
-	$out .= '<div id="partita">';
-	$out .= '<div class="row"><div class="col-md-9"><h5 style="text-align: left;">Bi$ca in occasione di: <strong><i id="occasione0">' . $row['Occasione'] . '</i></strong>' . (isset($_SESSION['id']) && $_SESSION['editor'] ? ($edit ? '&nbsp;<button class="btn btn-primary" onclick="info();"><i class="bi bi-pencil-fill"></i></button>&nbsp;<a href="partite.php?id=' . $id . '" class="btn btn-info btn-sm"><i class="bi bi-eye-fill"></i> Torna alla visualizzazione</a>' : '&nbsp;<a href="partite.php?id=' . $id . '&edit=true" class="btn btn-primary btn-sm"><i class="bi bi-pencil-fill"></i> Modifica la partita</a>') : '') . '</h5></div>';
-	$out .= '<div class="col-md-3"><h5 style="text-align: right;">' . $fmt1->format(strtotime($row['Data'])) . '</h5><span class="d-none" id="data0">' . date("o-m-d", strtotime($row['Data'])) . '</span></div></div>';
-	$out .= '<hr>';
-	
-	// Giocatori
-	$out .= '<div class="sticky-top" style="top: 56; "><div class="row" style="margin: 0px; background: var(--sfondo);"><div class="col-2 pad-alto border border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
-	foreach ($partita[2][0] as $i => $idg) {
-		$out .= '<div class="col-2 pad-alto border border-start-0 border-primary text-truncate" style="background: var(--sfondo); z-index: 1020; position: relative;">';
-		if ($idg == null) {
-			if ($edit) {
-				$out .= '<button class="btn btn-warning" style="width: 95%;" onclick="primogioc(' . ($i + 1) . ', false);"><i class="bi bi-person-plus-fill"></i></button>';
-			}
-		} else {
-			$nome = nomedi($idg);
-			$nomi = nomedi($idg, true);
-			if ($edit) {
-				$out .= '<button class="btn btn-outline-dark btn-sm atext-truncate" style="width: 100%; padding: 2px 0px;" onclick="primogioc(' . ($i + 1) . ', [\'' . addslashes($nomi[0]) . '\', \'' . addslashes($nomi[1]) . '\']);">&nbsp;<span class="longx">' . $nome . '</span></button>';
-			} else {
-				$out .= '<h6 style="margin: 0px; overflow-x: hidden;"><a class="longx text-tema text-decoration-none" href="giocatori.php?id=' . $idg . '">' . $nome . '</a></h6>';
-			}
+	$classifica = array(0, 0, 0, 0, 0);
+	$totali2 = $totali = $partita[1];
+	rsort($totali2);
+	$totali2 = array_values(array_unique($totali2));
+	for ($j = 0; $j < 5; $j++) {
+		if ($totali[$j] == $totali2[0]) {
+			$classifica[$j] = 1;
+		} else if ($totali[$j] == $totali2[1]) {
+			$classifica[$j] = 2;
+		} else if ($totali[$j] == $totali2[2]) {
+			$classifica[$j] = 3;
+		} else if ($totali[$j] == $totali2[3]) {
+			$classifica[$j] = 4;
+		} else if ($totali[$j] == $totali2[4]) {
+			$classifica[$j] = 5;
 		}
-		$out .= '</div>';
 	}
-	$out .= '</div></div>';
-	
-	// Mani e punteggi
-	$totali = array(0, 0, 0, 0, 0);
-	foreach ($partita[0] as $i => $parz) {
-		// Cambi di giocatori
-		if ($i > 0 && isset($partita[2][$i])) {
-			$out .= '<div class="sticky-top" style="pointer-events: none; top: 57; z-index: ' . (1030 + $i) . ';"><div class="row" style="margin: 0px;"><div class="col-2 pad-alto border-bottom' . (isset($partita[2][$i][0]) ? ' border-end' : '') . ' border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
+
+	// Medaglie assegnate solo se è stato raggiunto il minimo di turni
+	if ($partita[4][0] + $partita[4][1] + $partita[4][2] >= $minimomedaglie) {
+		$assegnate = array(0, 0, 0, 0, 0);
+		$colonne = $partita[7];
+		$turnimedaglia = array();
+		$iniziomedaglia = array();
+		$colonnamedaglia = array();
+		$attesa = array(array(), array(), array(), array(), array());
+
+		$i = 1;
+		while (count(array_filter($assegnate, function($a) {return $a == 0;})) != 0) {
 			for ($j = 0; $j < 5; $j++) {
-				if (isset($partita[2][$i][$j])) {
-					$nome = nomedi($partita[2][$i][$j]);
-					$nomi = nomedi($partita[2][$i][$j], true);
-					$out .= '<div class="col-2 pad-alto border-end border-bottom border-primary text-truncate" style="pointer-events: auto; background: var(--sfondo); position: relative;">';
-					if ($edit) {
-						$out .= '<button class="btn btn-outline-dark btn-sm atext-truncate" style="width: 100%; padding: 2px 0px;" onclick="modalannullacambio(' . ($i + 1) . ', ' . ($j + 1) . ', [\'' . addslashes($nomi[0]) . '\', \'' . addslashes($nomi[1]) . '\']);">&nbsp;<span class="longx">' . $nome . '</span></button>';
-					} else {
-						$out .= '<h6 style="margin: 0px;"><a class="longx text-tema text-decoration-none" href="giocatori.php?id=' . $partita[2][$i][$j] . '">' . $nome . '</a></h6>';
-					}
-					$out .= '</div>';
-				} else {
-					$out .= '<div class="col-2 border-bottom' . (isset($partita[2][$i][$j + 1]) != 0 ? ' border-end' : '') . ' border-primary pad-alto"></div>';
-				}
-			}
-			$out .= '</div></div>';
-		}
-		$out .= '<div class="row" style="margin: 0px;"><div class="col-2 border border-top-0 border-primary pad-alto">' . ($edit ? '<button class="btn btn-primary no-pad" style="width: 90%;" onclick="turno(' . ($i + 1) . ');">' : '') . '<i class="bi bi-hash"></i>' . ($i + 1) . ($edit ? '</button>' : '') . '</div>';
-		for ($j = 0; $j < 5; $j++) {
-			$totali[$j] += $partita[0][$i][$j];
-			$parz = ($partita[0][$i][$j] > 0 ? '+' : '') . $partita[0][$i][$j];
-			$tot = ($totali[$j] > 0 ? '+' : '') . $totali[$j];
+				if ($assegnate[$j] == 0 && count($colonne[$j]) == $i) { // Se la colonna contiene il numero totale di giocatori che si sta cercando
+					$lastmax = 0;
+					while (count($colonne[$j]) > 0) {
+						// Recupero il giocatore con il maggior numero di turni nella colonna
+						$turni = array_column($colonne[$j], 'turni', 'id');
+						$max = max($turni);
+						$g = array_keys($turni, $max)[0];
 
-			$sfondo = '';
-			if ($partita[6][$i][0] == ($j + 1)) { // È il chiamante
-				if ($partita[6][$i][1] == ($j + 1)) { // Si è autochiamato
-					if ($partita[6][$i][2] == 1 || $partita[6][$i][2] == null) { // Vittoria o pareggio
-						$sfondo = 'cerchi_luce2';
-					} else { // Sconfitta
-						$sfondo = 'cimitero';
-					}
-				} else { // Chiamata normale
-					if ($partita[6][$i][2] == 1 || $partita[6][$i][2] == null) { // Vittoria o pareggio
-						$sfondo = 'fuoco2';
-					} else { // Sconfitta
-						$sfondo = 'fuoco_blu2';
-					}
-				}
-			} else if ($partita[6][$i][1] == ($j + 1)) { // È il socio
-				if ($partita[6][$i][4] == 1) { // Vecia
-					$sfondo = 'fulmini2';
-				} else {
-					$sfondo = 'cerchi_verdi2';
-				}
-			}
-			$out .= '<div class="col-2 border-end border-bottom border-primary sfondo"' . (!empty($sfondo) ? ' style="background-image: url(\'img/gif/' . $sfondo . '.gif\');"' : '') . '>';
+						$turnifatti = $colonne[$j][$g]['turni'];
+						$iniziocolonna = $colonne[$j][$g]['inizio'];
+						// Se ha già ricevuto una medaglia, controllo se deve ottenere invece quella della colonna in esame
+						if (isset($medaglie[$g])) {
+							if ($turnifatti >= $turnimedaglia[$g] && $iniziocolonna > $iniziomedaglia[$g]) {
+								$prec = $colonnamedaglia[$g];
 
-				$out .= '<div class="row d-none d-md-flex">';
-					$out .= '<div class="col-4 bordo4 pad-alto small pt-1 sfondo"' . (!empty($sfondo) ? ' style="background-image: url(\'img/gif/' . $sfondo . '.gif\');"' : '') . '><i class="d-block' . (!empty($sfondo) ? ' ptsfondo' . ($partita[6][$i][3] == 1 ? ' ptcappotto' : '') : '') . '">' . $parz . '</i></div>';
-					$out .= '<div class="col-8 pad-alto" style="font-size: 20px; background-color: var(--sfondo);"><strong>' . $tot . '</strong></div>';
-				$out .= '</div>';
-				$out .= '<div class="d-md-none">';
-					$out .= '<span class="parziale pad-alto' . (!empty($sfondo) ? ' ptsfondo' . ($partita[6][$i][3] == 1 ? ' ptcappotto' : ''): '') . '" style="display: ' . (isset($_COOKIE['parziali']) ? ($_COOKIE['parziali'] == 'true' ? 'block': 'none') : 'block') . ';"><i>' . $parz . '</i></span>';
-					$out .= '<span class="totale pad-alto' . (!empty($sfondo) ? ' ptsfondo' . ($partita[6][$i][3] == 1 ? ' ptcappotto' : '') : '') . '" style="display: ' . (isset($_COOKIE['parziali']) ? ($_COOKIE['parziali'] == 'false' ? 'block': 'none') : 'none') . ';">' . $tot . '</span>';
-				$out .= '</div>';
+								// Se la colonna ha una lista d'attesa o un'altra medaglia assegnata, posso annullare la medaglia ricevuta
+								if (count($attesa[$prec]) > 0 || $assegnate[$prec] > 1) {
+									unset($medaglie[$g]);
+									unset($turnimedaglia[$g]);
+									unset($iniziomedaglia[$g]);
+									unset($colonnamedaglia[$g]);
+									$assegnate[$prec]--;
+									
+									// Solo se la colonna aveva solo quella medaglia, richiamo altri nella lista d'attesa
+									if ($assegnate[$prec] == 0) {
+										// Assegno la medaglia al prossimo (o i prossimi) aventi diritto
+										$t = $attesa[$prec][0]['turni'];
+										while (count($attesa[$prec]) > 0 && $attesa[$prec][0]['turni'] == $t) {
+											$next = array_shift($attesa[$prec]);
+											$medaglie[$next['id']] = $classifica[$prec];
+											$turnimedaglia[$g] = $next['turni'];
+											$iniziomedaglia[$g] = $next['inizio'];
+											$colonnamedaglia[$g] = $prec;
+											$assegnate[$prec]++;
+										}
+									}
+								}
+							}
+						}
 
-			$out .= '</div>';
-		}
-		$out .= '</div>';
-	}
-	
-	// Conclusioni
-	if (count($partita[0]) > 0) {
-		$out .= '<div class="row" style="margin: 0px;"><div class="col-2 bordog pad-alto" style="font-size: 20px;"><span class="d-sm-none"><strong>Tot.</strong></span><span class="d-none d-sm-block"><strong>Totale</strong></span></div>';
-		for ($j = 0; $j < 5; $j++) {
-			$out .= '<div class="col-2 bordo2g pad-alto" style="font-size: 20px;"><strong>' . ($totali[$j] > 0 ? '+' : '') . $totali[$j] . '</strong></div>';
-		}
-		$out .= '</div>';
-		$out .= '<div class="sticky-top" style="top: ' . ($edit ? 87 : 79) . ';"><div class="row" style="margin: 0px;"><div class="col-2"></div>';
-		for ($j = 0; $j < 5; $j++) {
-			$out .= '<div class="col-2 no-pad"><img src="img/Medaglia' . $partita[5][$j] . '.png" height=40px></div>';
-		}
-		$out .= '</div></div>';
-		$out .= '<div class="form-check form-switch d-md-none" style="text-align: left;"><br><input class="form-check-input" type="checkbox" value="" id="cparziali" onchange="parziali(this);"' . (isset($_COOKIE['parziali']) ? ($_COOKIE['parziali'] == 'true' ? 'checked=""': '') : 'checked=""') . '><label class="form-check-label" for="cparziali">Punteggi parziali</label></div>';
-		$out .= checkalias();
-	}
-	
-	if ($edit) {
-		$out .= '<br><div class="row"><div class="col-lg-2"></div><div class="col-sm-6 col-lg-4"><button class="btn btn-lg btn-primary mb-1" style="width: 95%;" onclick="turno();"><i class="bi bi-patch-plus-fill"></i> Nuovo turno</button></div>';
-		$out .= '<div class="col-sm-6 col-lg-4"><button class="btn btn-lg btn-warning mb-1" style="width: 95%;" onclick="cambio();"><i class="bi bi-person-plus-fill"></i> Cambio giocatore</button></div><div class="col-lg-2"></div></div><br>';
-	}
-	
-	// Note e foto
-	$out .= '<br>';
-	$foto = false;
-	if (isset($_SESSION['id'])) {
-		$outf = '';
-		$files;
-		if ($files = listafoto($id)) {
-			if (count($files) > 0) {
-				$foto = true;
-				for ($i = 0; $i < count($files); $i++) {
-					$outf .= '<div class="carousel-item' . ($i == 0 ? ' active' : '') . '"><img src="foto/' . $id . '/' . $files[$i] . '" class="d-block" style="max-height: 50vh; max-width: 100%;"></div>';
+						// Se non è stata annullata la medaglia precedente il giocatore non concorre per questa
+						if (!isset($medaglie[$g])) {
+							if ($lastmax == 0) { // Il primo giocatore avente diritto definisce il numero di turni da avere per competere con lui
+								$lastmax = $max;
+							}
+
+							if ($max == $lastmax) { // Se è il primo giocatore o ha il suo stesso numero di turni, ottiene la medaglia
+								$medaglie[$g] = $classifica[$j];
+								$turnimedaglia[$g] = $turnifatti;
+								$iniziomedaglia[$g] = $iniziocolonna;
+								$colonnamedaglia[$g] = $j;
+								$assegnate[$j]++;
+							} else { // Se questo giocatore ha giocato meno del precedente non concorre, ma finisce nella lista d'attesa della colonna
+								$attesa[$j][] = $colonne[$j][$g];
+							}
+						}
+						unset($colonne[$j][$g]);
+					}
 				}
-				$outf = '<h3>Foto ricordo</h3><div id="carousel" class="carousel slide" style="padding: 10px; border: 1px solid #8f8f8f;"><div id="carousel-inner" class="carousel-inner" style="background-image: linear-gradient(#d1d1d1, #8f8f8f);">' . $outf . '</div>';
-				if (count($files) > 1)
-					$outf .= '<button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Precedente</span>
-						</button>
-						<button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Successiva</span>
-						</button>';
-				$outf .= '</div>';
 			}
+			$i++;
 		}
 	}
-	$note = (!empty($row['Note']) ? '<h3>Note sulle giuocate</h3><p id="note0" style="text-align: justify;">' . $row['Note'] . '</p>' : '<span id="note0"></span>');
-	
-	$out .= '<div class="row">';
-	if ($foto && !empty($row['Note'])) {
-		$out .= '<div class="col-lg-8">' . $note . '</div><div class="col-lg-4">' . $outf . '</div>';
-	} else if ($foto) {
-		$out .= '<div class="col-lg-3"></div><div class="col">' . $outf . $note . '</div><div class="col-lg-3"></div>';
-	} else {
-		$out .= '<div class="col-lg-2"></div><div class="col">' . $note . '</div><div class="col-lg-2"></div>';
-	}
-	
-	$out .= '</div>';
-	$out .= '<div class="row"><div class="col-lg-2"></div><div class="col">';
-	
-	// Statistiche
-	if (count($partita[0]) > 1) {
-		$chiamanti = array();
-		$soci = array();
-		foreach ($partita[3][0] as $k => $v) {
-			$chiamanti[$k] = 0;
-			$soci[$k] = 0;
-		}
-		for ($z = 1; $z <= 3; $z++)
-			foreach ($partita[3][$z] as $k => $v)
-				$chiamanti[$k] += $v;
-		for ($z = 6; $z <= 8; $z++)
-			foreach ($partita[3][$z] as $k => $v)
-				$soci[$k] += $v;
-		arsort($chiamanti);
-		arsort($soci);
-		$out .= '<br><h3>Statistiche</h3><div class="row" style="text-align: left;">';
-		$out .= '<div class="col-sm-3"><h5><i class="bi bi-chat-dots"></i> Chiamate</h5><p style="text-align: justify;">Vinte: <strong>' . $partita[4][0] . '</strong><br>Perse: <strong>' . $partita[4][1] . '</strong><br>Patte: <strong>' . $partita[4][2] . '</strong><br>In mano: <strong>' . $partita[4][3] . '</strong><br>Con cappotto: <strong>' . $partita[4][4] . '</strong></p></div>';
-		$out .= '<div class="col-sm-3"><h5><i class="bi bi-chevron-expand"></i> Estremi dei punteggi</h5><p style="text-align: justify;">Massimo: <strong>+' . $partita[4][6] . '</strong><br>Minimo: <strong>' . $partita[4][5] . '</strong></p></div>';
-		$out .= '<div class="col-sm-3"><h5><i class="bi bi-award"></i> Chiamanti più arditi</h5><p style="text-align: justify;">';
-			foreach ($chiamanti as $k => $v) {
-				$out .= nomedi($k) . ': <strong>' . $v . '</strong><br>';
-			}
-			$out .= '</p></div>';
-		$out .= '<div class="col-sm-3"><h5><i class="bi bi-compass"></i> Soci più ambiti</h5><p style="text-align: justify;">';
-			foreach ($soci as $k=>$v) {
-				$out .= nomedi($k) . ': <strong>' . $v . '</strong><br>';
-			}
-			$out .= '</p></div>';
-		$out .= '</div>';
-	}
-	$out .= '</div><div class="col-lg-2"></div></div>';
-	$out .= '</div>';
-	
-	return $out;
+
+	return $medaglie;
 }
 ?>
