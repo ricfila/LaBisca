@@ -12,7 +12,8 @@ function partita($id) {
 		array(), array(), array(), // [4] in mano vinte, [5] perse, [6] patte,
 		array(), array(), array(), // [7] con cappotto vinte, [8] perse, [9] punteggio chiamante,
 		array(), array(), array(),  // [10] Socio vinte, [11] perse, [12] patte,
-		array(), array(), array()); // [13] socio con cappotto vinte, [14] perse, [15] punteggio socio
+		array(), array(), array(), // [13] socio con cappotto vinte, [14] perse, [15] punteggio socio
+		array()); // [16] punteggio totale
 	$matgiocatori = array();
 	$matgiocatori[0] = array(null, null, null, null, null);
 	while ($rowg = $gioc->fetch_assoc()) {
@@ -128,6 +129,8 @@ function partita($id) {
 			} else {
 				$parziali[$i][$j] = -1 * $vittoria * $palio2;
 			}
+			$gstat[16][$giocatori[$j]] += $parziali[$i][$j];
+
 			$totali[$j] += $parziali[$i][$j];
 			if ($totali[$j] > $stat[6])
 				$stat[6] = $totali[$j];
@@ -180,6 +183,7 @@ function partita($id) {
 		[13] Da socio con cappotto vinte
 		[14] Da socio con cappotto perse
 		[15] Punteggio socio
+		[16] Punteggio totale
 	[4] stat: array di 7 elementi
 		[0] Vinte
 		[1] Perse
