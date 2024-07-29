@@ -282,6 +282,12 @@ function medaglie($partita) {
 function coppie($partita) {
 	$coppie = array();
 	$punti = array();
+	$vinte = array();
+	$perse = array();
+	$patte = array();
+	$cappotto = array();
+	$benedizioni = array();
+	$maledizioni = array();
 
 	$giocatori = $partita[2][0];
 	foreach ($partita[6] as $i => $cod) {
@@ -306,10 +312,35 @@ function coppie($partita) {
 		} else {
 			$coppie[$c] = 1;
 			$punti[$c] = 0;
+			$vinte[$c] = 0;
+			$perse[$c] = 0;
+			$patte[$c] = 0;
+			$cappotto[$c] = 0;
+			$benedizioni[$c] = 0;
+			$maledizioni[$c] = 0;
 		}
-		$punti[$c] += (2 * ($cod[2] == null ? 0 : ($cod[2] * 2) - 1) * ($cod[3] == 1 ? 2 : 1)) + $cod[4];
+
+		$mul = $cod[2] == null ? 0 : ($cod[2] * 2) - 1;
+		$punti[$c] += (2 * $mul * ($cod[3] == 1 ? 2 : 1)) + ($mul * $cod[4]);
+		if ($cod[2] == 1) {
+			$vinte[$c]++;
+		} else if ($cod[2] == 0) {
+			$perse[$c]++;
+		} else {
+			$patte[$c]++;
+		}
+		if ($cod[3] == 1) {
+			$cappotto[$c]++;
+		}
+		if ($cod[4] == 1) {
+			if ($cod[2] == 1) {
+				$benedizioni[$c]++;
+			} else if ($cod[2] == 0) {
+				$maledizioni[$c]++;
+			}
+		}
 	}
 
-	return array($coppie, $punti);
+	return array($coppie, $punti, $vinte, $perse, $patte, $cappotto, $benedizioni, $maledizioni);
 }
 ?>
