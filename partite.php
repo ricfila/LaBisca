@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="it-IT" data-bs-theme="auto">
 <head>
 	<?php
 	include "php/bootstrap.php";
@@ -102,7 +103,7 @@
 					echo '<a class="dropdown-item" href="partite.php?id=' . $row['IdPartita'] . '"><div class="row">';
 					echo '<div class="col-1 no-pad" style="text-align: right;">' . ($turni < 10 ? '&nbsp;&nbsp;' : '') . $turni . '<i class="bi bi-play-fill"></i></div>';
 					echo '<div class="col d-inline-block text-truncate" style="text-align: left;">' . (empty($row['Occasione']) ? '<span class="chiaro"><i>Occasione sconosciuta</i></span>' : $row['Occasione']) . '</div>';
-					echo '<div class="col-auto text-left" style="text-align: right;"><small class="chiaro"><i class="d-block d-sm-none">' . $fmt2->format(strtotime($row['Data'])) . '</i><i class="d-none d-sm-block">' . $fmt3->format(strtotime($row['Data'])) . '</i></small></div></div></a>';
+					echo '<div class="col-auto text-left px-0 px-sm-3" style="text-align: right;"><small class="chiaro"><i class="d-block d-sm-none">' . $fmt2->format(strtotime($row['Data'])) . '</i><i class="d-none d-sm-block">' . $fmt3->format(strtotime($row['Data'])) . '</i></small></div></div></a>';
 				}
 				echo '</div><div class="col-lg-2"></div></div><br>';
 			}

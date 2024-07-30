@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="it-IT" data-bs-theme="auto">
 <head>
 	<title>La Bi$ca</title>
 	<?php include "php/bootstrap.php"; ?>
@@ -85,7 +85,7 @@
 			echo '<a href="giocatori.php?id=' . $partita[2][$vincitori[$i]] . '">' . nomedi($partita[2][$vincitori[$i]]) . '</a>' . ($i == count($vincitori) - 1 ? '' : ($i == count($vincitori) - 2 ? ' e ' : ', '));
 		}
 		echo ' con <strong>' . $max . '</strong> punti.</p>';*/
-		echo '<a href="partite.php?id=' . $row['IdPartita'] . '" class="btn btn-success"><i class="bi bi-arrow-right-circle-fill"></i> Vai alla partita</a>';
+		echo '<a href="partite.php?id=' . $row['IdPartita'] . '" class="btn btn-primary"><i class="bi bi-arrow-right-circle-fill"></i> Vai alla partita</a>';
 		?>
 		
 	</div><div class="col-sm-4 col-lg-3"><hr class="d-sm-none" />

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="it-IT" data-bs-theme="auto">
 <head>
 	<title>La Bi$ca</title>
 	<?php include "php/bootstrap.php"; ?>

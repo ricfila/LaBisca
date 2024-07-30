@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="it-IT" data-bs-theme="auto">
 <head>
 	<title>Accesso - La Bi$ca</title>
 	<?php
