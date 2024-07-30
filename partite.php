@@ -44,9 +44,10 @@
 								<button class="btn btn-danger mb-1" onclick="modaleliminapartita();"><i class="bi bi-trash"></i> Elimina la partita</button>
 								<?php
 							}
+							echo '<br>';
 						}
 						?>
-						<br><br>
+						<br>
 					</div>
 					<div class="col-lg-1"></div>
 				</div>
@@ -60,7 +61,7 @@
 			}
 		} else {
 			?>
-			<h1>Le partite</h1>
+			<h1 style="font-family: Vivaldi; font-size: 50px;" class="mb-0">Almanacco</h1>
 			<p>L'archivio dei tornei al Giuoco del Due</p>
 			
 			<?php

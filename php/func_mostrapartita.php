@@ -192,9 +192,12 @@ function mostra_partita($row, $edit) {
 		$out .= mostra_chiamantisoci($partita);
 		$out .= '</div>';
 		
-		$out .= '<hr><div class="row" style="text-align: left;">';
-		$out .= mostra_coppie($partita);
-		$out .= '</div>';
+		$coppie = mostra_coppie($partita);
+		if (!empty($coppie)) {
+			$out .= '<hr><div class="row" style="text-align: left;">';
+			$out .= $coppie;
+			$out .= '</div>';
+		}
 	}
 	$out .= '</div><div class="col-lg-2"></div></div>';
 	$out .= '</div>';

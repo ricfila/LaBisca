@@ -17,7 +17,7 @@ function partita($id) {
 	$matgiocatori[0] = array(null, null, null, null, null);
 
 	$rowg = $gioc->fetch_assoc();
-	while ($rowg && $rowg['Inizio'] == 1) {
+	while ($rowg != null && $rowg['Inizio'] == 1) {
 		$giocatori[$rowg['Colonna'] - 1] = $rowg['Giocatore'];
 		$matgiocatori[0][$rowg['Colonna'] - 1] = $rowg['Giocatore'];
 
