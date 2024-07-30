@@ -2,10 +2,9 @@
 
 function partita($id) {
 	global $conn;
-	$row = $conn->query("SELECT * FROM partite WHERE IdPartita = '$id';")->fetch_assoc();
 	
 	// Giocatori
-	$gioc = $conn->query("SELECT * FROM partecipazioni WHERE Inizio = 1 AND Partita = $id ORDER BY Colonna;");
+	$gioc = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id ORDER BY Inizio, Colonna;");
 	$giocatori = array(null, null, null, null, null);
 	$gstat = array(array(), // [0][5] turni giocati in ogni colonna,
 		array(), array(), array(), // [1] Chiamate vinte, [2] perse, [3] patte,
@@ -16,7 +15,9 @@ function partita($id) {
 		array()); // [16] punteggio totale
 	$matgiocatori = array();
 	$matgiocatori[0] = array(null, null, null, null, null);
-	while ($rowg = $gioc->fetch_assoc()) {
+
+	$rowg = $gioc->fetch_assoc();
+	while ($rowg && $rowg['Inizio'] == 1) {
 		$giocatori[$rowg['Colonna'] - 1] = $rowg['Giocatore'];
 		$matgiocatori[0][$rowg['Colonna'] - 1] = $rowg['Giocatore'];
 
@@ -24,32 +25,32 @@ function partita($id) {
 		$gstat[0][$rowg['Giocatore']] = array(0, 0, 0, 0, 0);
 		for ($z = 1; $z < count($gstat); $z++)
 			$gstat[$z][$rowg['Giocatore']] = 0;
+		
+		$rowg = $gioc->fetch_assoc();
 	}
 	
 	// Mani e punteggi
 	$mani = $conn->query("SELECT * FROM mani WHERE Partita = $id ORDER BY Numero;");
-	$cambi = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio > 1 ORDER BY Inizio;");
 	$i = 0;
 	$parziali = array();
 	$totali = array(0, 0, 0, 0, 0);
 	$codici = array();
-	$rowc = $cambi->fetch_assoc();
 	$stat = array(0, 0, 0, 0, 0, 0, 0); //Vinte, perse, patte, in mano, cappotto, min, max
 	$colonne = array(array(), array(), array(), array(), array());
 	while ($rowm = $mani->fetch_assoc()) {
-		if ($rowc != null && $rowc['Inizio'] == ($i + 1)) {
+		if ($rowg != null && $rowg['Inizio'] == ($i + 1)) {
 			$matgiocatori[$i] = array();
-			while ($rowc != null && $rowc['Inizio'] == ($i + 1)) {
-				$matgiocatori[$i][$rowc['Colonna'] - 1] = $rowc['Giocatore'];
-				$giocatori[$rowc['Colonna'] - 1] = $rowc['Giocatore'];
+			while ($rowg != null && $rowg['Inizio'] == ($i + 1)) {
+				$matgiocatori[$i][$rowg['Colonna'] - 1] = $rowg['Giocatore'];
+				$giocatori[$rowg['Colonna'] - 1] = $rowg['Giocatore'];
 
 				// Inizializzazione del giocatore, se nuovo in questa partita
-				if (!array_key_exists($rowc['Giocatore'], $gstat[0])) {
-					$gstat[0][$rowc['Giocatore']] = array(0, 0, 0, 0, 0);
+				if (!array_key_exists($rowg['Giocatore'], $gstat[0])) {
+					$gstat[0][$rowg['Giocatore']] = array(0, 0, 0, 0, 0);
 					for ($z = 1; $z < count($gstat); $z++)
-						$gstat[$z][$rowc['Giocatore']] = 0;
+						$gstat[$z][$rowg['Giocatore']] = 0;
 				}
-				$rowc = $cambi->fetch_assoc();
+				$rowg = $gioc->fetch_assoc();
 			}
 		}
 		$parziali[] = array(0, 0, 0, 0, 0);
