@@ -14,9 +14,9 @@ function mostra_partita($row, $edit) {
 	
 	// Giocatori
 	$out .= '<div style="position: relative;">';
-	$out .= '<div class="sticky-top" style="top: 55px;"><div class="row" style="margin: 0px; background: var(--sfondo);"><div class="col-2 col-sm-1 pad-alto border-end border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
+	$out .= '<div class="sticky-top" style="top: 55px;"><div class="row m-0" style="background: var(--sfondo);"><div class="col-2 col-sm-1 pad-alto border-end border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
 	foreach ($partita[2][0] as $i => $idg) {
-		$out .= '<div class="col pad-alto border border-start-0 border-primary text-truncate" style="background: var(--sfondo); z-index: 1020; position: relative;">';
+		$out .= '<div class="col pad-alto border border-start-0 border-primary text-truncate" style="background: var(--sfondo); z-index: 1020; position: relative; height: ' . ($edit ? 31 : 23) . 'px;">';
 		if ($idg == null) {
 			if ($edit) {
 				$out .= '<button class="btn btn-warning" style="width: 95%;" onclick="primogioc(' . ($i + 1) . ', false);"><i class="bi bi-person-plus-fill"></i></button>';
@@ -39,12 +39,12 @@ function mostra_partita($row, $edit) {
 	foreach ($partita[0] as $i => $parz) {
 		// Cambi di giocatori
 		if ($i > 0 && isset($partita[2][$i])) {
-			$out .= '<div class="sticky-top" style="pointer-events: none; top: 55px; z-index: ' . (1020 + $i) . ';"><div class="row" style="margin: 0px;"><div class="col-2 col-sm-1 pad-alto' . (isset($partita[2][$i][0]) ? ' border-end' : '') . ' border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
+			$out .= '<div class="sticky-top" style="pointer-events: none; top: 55px; z-index: ' . (1020 + $i) . ';"><div class="row m-0"><div class="col-2 col-sm-1 pad-alto' . (isset($partita[2][$i][0]) ? ' border-end' : '') . ' border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
 			for ($j = 0; $j < 5; $j++) {
 				if (isset($partita[2][$i][$j])) {
 					$nome = nomedi($partita[2][$i][$j]);
 					$nomi = nomedi($partita[2][$i][$j], true);
-					$out .= '<div class="col pad-alto border-end border-bottom border-primary text-truncate" style="pointer-events: auto; background: var(--sfondo); position: relative;">';
+					$out .= '<div class="col pad-alto border-end border-bottom border-primary text-truncate" style="pointer-events: auto; background: var(--sfondo); position: relative; height: ' . ($edit ? 31 : 23) . 'px;">';
 					if ($edit) {
 						$out .= '<button class="btn btn-outline-dark btn-sm atext-truncate" style="width: 100%; padding: 2px 0px;" onclick="modalannullacambio(' . ($i + 1) . ', ' . ($j + 1) . ', [\'' . addslashes($nomi[0]) . '\', \'' . addslashes($nomi[1]) . '\']);">&nbsp;<span class="longx">' . $nome . '</span></button>';
 					} else {
@@ -57,7 +57,7 @@ function mostra_partita($row, $edit) {
 			}
 			$out .= '</div></div>';
 		}
-		$out .= '<div class="row" style="margin: 0px;"><div class="col-2 col-sm-1 border-end border-primary pad-alto pe-2 text-end">' . ($edit ? '<button class="btn btn-primary no-pad" style="width: 90%;" onclick="turno(' . ($i + 1) . ');">' : '') . '<i class="bi bi-hash"></i>' . ($i + 1) . ($edit ? '</button>' : '') . '</div>';
+		$out .= '<div class="row m-0"><div class="col-2 col-sm-1 border-end border-primary pad-alto pe-2 text-end">' . ($edit ? '<button class="btn btn-primary no-pad" style="width: 90%;" onclick="turno(' . ($i + 1) . ');">' : '') . '<i class="bi bi-hash"></i>' . ($i + 1) . ($edit ? '</button>' : '') . '</div>';
 		for ($j = 0; $j < 5; $j++) {
 			$totali[$j] += $partita[0][$i][$j];
 			$parz = ($partita[0][$i][$j] > 0 ? '+' : '') . $partita[0][$i][$j];
@@ -103,7 +103,7 @@ function mostra_partita($row, $edit) {
 	
 	// Conclusioni
 	if (count($partita[0]) > 0) {
-		$out .= '<div class="row" style="margin: 0px;"><div class="col-2 col-sm-1 bordog pad-alto pe-2 text-end" style="font-size: 20px;"><span class="d-sm-none"><strong>Tot.</strong></span><span class="d-none d-sm-block"><strong>Totale</strong></span></div>';
+		$out .= '<div class="row" style="margin: 0px;"><div class="col-2 col-sm-1 bordog pad-alto pe-2 text-end" style="font-size: 20px;"><span class="d-md-none"><strong>Tot.</strong></span><span class="d-none d-md-block"><strong>Totale</strong></span></div>';
 		for ($j = 0; $j < 5; $j++) {
 			$out .= '<div class="col bordo2g pad-alto" style="font-size: 20px;"><strong>' . ($totali[$j] > 0 ? '+' : '') . $totali[$j] . '</strong></div>';
 		}
@@ -227,18 +227,22 @@ function mostra_chiamantisoci($partita) {
 		$chiamanti[$k] = $partita[3][1][$k] + $partita[3][2][$k] + $partita[3][3][$k];
 		$soci[$k] = $partita[3][10][$k] + $partita[3][11][$k] + $partita[3][12][$k];
 		
-		if ($partita[3][9][$k] > $bestc_score) {
-			$bestc = array($k);
-			$bestc_score = $partita[3][9][$k];
-		} else if ($partita[3][9][$k] == $bestc_score) {
-			$bestc[] = $k;
+		if ($chiamanti[$k] > 1) {
+			if ($partita[3][9][$k] > $bestc_score) {
+				$bestc = array($k);
+				$bestc_score = $partita[3][9][$k];
+			} else if ($partita[3][9][$k] == $bestc_score) {
+				$bestc[] = $k;
+			}
 		}
 		
-		if ($partita[3][15][$k] > $bests_score) {
-			$bests = array($k);
-			$bests_score = $partita[3][15][$k];
-		} else if ($partita[3][15][$k] == $bests_score) {
-			$bests[] = $k;
+		if ($soci[$k] > 1) {
+			if ($partita[3][15][$k] > $bests_score) {
+				$bests = array($k);
+				$bests_score = $partita[3][15][$k];
+			} else if ($partita[3][15][$k] == $bests_score) {
+				$bests[] = $k;
+			}
 		}
 	}
 	arsort($chiamanti);

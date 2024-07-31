@@ -1,0 +1,19 @@
+
+@font-face {
+	font-family: Vivaldi;
+	src: url('../font/VIVACS.TTF');
+}
+
+@font-face {
+	font-family: WhiteDream;
+	src: url('../font/WhiteDream.otf');
+}
+
+@font-face {
+	font-family: Madina;
+	src: url('../font/Madina.ttf');
+}
+
+.vivaldi {
+	font-family: Vivaldi;
+}

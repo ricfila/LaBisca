@@ -58,7 +58,10 @@ function head() {
 <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/jquery-3.7.1.min.js"></script>
 
-<link href="css/stile.css" rel="stylesheet" />
+<link href="css/temi.css" rel="stylesheet" />
+<link href="css/font.css" rel="stylesheet" />
+<link href="css/partite.css" rel="stylesheet" />
+<link href="css/generico.css" rel="stylesheet" />
 
 <script>
 var nomealias = <?php echo ($nomealias == 'Nome' ? '0' : '1'); ?>;
