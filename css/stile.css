@@ -112,7 +112,7 @@ input {
 }
 
 .bordog {
-	border-width: 1px 2px 2px 2px;
+	border-width: 0px 2px 0px 0px;
 	border-style: solid;
 	border-color: #78c2ad;
 }

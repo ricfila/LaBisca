@@ -9,7 +9,7 @@ $fmt3 = new IntlDateFormatter('it_IT', IntlDateFormatter::MEDIUM, IntlDateFormat
 //$conn->set_charset("utf-8");
 
 function head() {
-	$out = '<nav class="navbar navbar-expand-sm fixed-top navbar-dark bg-primary" style="height: 56px;">
+	$out = '<nav class="navbar navbar-expand-sm fixed-top navbar-dark bg-primary" style="height: 56px; z-index: 1050;">
 			<div class="container-fluid pe-0">
 				<div class="row w-100">
 					<div class="col-lg-1"></div>
@@ -102,15 +102,15 @@ function alias(check) {
 }
 
 ;(function () {
-  const htmlElement = document.querySelector("html")
-  if(htmlElement.getAttribute("data-bs-theme") === 'auto') {
-    function updateTheme() {
-      document.querySelector("html").setAttribute("data-bs-theme",
-      window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-    }
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme)
-    updateTheme()
-  }
+	const htmlElement = document.querySelector("html")
+	if(htmlElement.getAttribute("data-bs-theme") === 'auto') {
+		function updateTheme() {
+			document.querySelector("html").setAttribute("data-bs-theme",
+			window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+		}
+		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme)
+		updateTheme()
+	}
 })()
 
 </script>
