@@ -76,7 +76,7 @@
 						
 						if (($row2 == null) || substr($row2['Data'], 0, 4) != $anno) { // Cambio anno
 							if ($anno != null) {
-								$out .= '<div class="alert alert-success mt-3 mb-0">';
+								$out .= '<div class="riquadroanno alert-success mt-3 mb-0">';
 
 								$out .= '<div class="row">';
 								$out .= '<div class="col-auto text-start"><h3 class="mb-sm-0">' . $anno . '</h3></div>';
