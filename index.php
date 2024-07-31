@@ -66,10 +66,10 @@
 		<hr>
 		<h4>Le partite</h4>
 		<?php
-		$res = $conn->query("select * from partite order by Data desc;");
+		$res = $conn->query("SELECT * FROM partite ORDER BY Data desc;");
 		do {
 			$row = $res->fetch_assoc();
-		} while ($conn->query("select * from mani where Partita = " . $row['IdPartita'] . ";")->num_rows == 0);
+		} while ($conn->query("SELECT * FROM mani WHERE Partita = " . $row['IdPartita'] . ";")->num_rows == 0);
 		echo '<p style="text-align: justify;">Nell\'archivio sono presenti ' . $res->num_rows . ' partite. L\'ultima di queste è stata disputata il ' . $fmt1->format(strtotime($row['Data'])) . ' in occasione di <i>' . $row['Occasione'] . '</i>.</p> ';
 		$partita = partita($row['IdPartita']);
 		$totali = $partita[1];
@@ -97,18 +97,36 @@
 			</div>
 		</div>
 		
+		<a name="segnapunti"></a>
 		<div class="card border-info bg-info mb-3">
 			<h4 class="card-header text-white bg-info">Segnapunti</h4>
 			<div class="card-body sfondo m-1" style="border-radius: .4rem;">
 				<p class="card-text">Scarica e stampa le tabelle per segnare i punti su carta:
 				<ul style="text-align: justify;">
-					<li><a href="segnapunti/2019-breve.pdf" astyle="color: white;">Versione 2019 breve</a></li>
-					<li><a href="segnapunti/2019.pdf" astyle="color: white;">Versione 2019</a></li>
-					<li><a href="segnapunti/2016.2.2.pdf" astyle="color: white;">Versione 2016</a></li>
-				</ul></p>
+					<li><a href="segnapunti/2023.pdf" target="_blank">Versione 2023</a></li>
+					<li><a href="segnapunti/2023-breve.pdf" target="_blank">Versione 2023 breve</a></li>
+					<li class="linkn"><a href="segnapunti/2023-speciale.pdf" target="_blank">Versione 2023 speciale</a></li>
+					<li class="linkn"><a href="segnapunti/2019.pdf" target="_blank">Versione 2019</a></li>
+					<li class="linkn"><a href="segnapunti/2019-breve.pdf" target="_blank">Versione 2019 breve</a></li>
+					<li class="linkn"><a href="segnapunti/2016.2.2.pdf" target="_blank">Versione 2016</a></li>
+				</ul>
+				<a href="#segnapunti" onclick="togglelink();">Mostra tutti</a>
+				</p>
 			</div>
 		</div>
-		
+
+		<script>
+			let show = false;
+			$('.linkn').hide();
+
+			function togglelink() {
+				if (show)
+					$('.linkn').hide();
+				else
+					$('.linkn').show();
+				show = !show;
+			}
+		</script>
 		
 		<hr>
 		<h4>Impostazioni</h4>

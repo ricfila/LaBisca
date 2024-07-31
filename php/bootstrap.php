@@ -98,7 +98,8 @@ function alias(check) {
 	for (var i = 0; i < alias.length; i++) {
 		alias[i].style.display = (check.checked ? 'inline' : 'none');
 	}
-	marquee();
+	if (typeof marquee === "function")
+		marquee();
 }
 
 ;(function () {
