@@ -19,7 +19,7 @@ function mostra_partita($row, $edit) {
 		$out .= '<div class="col pad-alto border border-start-0 border-primary text-truncate" style="background: var(--sfondo); z-index: 1020; position: relative; height: ' . ($edit ? 31 : 23) . 'px;">';
 		if ($idg == null) {
 			if ($edit) {
-				$out .= '<button class="btn btn-warning" style="width: 95%;" onclick="primogioc(' . ($i + 1) . ', false);"><i class="bi bi-person-plus-fill"></i></button>';
+				$out .= '<button class="btn btn-warning p-0" style="width: 95%;" onclick="primogioc(' . ($i + 1) . ', false);"><i class="bi bi-person-plus-fill"></i></button>';
 			}
 		} else {
 			$nome = nomedi($idg);
