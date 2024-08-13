@@ -326,7 +326,7 @@ function coppie($partita) {
 		}
 
 		$mul = $cod[2] == null ? 0 : ($cod[2] * 2) - 1;
-		$punti[$c] += (2 * $mul * ($cod[3] == 1 ? 2 : 1)) + ($mul * $cod[4]);
+		$punti[$c] += (2 * $mul * ($cod[3] == 1 ? 2 : 1)) + ($mul * $cod[4] * 0.5);
 		if ($cod[2] == 1) {
 			$vinte[$c]++;
 		} else if ($cod[2] == 0) {

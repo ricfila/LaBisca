@@ -312,7 +312,7 @@ function mostra_coppie($partita) {
 						$m++;
 					}
 				}
-			} else {
+			} else if ($punti < 0) {
 				if ($p < $posizioni_podio || $punti == $last) {
 					$peggiori[] = array($coppia, $punti);
 					if ($punti != $last) {
@@ -375,7 +375,7 @@ function gettooltip($gstat, $g, $socio, $score, $best) {
 	$tooltip .= ($cappotto > 0 ? '<i class=\'bi bi-star-fill\'></i> ' . $cappotto . ' cappotto<br>' : '');
 
 	$tooltip .= '</div>';
-	if ($score != 0) {
+	if ($tooltip != '<div class=\'text-start\'></div>') {
 		$tooltip .= '<hr class=\'my-1\'>' . punti($score) . ' punt' . (abs($score) == 1 ? 'o' : 'i');
 	}
 	if ($best) {
