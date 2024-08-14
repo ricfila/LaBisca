@@ -11,46 +11,45 @@
 	<div class="row"><div class="col-lg-1"></div>
 	<div class="col-sm-8 col-lg-7">
 		
-		<audio id="inizio"><source src="suoni/mixkit-bonus-extra-in-a-video-game-2064.wav" type="audio/wav"></audio>
-		<audio id="punti"><source src="suoni/mixkit-player-recharging-in-video-game-2041.wav" type="audio/wav"></audio>
-		<audio id="applausi"><source src="suoni/mixkit-ending-show-audience-clapping-478.wav" type="audio/wav"></audio>
-		<audio id="clacson"><source src="suoni/Clacson.wav" type="audio/wav"></audio>
+		<audio id="inizio"><source src="media/suoni/mixkit-bonus-extra-in-a-video-game-2064.wav" type="audio/wav"></audio>
+		<audio id="punti"><source src="media/suoni/mixkit-player-recharging-in-video-game-2041.wav" type="audio/wav"></audio>
+		<audio id="applausi"><source src="media/suoni/mixkit-ending-show-audience-clapping-478.wav" type="audio/wav"></audio>
+		<audio id="clacson"><source src="media/suoni/Clacson.wav" type="audio/wav"></audio>
 		
-		<audio id="delusione"><source src="suoni/mixkit-arcade-space-shooter-dead-notification-272.wav" type="audio/wav"></audio>
-		<audio id="fallimento"><source src="suoni/mixkit-player-losing-or-failing-2042.wav" type="audio/wav"></audio>
-		<audio id="schiaffo"><source src="suoni/mixkit-axe-hits-to-a-plate-2774.wav" type="audio/wav"></audio>
-		<audio id="trombone"><source src="suoni/Trombone.wav" type="audio/wav"></audio>
+		<audio id="delusione"><source src="media/suoni/mixkit-arcade-space-shooter-dead-notification-272.wav" type="audio/wav"></audio>
+		<audio id="fallimento"><source src="media/suoni/mixkit-player-losing-or-failing-2042.wav" type="audio/wav"></audio>
+		<audio id="schiaffo"><source src="media/suoni/mixkit-axe-hits-to-a-plate-2774.wav" type="audio/wav"></audio>
+		<audio id="trombone"><source src="media/suoni/Trombone.wav" type="audio/wav"></audio>
 		
-		<audio id="preparazione"><source src="suoni/mixkit-arcade-rising-231.wav" type="audio/wav"></audio>
-		<audio id="psyco"><source src="suoni/Psyco.wav" type="audio/wav"></audio>
-		<audio id="tantantan"><source src="suoni/Tan_tan_tan.wav" type="audio/wav"></audio>
+		<audio id="preparazione"><source src="media/suoni/mixkit-arcade-rising-231.wav" type="audio/wav"></audio>
+		<audio id="psyco"><source src="media/suoni/Psyco.wav" type="audio/wav"></audio>
+		<audio id="tantantan"><source src="media/suoni/Tan_tan_tan.wav" type="audio/wav"></audio>
 		
-		<audio id="bomba"><source src="suoni/mixkit-explosion-in-battle-2809.wav" type="audio/wav"></audio>
-		<audio id="impatto"><source src="suoni/mixkit-dramatic-metal-explosion-impact-1687.wav" type="audio/wav"></audio>
-		<audio id="cadutabomba"><source src="suoni/mixkit-bomb-drop-impact-2804.wav" type="audio/wav"></audio>
-		<audio id="esplosione"><source src="suoni/mixkit-low-explosion-indoors-2187.wav" type="audio/wav"></audio>
-		<audio id="tuono"><source src="suoni/mixkit-distant-thunder-explosion-1278.wav" type="audio/wav"></audio>
-		<audio id="allarme"><source src="suoni/mixkit-facility-alarm-sound-999.wav" type="audio/wav"></audio>
+		<audio id="bomba"><source src="media/suoni/mixkit-explosion-in-battle-2809.wav" type="audio/wav"></audio>
+		<audio id="impatto"><source src="media/suoni/mixkit-dramatic-metal-explosion-impact-1687.wav" type="audio/wav"></audio>
+		<audio id="cadutabomba"><source src="media/suoni/mixkit-bomb-drop-impact-2804.wav" type="audio/wav"></audio>
+		<audio id="esplosione"><source src="media/suoni/mixkit-low-explosion-indoors-2187.wav" type="audio/wav"></audio>
+		<audio id="tuono"><source src="media/suoni/mixkit-distant-thunder-explosion-1278.wav" type="audio/wav"></audio>
+		<audio id="allarme"><source src="media/suoni/mixkit-facility-alarm-sound-999.wav" type="audio/wav"></audio>
 		
-		<audio id="six3"><source src="suoni/Si_si_e_si.wav" type="audio/wav"></audio>
-		<audio id="siii"><source src="suoni/Siii.wav" type="audio/wav"></audio>
-		<audio id="carica"><source src="suoni/Carica.wav" type="audio/wav"></audio>
-		<audio id="ohno"><source src="suoni/Oh_no.wav" type="audio/wav"></audio>
-		<audio id="eccomiqua"><source src="suoni/Eccomi_qua.wav" type="audio/wav"></audio>
-		<audio id="tombola"><source src="suoni/Tombola.wav" type="audio/wav"></audio>
-		<audio id="miodio"><source src="suoni/Mio_Dio.wav" type="audio/wav"></audio>
-		<audio id="tuttomio"><source src="suoni/Tutto_mio.wav" type="audio/wav"></audio>
-		<audio id="classico"><source src="suoni/Classico.wav" type="audio/wav"></audio>
-		<audio id="demone"><source src="suoni/Un_demone.wav" type="audio/wav"></audio>
-		<audio id="mostro"><source src="suoni/Un_mostro.wav" type="audio/wav"></audio>
-		<audio id="disgrazie"><source src="suoni/Disgrazie.wav" type="audio/wav"></audio>
-		<audio id="cavallo"><source src="suoni/Cavallo.wav" type="audio/wav"></audio>
-		<audio id="nientediniente"><source src="suoni/Niente_di_niente.wav" type="audio/wav"></audio>
-		<audio id="rilevante"><source src="suoni/Rilevante.wav" type="audio/wav"></audio>
-		<audio id="minatore"><source src="suoni/Minatore.wav" type="audio/wav"></audio>
-		<audio id="mangiafuoco"><source src="suoni/Mangiafuoco.wav" type="audio/wav"></audio>
-		<audio id="perme"><source src="suoni/Per_me.wav" type="audio/wav"></audio>
-		<audio id="nientegrazie"><source src="suoni/Neanche_un_grazie.wav" type="audio/wav"></audio>
+		<audio id="six3"><source src="media/suoni/Si_si_e_si.wav" type="audio/wav"></audio>
+		<audio id="siii"><source src="media/suoni/Siii.wav" type="audio/wav"></audio>
+		<audio id="carica"><source src="media/suoni/Carica.wav" type="audio/wav"></audio>
+		<audio id="ohno"><source src="media/suoni/Oh_no.wav" type="audio/wav"></audio>
+		<audio id="eccomiqua"><source src="media/suoni/Eccomi_qua.wav" type="audio/wav"></audio>
+		<audio id="tombola"><source src="media/suoni/Tombola.wav" type="audio/wav"></audio>
+		<audio id="miodio"><source src="media/suoni/Mio_Dio.wav" type="audio/wav"></audio>
+		<audio id="tuttomio"><source src="media/suoni/Tutto_mio.wav" type="audio/wav"></audio>
+		<audio id="classico"><source src="media/suoni/Classico.wav" type="audio/wav"></audio>
+		<audio id="demone"><source src="media/suoni/Un_demone.wav" type="audio/wav"></audio>
+		<audio id="mostro"><source src="media/suoni/Un_mostro.wav" type="audio/wav"></audio>
+		<audio id="disgrazie"><source src="media/suoni/Disgrazie.wav" type="audio/wav"></audio>
+		<audio id="cavallo"><source src="media/suoni/Cavallo.wav" type="audio/wav"></audio>
+		<audio id="nientediniente"><source src="media/suoni/Niente_di_niente.wav" type="audio/wav"></audio>
+		<audio id="rilevante"><source src="media/suoni/Rilevante.wav" type="audio/wav"></audio>
+		<audio id="minatore"><source src="media/suoni/Minatore.wav" type="audio/wav"></audio>
+		<audio id="mangiafuoco"><source src="media/suoni/Mangiafuoco.wav" type="audio/wav"></audio>
+		<audio id="perme"><source src="media/suoni/Per_me.wav" type="audio/wav"></audio>
 		
 		<h4>Effetti sonori</h4>
 		<p style="text-align: left;">
@@ -93,7 +92,6 @@
 			<button class="btn btn-sm btn-danger mb-1" onclick="suono('rilevante');"><i class="bi bi-play-fill"></i> Rilevante</button>
 			<button class="btn btn-sm btn-danger mb-1" onclick="suono('perme');"><i class="bi bi-play-fill"></i> Per me</button>
 			<button class="btn btn-sm btn-danger mb-1" onclick="suono('minatore');"><i class="bi bi-play-fill"></i> Minatore</button>
-			<button class="btn btn-sm btn-danger mb-1" onclick="suono('nientegrazie');"><i class="bi bi-play-fill"></i> Niente grazie</button>
 			<br>
 			<button class="btn btn-sm btn-warning mb-1" onclick="suono('cavallo');"><i class="bi bi-play-fill"></i> Cavallo</button>
 			<button class="btn btn-sm btn-warning mb-1" onclick="suono('mangiafuoco');"><i class="bi bi-play-fill"></i> Mangiafuoco</button>
