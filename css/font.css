@@ -1,17 +1,17 @@
 
 @font-face {
 	font-family: Vivaldi;
-	src: url('../font/VIVACS.TTF');
+	src: url('font/VIVACS.TTF');
 }
 
 @font-face {
 	font-family: WhiteDream;
-	src: url('../font/WhiteDream.otf');
+	src: url('font/WhiteDream.otf');
 }
 
 @font-face {
 	font-family: Madina;
-	src: url('../font/Madina.ttf');
+	src: url('font/Madina.ttf');
 }
 
 .vivaldi {
