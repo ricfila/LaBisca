@@ -270,7 +270,7 @@ switch ($ajax) {
 		break;
 	case 'caricafoto':
 		if (isset($_FILES['files'])) {
-			$directory = 'foto/' . $id;
+			$directory = 'media/foto/' . $id;
 			if (!is_dir($directory)) {
 				mkdir($directory);
 			}
@@ -312,7 +312,7 @@ switch ($ajax) {
 		break;
 	case 'eliminafoto':
 		if ($files = listafoto($id)) {
-			if (unlink('foto/' . $id . '/' . $files[$indice]))
+			if (unlink('media/foto/' . $id . '/' . $files[$indice]))
 				echo '1';
 		} else {
 			echo 'Nessun file trovato';
@@ -320,7 +320,7 @@ switch ($ajax) {
 		break;
 	case 'rinominafoto':
 		if ($files = listafoto($id)) {
-			if (rename('foto/' . $id . '/' . $files[$indice], 'foto/' . $id . '/' . $nome))
+			if (rename('media/foto/' . $id . '/' . $files[$indice], 'media/foto/' . $id . '/' . $nome))
 				echo '1';
 		} else {
 			echo 'Nessun file trovato';

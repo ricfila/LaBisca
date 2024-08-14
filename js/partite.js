@@ -246,7 +246,7 @@ function modalfoto() {
 			if (this.responseText != '0' && this.responseText != 'null') {
 				foto = this.responseText.split(/\r?\n/);
 				for (let i = 0; i < foto.length - 1; i++) {
-					lista += '<div class="row"><div class="col-auto"><img src="foto/' + id + '/' + foto[i] + '" style="height: 60px; margin-bottom: 10px;"></div><div class="col">' + foto[i] + '<br><span id="elimfoto' + i + '"><button class="btn btn-sm btn-outline-info" onclick="rinfoto(' + i + ');"><i class="bi bi-pencil"></i> Rinomina</button>&nbsp;<button class="btn btn-sm btn-outline-danger" onclick="elimfoto(' + i + ');"><i class="bi bi-trash"></i> Elimina</button></span></div></div>';
+					lista += '<div class="row"><div class="col-auto"><img src="media/foto/' + id + '/' + foto[i] + '" style="height: 60px; margin-bottom: 10px;"></div><div class="col">' + foto[i] + '<br><span id="elimfoto' + i + '"><button class="btn btn-sm btn-outline-info" onclick="rinfoto(' + i + ');"><i class="bi bi-pencil"></i> Rinomina</button>&nbsp;<button class="btn btn-sm btn-outline-danger" onclick="elimfoto(' + i + ');"><i class="bi bi-trash"></i> Elimina</button></span></div></div>';
 				}
 			} else {
 				foto = null;

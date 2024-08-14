@@ -140,7 +140,7 @@ function mostra_partita($row, $edit) {
 			if (count($files) > 0) {
 				$foto = true;
 				for ($i = 0; $i < count($files); $i++) {
-					$outf .= '<div class="carousel-item' . ($i == 0 ? ' active' : '') . '"><img src="foto/' . $id . '/' . $files[$i] . '" class="d-block" style="max-height: 50vh; max-width: 100%;"></div>';
+					$outf .= '<div class="carousel-item' . ($i == 0 ? ' active' : '') . '"><img src="media/foto/' . $id . '/' . $files[$i] . '" class="d-block" style="max-height: 50vh; max-width: 100%;"></div>';
 				}
 				$outf = '<h3 class="text-primary">Foto ricordo</h3><div id="carousel" class="carousel slide" style="padding: 10px; border: 1px solid #8f8f8f;"><div id="carousel-inner" class="carousel-inner" style="background-image: linear-gradient(#d1d1d1, #8f8f8f);">' . $outf . '</div>';
 				if (count($files) > 1)

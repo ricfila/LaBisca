@@ -112,8 +112,8 @@ function processafile($file, $directory, $nomefile = null, $estensioni = null) {
 }
 
 function listafoto($id) {
-	if (is_dir('foto/' . $id)) {
-		$files = scandir('foto/' . $id);
+	if (is_dir('media/foto/' . $id)) {
+		$files = scandir('media/foto/' . $id);
 		array_shift($files);
 		array_shift($files);
 		return $files;
