@@ -7,7 +7,7 @@
 <body><center>
 	<?php echo head(); ?>
 	<div class="container-fluid">
-	<img src="img/Bisca_index.png" height="100px"><br><br>
+	<img src="media/img/Bisca_index.png" height="100px"><br><br>
 	<div class="row"><div class="col-lg-1"></div>
 	<div class="col-sm-8 col-lg-7">
 		<h4 style="padding: 0 40 0 40;">Benvenuti nel sito del <strong style="font-family: Vivaldi; afont-weight: bold; afont-size: 16px; white-space: nowrap;">Giuoco del Due</strong></h4>

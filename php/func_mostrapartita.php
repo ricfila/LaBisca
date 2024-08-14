@@ -85,10 +85,10 @@ function mostra_partita($row, $edit) {
 					$sfondo = 'cerchi_verdi2';
 				}
 			}
-			$out .= '<div class="col border-end border-bottom border-primary sfondo"' . (!empty($sfondo) ? ' style="background-image: url(\'img/gif/' . $sfondo . '.gif\');"' : '') . '>';
+			$out .= '<div class="col border-end border-bottom border-primary sfondo"' . (!empty($sfondo) ? ' style="background-image: url(\'media/img/gif/' . $sfondo . '.gif\');"' : '') . '>';
 
 				$out .= '<div class="row d-none d-md-flex">';
-					$out .= '<div class="col-4 bordo4 pad-alto small pt-1 sfondo"' . (!empty($sfondo) ? ' style="background-image: url(\'img/gif/' . $sfondo . '.gif\');"' : '') . '><i class="d-block' . (!empty($sfondo) ? ' ptsfondo' . ($partita[6][$i][3] == 1 ? ' ptcappotto' : '') : '') . '">' . $parz . '</i></div>';
+					$out .= '<div class="col-4 bordo4 pad-alto small pt-1 sfondo"' . (!empty($sfondo) ? ' style="background-image: url(\'media/img/gif/' . $sfondo . '.gif\');"' : '') . '><i class="d-block' . (!empty($sfondo) ? ' ptsfondo' . ($partita[6][$i][3] == 1 ? ' ptcappotto' : '') : '') . '">' . $parz . '</i></div>';
 					$out .= '<div class="col-8 pad-alto" style="font-size: 20px; background-color: var(--sfondo);"><strong>' . $tot . '</strong></div>';
 				$out .= '</div>';
 				$out .= '<div class="d-md-none">';
@@ -114,7 +114,7 @@ function mostra_partita($row, $edit) {
 		$out .= '<div class="row" style="margin: 0px;"><div class="col-2 col-sm-1"></div>';
 
 		for ($j = 0; $j < 5; $j++) {
-			$out .= '<div class="col no-pad"><img src="img/Medaglia' . $partita[5][$j] . '.png" height="40px"' . (count($partita[0]) < $minimomedaglie ? ' class="img-bn"' : '') . '></div>';
+			$out .= '<div class="col no-pad"><img src="media/img/Medaglia' . $partita[5][$j] . '.png" height="40px"' . (count($partita[0]) < $minimomedaglie ? ' class="img-bn"' : '') . '></div>';
 		}
 		$out .= '</div>';
 		$out .= '<div class="row mt-4"><div class="col-lg-2"></div><div class="col">';
@@ -181,7 +181,7 @@ function mostra_partita($row, $edit) {
 				$min = min($medaglie);
 				$gg = array_keys($medaglie, $min);
 				foreach ($gg as $g) {
-					$out .= '<img src="img/Medaglia' . $min . '.png" height="25px" />&nbsp;' . nomedi($g) . '<br>';
+					$out .= '<img src="media/img/Medaglia' . $min . '.png" height="25px" />&nbsp;' . nomedi($g) . '<br>';
 					unset($medaglie[$g]);
 				}
 			}

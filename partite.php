@@ -120,8 +120,8 @@
 		});
 	}
 	</script>
-	<div id="fulminevecia" style="display: none; width: 100vw; height: 100vh; top: 0; right: 0; z-index: 2000; position: fixed; background-color: #000; background-image: url('img/gif/fulmini_vecia.gif'); background-repeat: no-repeat; background-attachment: fixed; background-position: center; background-size: cover;">
-		<!--img id="imgfulminevecia" src="img/gif/fulmine_vecia2.gif" style="height: 100%;" /-->
+	<div id="fulminevecia" style="display: none; width: 100vw; height: 100vh; top: 0; right: 0; z-index: 2000; position: fixed; background-color: #000; background-image: url('media/img/gif/fulmini_vecia.gif'); background-repeat: no-repeat; background-attachment: fixed; background-position: center; background-size: cover;">
+		<!--img id="imgfulminevecia" src="media/img/gif/fulmine_vecia2.gif" style="height: 100%;" /-->
 	</div>
 </center><?php include "php/bootstrap2.php"; ?></body>
 </html>

@@ -12,7 +12,7 @@
 			$err = "Giuocatore non trovato";
 		} else {
 			if ($res->fetch_assoc()['Password'] != $pwd) {
-				$err = '<img src="img/gif/vecia.gif"><br><strong>Parola chiave erronea</strong>';
+				$err = '<img src="media/img/gif/vecia.gif"><br><strong>Parola chiave erronea</strong>';
 			} else {
 				$durata = time() + (86400 * 365);
 				$posizione = "/";
@@ -83,7 +83,7 @@
 			$('#btnaccedi').show();
 			$('#err').html('');
 		} else {
-			$('#err').html('<img src="img/gif/vecia.gif"><br><strong>Non sei autorizzato ad accedere al sito</strong>');
+			$('#err').html('<img src="media/img/gif/vecia.gif"><br><strong>Non sei autorizzato ad accedere al sito</strong>');
 		}
 	}
 

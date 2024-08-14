@@ -110,7 +110,7 @@ function turno(numero) {
 
 function vecia(check) {
 	if (check) {
-		//$('#imgfulminevecia').attr('src', "").attr('src', "img/gif/fulmine_vecia2.gif?t=" + new Date().getTime());
+		//$('#imgfulminevecia').attr('src', "").attr('src', "media/img/gif/fulmine_vecia2.gif?t=" + new Date().getTime());
 		$('#fulminevecia').css('opacity', '1').show();
 		
 		setTimeout(function() {

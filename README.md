@@ -1,5 +1,5 @@
 # La Bi$ca
-[<img src="https://labisca.altervista.org/img/logo%20bisca.png">](https://labisca.altervista.org)
+[<img src="https://labisca.altervista.org/media/img/logo%20bisca.png">](https://labisca.altervista.org)
 Sito web dedicato all'archiviazione e alla consultazione dei punteggi realizzati al *Giuoco del Due*. Disponibile all'indirizzo https://labisca.altervista.org.
 
 

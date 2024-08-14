@@ -14,7 +14,7 @@ function head() {
 				<div class="row w-100">
 					<div class="col-lg-1"></div>
 					<div class="col text-start">
-						<a class="navbar-brand" href="index.php" style="margin-left: 15px;"><img src="img/Bisca_bianco.png" style="height: 30px;"></a>
+						<a class="navbar-brand" href="index.php" style="margin-left: 15px;"><img src="media/img/Bisca_bianco.png" style="height: 30px;"></a>
 					</div>
 
 					<div class="col text-end pe-0">
@@ -52,7 +52,7 @@ function head() {
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<link rel="icon" type="image/png" href="img/Bisca_icon.png">
+<link rel="icon" type="image/png" href="media/img/Bisca_icon.png">
 <link href="bootstrap-5.3.3-dist/css/bootstrap.min.css" rel="stylesheet" />
 <link href="css/icons/bootstrap-icons.css" rel="stylesheet" />
 <script src="bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>

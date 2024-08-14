@@ -15,7 +15,7 @@ function medagliere_giocatore($medaglie) {
 	$out = '';
 	foreach ($medaglie as $i => $m) {
 		if ($m > 0) {
-			$out .= '<img src="img/Medaglia' . ($i+1) . '.png" height=25px><!--i class="bi bi-x"></i-->' . $m . '&nbsp;&nbsp;';
+			$out .= '<img src="media/img/Medaglia' . ($i+1) . '.png" height=25px><!--i class="bi bi-x"></i-->' . $m . '&nbsp;&nbsp;';
 		}
 	}
 	return $out;

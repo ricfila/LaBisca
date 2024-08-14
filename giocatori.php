@@ -124,12 +124,12 @@
 						$outanno .= ($completo ? '<strong>' : '') . punti($punti) . ($completo ? '</strong>' : '');
 						$med = medaglie($partita);
 						if (isset($med[$id])) {
-							$outanno .= '<img src="img/Medaglia' . $med[$id] . '.png" height=25px>';
+							$outanno .= '<img src="media/img/Medaglia' . $med[$id] . '.png" height=25px>';
 							$medaglie[$med[$id] - 1]++;
 						} else if ($numturni >= $minimomedaglie) {
 							$outanno .= '&nbsp;<i class="bi bi-door-open"></i>&nbsp;';
 						} else {
-							$outanno .= '<img src="img/Medaglia0.png" height=25px>';
+							$outanno .= '<img src="media/img/Medaglia0.png" height=25px>';
 						}
 
 						$chiamate[0] += $partita[3][1][$id]; // Vinte
