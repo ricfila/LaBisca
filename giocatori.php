@@ -66,8 +66,8 @@
 					$last = false;
 					$medaglie = array(0, 0, 0, 0, 0);
 					$medaglietot = array(0, 0, 0, 0, 0);
-					$chiamate = array(0, 0, 0, 0, 0, 0, 0, 0); // Chiamate [0] vinte, [1] perse, [2] patte, [3] in mano, [4] socio, [5] cappotti (sia chiamante che socio), [6] punteggio, [7] turni giocati
-					$chiamatetot = array(0, 0, 0, 0, 0, 0, 0, 0);
+					$chiamate = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); // Chiamate [0] vinte, [1] perse, [2] patte, In mano [3] vinte, [4] perse, [5] patte, Socio [6] vinte, [7] perse, [8] patte, Cappotti (sia chiamante che socio) [9] vinti, [10] persi, [11] punteggio, [12] turni giocati
+					$chiamatetot = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 					while (($row2 = $res2->fetch_assoc()) || !$last) {
 						if ($row2) {
 							$partita = partita($row2['IdPartita']);
@@ -106,7 +106,7 @@
 							$outanno = '';
 							$anno = substr($row2['Data'], 0, 4);
 							$medaglie = array(0, 0, 0, 0, 0);
-							$chiamate = array(0, 0, 0, 0, 0, 0, 0, 0);
+							$chiamate = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 						}
 						
 						$outanno .= '<a class="dropdown-item" href="partite.php?id=' . $row2['IdPartita'] . '"><div class="row">';
@@ -132,14 +132,19 @@
 							$outanno .= '<img src="img/Medaglia0.png" height=25px>';
 						}
 
-						$chiamate[0] += $partita[3][1][$id];
-						$chiamate[1] += $partita[3][2][$id];
-						$chiamate[2] += $partita[3][3][$id];
-						$chiamate[3] += $partita[3][4][$id] + $partita[3][5][$id] + $partita[3][6][$id];
-						$chiamate[4] += $partita[3][10][$id] + $partita[3][11][$id] + $partita[3][12][$id];
-						$chiamate[5] += $partita[3][7][$id] + $partita[3][8][$id] + $partita[3][13][$id] + $partita[3][14][$id];
-						$chiamate[6] += $punti;
-						$chiamate[7] += $turnifatti;
+						$chiamate[0] += $partita[3][1][$id]; // Vinte
+						$chiamate[1] += $partita[3][2][$id]; // Perse
+						$chiamate[2] += $partita[3][3][$id]; // Patte
+						$chiamate[3] += $partita[3][4][$id]; // In mano vinte
+						$chiamate[4] += $partita[3][5][$id]; // In mano perse
+						$chiamate[5] += $partita[3][6][$id]; // In mano patte
+						$chiamate[6] += $partita[3][10][$id]; // Socio vinte
+						$chiamate[7] += $partita[3][11][$id]; // Socio perse
+						$chiamate[8] += $partita[3][12][$id]; // Socio patte
+						$chiamate[9] += $partita[3][7][$id] + $partita[3][13][$id]; // Cappotti vinti
+						$chiamate[10] += $partita[3][8][$id] + $partita[3][14][$id]; // Cappotti persi
+						$chiamate[11] += $punti; // Punteggio
+						$chiamate[12] += $turnifatti; // Turni
 
 						$outanno .= '</div>';
 						$outanno .= '<div class="col-md-1"></div>';
@@ -151,60 +156,87 @@
 					<hr>
 					<h2 class="vivaldi text-center">La carriera del Giuocatore</h2>
 					<div class="row">
-						<div class="col-md my-auto mb-4">
+						<div class="col-md amy-auto mb-4">
 							<div class="row">
 								<div class="col text-end">
 									Bi$che disputate<br>
+									Partite giocate<br>
 									Punteggio realizzato
 								</div>
 								<div class="col">
 									<strong><?php echo $res2->num_rows; ?></strong><br>
-									<strong><?php echo ($chiamatetot[6] >= 0 ? '<span class="text-success">' : '<span class="text-danger">') . punti($chiamatetot[6]) . '</span>'; ?></strong>
+									<strong><i class="bi bi-play-fill"></i>&nbsp;<?php echo $chiamatetot[12]; ?></strong><br>
+									<strong><?php echo ($chiamatetot[11] >= 0 ? '<span class="text-success">' : '<span class="text-danger">') . punti($chiamatetot[11]) . '</span>'; ?></strong>
 								</div>
 							</div>
-							<div class="text-center">Medaglie<br><?php echo medagliere_giocatore($medaglietot); ?></div>
+							<?php if (array_sum($medaglietot) > 0) { ?>
+								<div class="text-center"><h6 class="mt-3">Medaglie</h6><?php echo medagliere_giocatore($medaglietot); ?></div>
+							<?php } ?>
 						</div>
-						<div class="col-md my-auto">
-							<div class="row">
-								<div class="col text-end">Partite giocate</div>
-								<div class="col">
-									<strong class="text-info">
-										<i class="bi bi-play-fill"></i>&nbsp;<?php echo $chiamatetot[7]; ?>
-									</strong>
-								</div>
+						<div class="col-md amy-auto">
+							<div class="text-center">
+								<h6>Chiamate</h6>
+								<strong class="text-success">
+									<i class="bi bi-hand-thumbs-up"></i> <?php echo $chiamatetot[0]; ?>
+								</strong>
+								<?php
+								$sum = $chiamatetot[0] + $chiamatetot[1] + $chiamatetot[2];
+								echo ($sum > 0 ? '<small>(' . floor(($chiamatetot[0] / $sum) * 100) . '%)</small>' : '');
+								?>&nbsp;&nbsp;
+								<strong class="text-danger">
+									<i class="bi bi-hand-thumbs-down"></i>&nbsp;<?php echo $chiamatetot[1]; ?>
+								</strong>&nbsp;&nbsp;
+								<?php if ($chiamatetot[2] > 0) {?>
+									<strong class="text-warning"><i class="bi bi-arrows-collapse"></i>&nbsp;<?php echo $chiamatetot[2]; ?></strong>
+								<?php } ?>
 							</div>
-							<div class="row">
-								<div class="col text-end my-auto">Chiamate</div>
-								<div class="col">
+							
+							<?php if (($chiamatetot[3] + $chiamatetot[4] + $chiamatetot[5]) > 0) { ?>
+								<div class="text-center">
+									<h6 class="mt-3">Chiamate in mano</h6>
 									<strong class="text-success">
-										<i class="bi bi-hand-thumbs-up"></i> <?php echo $chiamatetot[0]; ?>
+										<i class="bi bi-hand-thumbs-up"></i> <?php echo $chiamatetot[3]; ?>
+									</strong>
+									<?php
+									$sum = $chiamatetot[3] + $chiamatetot[4] + $chiamatetot[5];
+									echo ($sum > 0 ? '<small>(' . floor(($chiamatetot[3] / $sum) * 100) . '%)</small>' : '');
+									?>&nbsp;&nbsp;
+									<strong class="text-danger">
+										<i class="bi bi-hand-thumbs-down"></i>&nbsp;<?php echo $chiamatetot[4]; ?>
+									</strong>&nbsp;&nbsp;
+									<?php if ($chiamatetot[5] > 0) {?>
+										<strong class="text-warning"><i class="bi bi-arrows-collapse"></i>&nbsp;<?php echo $chiamatetot[5]; ?></strong>
+									<?php } ?>
+								</div>
+							<?php } ?>
+						</div>
+						<div class="col-md">
+							<div class="text-center">
+								<h6><i class="bi bi-incognito"></i> Alleanze</h6>
+								<strong class="text-success">
+									<i class="bi bi-hand-thumbs-up"></i> <?php echo $chiamatetot[6]; ?>
+								</strong>
+								<?php
+								$sum = $chiamatetot[6] + $chiamatetot[7] + $chiamatetot[8];
+								echo ($sum > 0 ? '<small>(' . floor(($chiamatetot[6] / $sum) * 100) . '%)</small>' : '');
+								?>&nbsp;&nbsp;
+								<strong class="text-danger">
+									<i class="bi bi-hand-thumbs-down"></i>&nbsp;<?php echo $chiamatetot[7]; ?>
+								</strong>&nbsp;&nbsp;
+								<?php if ($chiamatetot[8] > 0) {?>
+									<strong class="text-warning"><i class="bi bi-arrows-collapse"></i>&nbsp;<?php echo $chiamatetot[8]; ?></strong>
+								<?php } ?>
+							</div>
+							
+							<?php if (($chiamatetot[9] + $chiamatetot[10]) > 0) { ?>
+								<div class="text-center">
+									<h6 class="mt-3"><i class="bi bi-star-fill"></i> Cappotti</h6>
+									<strong class="text-success">
+										<i class="bi bi-hand-thumbs-up"></i> <?php echo $chiamatetot[9]; ?>
 									</strong>&nbsp;&nbsp;
 									<strong class="text-danger">
-										<i class="bi bi-hand-thumbs-down"></i>&nbsp;<?php echo $chiamatetot[1]; ?>
+										<i class="bi bi-hand-thumbs-down"></i>&nbsp;<?php echo $chiamatetot[10]; ?>
 									</strong>
-									<?php if ($chiamatetot[2] > 0 || $chiamatetot[3] > 0) echo '<br>';
-									if ($chiamatetot[2] > 0) {?>
-										<strong class="text-warning"><i class="bi bi-arrows-collapse"></i>&nbsp;<?php echo $chiamatetot[2]; ?></strong>
-									<?php } ?>
-									<?php if ($chiamatetot[3] > 0) {?>
-										&nbsp;&nbsp;<strong class="text-info"><i class="bi bi-person-bounding-box"></i>&nbsp;<?php echo $chiamatetot[3]; ?></strong>
-									<?php } ?><br>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col text-end">Alleanze</div>
-								<div class="col">
-									<i class="bi bi-incognito"></i>&nbsp;<strong><?php echo $chiamatetot[4]; ?></strong>
-								</div>
-							</div>
-							<?php if ($chiamatetot[5] > 0) {?>
-								<div class="row">
-									<div class="col text-end">Cappotti</div>
-									<div class="col">
-										<strong class="text-warning">
-											<i class="bi bi-star-fill"></i>&nbsp;<?php echo $chiamatetot[5]; ?>
-										</strong>
-									</div>
 								</div>
 							<?php } ?>
 						</div>
