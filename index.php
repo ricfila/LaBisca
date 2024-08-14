@@ -103,12 +103,12 @@
 			<div class="card-body sfondo m-1" style="border-radius: .4rem;">
 				<p class="card-text">Scarica e stampa le tabelle per segnare i punti su carta:
 				<ul style="text-align: justify;">
-					<li><a href="segnapunti/2023.pdf" target="_blank">Versione 2023</a></li>
-					<li><a href="segnapunti/2023-breve.pdf" target="_blank">Versione 2023 breve</a></li>
-					<li class="linkn"><a href="segnapunti/2023-speciale.pdf" target="_blank">Versione 2023 speciale</a></li>
-					<li class="linkn"><a href="segnapunti/2019.pdf" target="_blank">Versione 2019</a></li>
-					<li class="linkn"><a href="segnapunti/2019-breve.pdf" target="_blank">Versione 2019 breve</a></li>
-					<li class="linkn"><a href="segnapunti/2016.2.2.pdf" target="_blank">Versione 2016</a></li>
+					<li><a href="media/segnapunti/2023.pdf" target="_blank">Versione 2023</a></li>
+					<li><a href="media/segnapunti/2023-breve.pdf" target="_blank">Versione 2023 breve</a></li>
+					<li class="linkn"><a href="media/segnapunti/2023-speciale.pdf" target="_blank">Versione 2023 speciale</a></li>
+					<li class="linkn"><a href="media/segnapunti/2019.pdf" target="_blank">Versione 2019</a></li>
+					<li class="linkn"><a href="media/segnapunti/2019-breve.pdf" target="_blank">Versione 2019 breve</a></li>
+					<li class="linkn"><a href="media/segnapunti/2016.2.2.pdf" target="_blank">Versione 2016</a></li>
 				</ul>
 				<a href="#segnapunti" onclick="togglelink();">Mostra tutti</a>
 				</p>
