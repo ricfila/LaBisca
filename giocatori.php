@@ -56,7 +56,7 @@
 			
 			<div class="row"><div class="col-lg-2"></div><div class="col-lg">
 				<?php
-				$res2 = $conn->query("SELECT * FROM partecipazioni JOIN partite ON partecipazioni.Partita = partite.IdPartita WHERE partecipazioni.Giocatore = $id GROUP BY partite.IdPartita ORDER BY partite.Data desc;");
+				$res2 = $conn->query("SELECT * FROM partecipazioni JOIN partite ON partecipazioni.Partita = partite.IdPartita WHERE partecipazioni.Giocatore = $id GROUP BY partite.IdPartita ORDER BY partite.Data desc, partite.IdPartita desc;");
 				if ($res2->num_rows > 0) {
 					
 					$anno = false;
