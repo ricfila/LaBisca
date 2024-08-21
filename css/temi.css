@@ -25,10 +25,10 @@
 	}/*
 	.btn-outline-primary:hover {
 		color: var(--sfondo);
-	}*/
+	}
 	a.dropdown-item, a.dropdown-item:hover {
 		color: var(--colore-tema)!important;
-	}
+	}*/
 }
 
 body, .sfondo, .sfondo2, .btn, .form-check-input {
@@ -48,7 +48,7 @@ body, .sfondo, .sfondo2, .btn, .form-check-input {
 }
 
 .dropdown-item:hover {
-	color: var(--sfondo2);
+	color: var(--bs-light);
 	background-color: var(--sfondo-dropdown);
 }
 
@@ -57,8 +57,8 @@ a.dropdown-item {
 }
 
 .dropdown-item:focus {
-	background-color: var(--sfondo-dropdown-active);
 	color: var(--bs-light);
+	background-color: var(--sfondo-dropdown-active);
 }
 
 .sfondo {
