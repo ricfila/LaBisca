@@ -34,6 +34,7 @@
 		<audio id="six3"><source src="media/suoni/Si_si_e_si.mp3" type="audio/mp3"></audio>
 		<audio id="siii"><source src="media/suoni/Siii.mp3" type="audio/mp3"></audio>
 		<audio id="carica"><source src="media/suoni/Carica.mp3" type="audio/mp3"></audio>
+		<audio id="ohno"><source src="media/suoni/Oh_no.mp3" type="audio/mp3"></audio>
 		<audio id="eccomiqua"><source src="media/suoni/Eccomi_qua.mp3" type="audio/mp3"></audio>
 		<audio id="tombola"><source src="media/suoni/Tombola.mp3" type="audio/mp3"></audio>
 		<audio id="miodio"><source src="media/suoni/Mio_Dio.mp3" type="audio/mp3"></audio>
@@ -47,6 +48,9 @@
 		<audio id="rilevante"><source src="media/suoni/Rilevante.mp3" type="audio/mp3"></audio>
 		<audio id="minatore"><source src="media/suoni/Minatore.mp3" type="audio/mp3"></audio>
 		<audio id="mangiafuoco"><source src="media/suoni/Mangiafuoco.mp3" type="audio/mp3"></audio>
+		<audio id="zolia"><source src="media/suoni/Zolia_carte.mp3" type="audio/mp3"></audio>
+		<audio id="disonore"><source src="media/suoni/Disonore.mp3" type="audio/mp3"></audio>
+		<audio id="bisbigliare"><source src="media/suoni/Bisbigliare.mp3" type="audio/mp3"></audio>
 		
 		<h4>Effetti sonori</h4>
 		<p style="text-align: left;">
@@ -77,15 +81,19 @@
 			<button class="btn btn-sm btn-success mb-1" onclick="suono('carica');"><i class="bi bi-play-fill"></i> Carica</button>
 			<button class="btn btn-sm btn-success mb-1" onclick="suono('tuttomio');"><i class="bi bi-play-fill"></i> Tutto mio</button>
 			<button class="btn btn-sm btn-success mb-1" onclick="suono('tombola');"><i class="bi bi-play-fill"></i> Tombola</button>
+			<button class="btn btn-sm btn-success mb-1" onclick="suono('bisbigliare');"><i class="bi bi-play-fill"></i> Bisbigliare</button>
 			<br>
+			<button class="btn btn-sm btn-info mb-1" onclick="suono('ohno');"><i class="bi bi-play-fill"></i> Oh no</button>
 			<button class="btn btn-sm btn-info mb-1" onclick="suono('disgrazie');"><i class="bi bi-play-fill"></i> Disgrazie</button>
-			<button class="btn btn-sm btn-info mb-1" onclick="suono('miodio');"><i class="bi bi-play-fill"></i> Mio Dio</button>
 			<button class="btn btn-sm btn-info mb-1" onclick="suono('eccomiqua');"><i class="bi bi-play-fill"></i> Eccomi qua</button>
 			<button class="btn btn-sm btn-info mb-1" onclick="suono('classico');"><i class="bi bi-play-fill"></i> È un classico</button>
+			<button class="btn btn-sm btn-info mb-1" onclick="suono('zolia');"><i class="bi bi-play-fill"></i> Zolia</button>
+			<button class="btn btn-sm btn-info mb-1" onclick="suono('disonore');"><i class="bi bi-play-fill"></i> Disonore</button>
 			<br>
 			<button class="btn btn-sm btn-danger mb-1" onclick="suono('nientediniente');"><i class="bi bi-play-fill"></i> Niente di niente</button>
 			<button class="btn btn-sm btn-danger mb-1" onclick="suono('rilevante');"><i class="bi bi-play-fill"></i> Rilevante</button>
 			<button class="btn btn-sm btn-danger mb-1" onclick="suono('minatore');"><i class="bi bi-play-fill"></i> Minatore</button>
+			<button class="btn btn-sm btn-danger mb-1" onclick="suono('miodio');"><i class="bi bi-play-fill"></i> Mio Dio</button>
 			<br>
 			<button class="btn btn-sm btn-warning mb-1" onclick="suono('cavallo');"><i class="bi bi-play-fill"></i> Cavallo</button>
 			<button class="btn btn-sm btn-warning mb-1" onclick="suono('mangiafuoco');"><i class="bi bi-play-fill"></i> Mangiafuoco</button>
