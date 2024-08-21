@@ -1,7 +1,7 @@
 
 [data-bs-theme=light] {
 	--sfondo: var(--bs-body-bg);
-	--sfondo2: var(--bs-secondary-bg)/*#fafafa*/;
+	--sfondo2: #fafafa;
 	--colore-tema: var(--bs-gray);
 	--colore-titoli: #5a5a5a;
 	--sfondo-dropdown: var(--bs-info);
@@ -10,7 +10,7 @@
 
 [data-bs-theme=dark] {
 	--sfondo: var(--bs-body-bg);
-	--sfondo2: var(--bs-secondary-bg)/*#353a3f*/;
+	--sfondo2: #353a3f;
 	--colore-tema: var(--bs-light);
 	--colore-titoli: var(--bs-white);
 	--sfondo-dropdown: var(--bs-gray-700);
@@ -32,7 +32,7 @@
 }
 
 body, .sfondo, .sfondo2, .btn, .form-check-input {
-	transition: color .3s ease-in-out, background-color .3s ease-in-out, border-color .3s ease-in-out, box-shadow .3s ease-in-out;
+	transition: color .3s ease-in-out, background-color .3s ease-in-out, border-color .3s ease-in-out, box-shadow .3s ease-in-out!important;
 }
 
 .text-tema {
