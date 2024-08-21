@@ -10,7 +10,7 @@
 	<img id="imglogo" height="100px"><br><br>
 	<div class="row"><div class="col-lg-1"></div>
 	<div class="col-sm-8 col-lg-7">
-		<h4 style="padding: 0 40 0 40;">Benvenuti nel sito del <strong style="font-family: Vivaldi; white-space: nowrap;">Giuoco del Due</strong></h4>
+		<h4 style="padding: 0 40 0 40;" class="text-primary">Benvenuti nel sito del <strong style="font-family: Vivaldi; white-space: nowrap;">Giuoco del Due</strong></h4>
 		<p style="text-align: justify;">Il Giuoco del Due è una variante della Briscola per cinque giocatori. Questo sito è stato realizzato per archiviare i punteggi della famiglia Barzon, grande appassionata di questo gioco. La consultazione è aperta a tutti!</p>
 		<?php
 		$proverbi = array(

@@ -29,13 +29,10 @@
 	a.dropdown-item {
 		color: var(--colore-tema)!important;
 	}
-	/*
-	.form-control, .form-control:focus {
-		background-color: var(--sfondo);
-		color: var(--colore-tema)!important;
-		border-color: #7c7c7c;
-	}
-	*/
+}
+
+body, .sfondo, .sfondo2, .btn, .form-check-input {
+	transition: color .3s ease-in-out, background-color .3s ease-in-out, border-color .3s ease-in-out, box-shadow .3s ease-in-out;
 }
 
 .text-tema {
