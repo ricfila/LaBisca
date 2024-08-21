@@ -89,7 +89,7 @@
 				</script>
 				<?php
 			}
-			$res = $conn->query("select * from partite order by Data desc;");
+			$res = $conn->query("SELECT * FROM partite ORDER BY Data desc, IdPartita desc;");
 			if ($res->num_rows > 0) {
 				echo '<div class="row"><div class="col-lg-2"></div><div class="col-lg">';
 				$anno = false;
