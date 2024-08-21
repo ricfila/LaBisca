@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="it-IT" data-bs-theme="auto">
+<html lang="it-IT" data-bs-theme="<?php echo $_COOKIE['tema'] ?: 'auto'; ?>">
 <head>
 	<?php
 	include "php/bootstrap.php";
 	$title = 'L\'almanacco della Bi$ca';
 	if (isset($_GET['id'])) {
 		$id = $conn->real_escape_string(stripslashes($_GET['id']));
-		$res = $conn->query("select * from partite where IdPartita = '$id';");
+		$res = $conn->query("SELECT * FROM partite WHERE IdPartita = '$id';");
 		if ($res->num_rows == 1) {
 			$title = $res->fetch_assoc()['Occasione'] . ' - La Bi$ca';
 		}

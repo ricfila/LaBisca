@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="it-IT" data-bs-theme="auto">
+<html lang="it-IT" data-bs-theme="<?php echo $_COOKIE['tema'] ?: 'auto'; ?>">
 <head>
 	<title>La Bi$ca</title>
 	<?php include "php/bootstrap.php"; ?>
 </head>
-<body><center>
+<body class="text-center">
 	<?php echo head(); ?>
 	<div class="container-fluid">
-	<img src="media/img/Bisca_index.png" height="100px"><br><br>
+	<img id="imglogo" height="100px"><br><br>
 	<div class="row"><div class="col-lg-1"></div>
 	<div class="col-sm-8 col-lg-7">
 		<h4 style="padding: 0 40 0 40;">Benvenuti nel sito del <strong style="font-family: Vivaldi; white-space: nowrap;">Giuoco del Due</strong></h4>
@@ -131,8 +131,33 @@
 		<hr>
 		<h4>Impostazioni</h4>
 		<?php echo checkalias(); ?>
+		<h6 class="mt-3">Tema grafico</h6>
+		<?php
+		$tema = isset($_COOKIE['tema']) ? $_COOKIE['tema'] : 'auto';
+		?>
+		<div class="form-check text-start">
+			<input class="form-check-input" type="radio" name="tema" id="temalight" <?php if ($tema == 'light') echo 'checked'; ?> onchange="if (this.checked) tema('light');">
+			<label class="form-check-label" for="temalight">Tema chiaro</label>
+		</div>
+		<div class="form-check text-start">
+  			<input class="form-check-input" type="radio" name="tema" id="temadark" <?php if ($tema == 'dark') echo 'checked'; ?> onchange="if (this.checked) tema('dark');">
+  			<label class="form-check-label" for="temadark">Tema scuro</label>
+		</div>
+		<div class="form-check text-start">
+  			<input class="form-check-input" type="radio" name="tema" id="temaauto" <?php if ($tema == 'auto') echo 'checked'; ?> onchange="if (this.checked) tema('auto');">
+  			<label class="form-check-label" for="temaauto">Automatico</label>
+		</div>
+
+		<script>
+			function tema(t) {
+				setCookie('tema', t);
+				$('html').attr('data-bs-theme', t);
+				updateTheme();
+			}
+		</script>
 		
 	</div><div class="col-lg-1"></div></div>
 	</div>
-</center></body>
+<?php include "php/bootstrap2.php"; ?>
+</body>
 </html>

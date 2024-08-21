@@ -1,25 +1,21 @@
 
-@media (prefers-color-scheme: light) {
-    :root {
-		--sfondo: #FFF;
-		--sfondo2: #fafafa;
-        --colore-tema: var(--bs-gray);
-		--colore-titoli: #5a5a5a;
-		--sfondo-dropdown: var(--bs-info);
-		--sfondo-dropdown-active: var(--bs-primary);
-    }
+[data-bs-theme=light] {
+	--sfondo: var(--bs-body-bg);
+	--sfondo2: var(--bs-secondary-bg)/*#fafafa*/;
+	--colore-tema: var(--bs-gray);
+	--colore-titoli: #5a5a5a;
+	--sfondo-dropdown: var(--bs-info);
+	--sfondo-dropdown-active: var(--bs-primary);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-		--sfondo: var(--bs-body-bg);
-		--sfondo2: #353a3f;
-        --colore-tema: var(--bs-light);
-		--colore-titoli: var(--bs-white);
-		--sfondo-dropdown: var(--bs-gray-700);
-		--sfondo-dropdown-active: #3a6855;
-    }
-	
+[data-bs-theme=dark] {
+	--sfondo: var(--bs-body-bg);
+	--sfondo2: var(--bs-secondary-bg)/*#353a3f*/;
+	--colore-tema: var(--bs-light);
+	--colore-titoli: var(--bs-white);
+	--sfondo-dropdown: var(--bs-gray-700);
+	--sfondo-dropdown-active: #3a6855;
+    
 	.btn-outline-dark, .btn-outline-dark:hover, .btn-dark, .btn-dark:hover {
 		color: var(--bs-light)!important;
 		border-color: #7c7c7c;

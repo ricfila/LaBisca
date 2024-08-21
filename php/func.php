@@ -51,7 +51,7 @@ function nomecognome($nome, $cognome) {
 }
 
 function checkalias() {
-	$out = '<div class="form-check form-switch" style="text-align: left;"><input class="form-check-input" type="checkbox" value="" id="calias" onchange="alias(this);"' . (isset($_COOKIE['alias']) ? ($_COOKIE['alias'] == 'true' ? 'checked=""': '') : '') . '><label class="form-check-label" for="calias">Visualizza gli alias</label></div>';
+	$out = '<div class="form-check form-switch text-start"><input class="form-check-input" type="checkbox" value="" id="calias" onchange="alias(this);"' . (isset($_COOKIE['alias']) ? ($_COOKIE['alias'] == 'true' ? 'checked=""': '') : '') . '><label class="form-check-label" for="calias">Visualizza gli alias</label></div>';
 	return $out;
 }
 

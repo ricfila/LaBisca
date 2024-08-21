@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it-IT" data-bs-theme="auto">
+<html lang="it-IT" data-bs-theme="<?php echo $_COOKIE['tema'] ?: 'auto'; ?>">
 <head>
 	<title>Sortita - La Bi$ca</title>
 	<?php

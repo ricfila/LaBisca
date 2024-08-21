@@ -19,6 +19,7 @@
 				html: true,
 				customClass: 'tooltip'
 			});
-		});   
+		});
+		aggiornalogo();
 	});
 </script>

@@ -107,14 +107,24 @@ function alias(check) {
 
 ;(function () {
 	const htmlElement = document.querySelector("html")
-	if(htmlElement.getAttribute("data-bs-theme") === 'auto') {
-		function updateTheme() {
-			document.querySelector("html").setAttribute("data-bs-theme",
-			window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-		}
+	if (htmlElement.getAttribute("data-bs-theme") === 'auto') {
 		window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateTheme)
 		updateTheme()
 	}
 })()
 
+function updateTheme() {
+	if (document.querySelector("html").getAttribute("data-bs-theme") === 'auto') {
+		let dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+		document.querySelector("html").setAttribute("data-bs-theme", (dark ? "dark" : "light"))
+	}
+	aggiornalogo();
+}
+
+function aggiornalogo() {
+	let logo = document.querySelector("#imglogo");
+	let dark = document.querySelector("html").getAttribute("data-bs-theme") == "dark";
+	if (logo != null)
+		logo.setAttribute("src", (dark ? 'media/img/Bisca_index_bianco.png' : 'media/img/Bisca_index.png'));
+}
 </script>
