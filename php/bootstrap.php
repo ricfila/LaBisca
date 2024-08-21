@@ -59,10 +59,10 @@ function head() {
 <script src="js/jquery-3.7.1.min.js"></script>
 
 <?php $r = rand(); ?>
-<link href="css/temi.css?d=<?php echo r; ?>" rel="stylesheet" />
-<link href="css/font.css?d=<?php echo r; ?>" rel="stylesheet" />
-<link href="css/partite.css?d=<?php echo r; ?>" rel="stylesheet" />
-<link href="css/generico.css?d=<?php echo r; ?>" rel="stylesheet" />
+<link href="css/temi.css?d=<?php echo $r; ?>" rel="stylesheet" />
+<link href="css/font.css?d=<?php echo $r; ?>" rel="stylesheet" />
+<link href="css/partite.css?d=<?php echo $r; ?>" rel="stylesheet" />
+<link href="css/generico.css?d=<?php echo $r; ?>" rel="stylesheet" />
 
 <script>
 var nomealias = <?php echo ($nomealias == 'Nome' ? '0' : '1'); ?>;
