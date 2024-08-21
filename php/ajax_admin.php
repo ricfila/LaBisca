@@ -15,7 +15,7 @@ $defpwd = '3f8203c18897266bdf30fe6e8b83c469084a79ba4a807edab6fc18e255e54656d631d
 
 switch ($ajax) {
 	case 'resetpwd':
-		if ($conn->query("UPDATE giocatori SET Password = '$pwd' WHERE IdGiocatore = $id;")) {
+		if ($conn->query("UPDATE giocatori SET Password = '$defpwd' WHERE IdGiocatore = $id;")) {
 			echo 1;
 			load_login();
 		} else {

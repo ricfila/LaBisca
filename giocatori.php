@@ -81,7 +81,7 @@
 								$out .= '<div class="row">';
 								$out .= '<div class="col-auto text-start"><h3 class="mb-sm-0">' . $anno . '</h3></div>';
 								$out .= '<div class="col text-end">';
-								$out .= '<h6>Punteggio: <strong>' . punti($chiamate[6]) . '</strong></h6>';
+								$out .= '<h6>Punteggio: <strong>' . punti($chiamate[11]) . '</strong></h6>';
 								$out .= '</div></div>';
 								
 								$out .= '<div class="text-end">' . lista_stat_giocatore($chiamate) . '</div>';
@@ -156,7 +156,7 @@
 					<hr>
 					<h2 class="vivaldi text-center">La carriera del Giuocatore</h2>
 					<div class="row">
-						<div class="col-md amy-auto mb-4">
+						<div class="col-md mb-4">
 							<div class="row">
 								<div class="col text-end">
 									Bi$che disputate<br>
@@ -173,7 +173,7 @@
 								<div class="text-center"><h6 class="mt-3">Medaglie</h6><?php echo medagliere_giocatore($medaglietot); ?></div>
 							<?php } ?>
 						</div>
-						<div class="col-md amy-auto">
+						<div class="col-md mb-4">
 							<div class="text-center">
 								<h6>Chiamate</h6>
 								<strong class="text-success">
@@ -196,11 +196,7 @@
 									<h6 class="mt-3">Chiamate in mano</h6>
 									<strong class="text-success">
 										<i class="bi bi-hand-thumbs-up"></i> <?php echo $chiamatetot[3]; ?>
-									</strong>
-									<?php
-									$sum = $chiamatetot[3] + $chiamatetot[4] + $chiamatetot[5];
-									echo ($sum > 0 ? '<small>(' . floor(($chiamatetot[3] / $sum) * 100) . '%)</small>' : '');
-									?>&nbsp;&nbsp;
+									</strong>&nbsp;&nbsp;
 									<strong class="text-danger">
 										<i class="bi bi-hand-thumbs-down"></i>&nbsp;<?php echo $chiamatetot[4]; ?>
 									</strong>&nbsp;&nbsp;
@@ -272,7 +268,7 @@
 		if (isset($_SESSION['id']) && $_SESSION['editor']) {
 			?>
 			<br><div class="text-center"><button class="btn btn-primary" onclick="aggiungi();"><i class="bi bi-person-plus-fill"></i> Aggiungi un giuocatore</button></div><br><br>
-					
+			
 			<script>
 			function aggiungi() {
 				modal('Aggiungi un giuocatore', 'Nome:<input type="text" class="form-control" id="nome" onkeyup="if(event.keyCode == 13) nuovo();">Alias:<input type="text" class="form-control" id="alias" onkeyup="if(event.keyCode == 13) nuovo();"><span class="text-danger" id="errorenuovo"></span>', '<button type="button" class="btn btn-primary" onclick="nuovo();"><i class="bi bi-check-circle-fill"></i> Salva</button>');
