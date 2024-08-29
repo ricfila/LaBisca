@@ -51,6 +51,7 @@
 		<audio id="zolia"><source src="media/suoni/Zolia_carte.mp3" type="audio/mp3"></audio>
 		<audio id="disonore"><source src="media/suoni/Disonore.mp3" type="audio/mp3"></audio>
 		<audio id="bisbigliare"><source src="media/suoni/Bisbigliare.mp3" type="audio/mp3"></audio>
+		<audio id="chevedo"><source src="media/suoni/Che_vedo.mp3" type="audio/mp3"></audio>
 		
 		<h4>Effetti sonori</h4>
 		<p style="text-align: left;">
@@ -78,6 +79,8 @@
 		<p style="text-align: left;">
 			<button class="btn btn-sm btn-success mb-1" onclick="suono('six3');"><i class="bi bi-play-fill"></i> Sì... sì e sì</button>
 			<button class="btn btn-sm btn-success mb-1" onclick="suono('siii');"><i class="bi bi-play-fill"></i> Sììì</button>
+			<button class="btn btn-sm btn-success mb-1" onclick="suono('zolia');"><i class="bi bi-play-fill"></i> Zolia</button>
+			<button class="btn btn-sm btn-success mb-1" onclick="suono('chevedo');"><i class="bi bi-play-fill"></i> Che vedo</button>
 			<button class="btn btn-sm btn-success mb-1" onclick="suono('carica');"><i class="bi bi-play-fill"></i> Carica</button>
 			<button class="btn btn-sm btn-success mb-1" onclick="suono('tuttomio');"><i class="bi bi-play-fill"></i> Tutto mio</button>
 			<button class="btn btn-sm btn-success mb-1" onclick="suono('tombola');"><i class="bi bi-play-fill"></i> Tombola</button>
@@ -87,7 +90,6 @@
 			<button class="btn btn-sm btn-info mb-1" onclick="suono('disgrazie');"><i class="bi bi-play-fill"></i> Disgrazie</button>
 			<button class="btn btn-sm btn-info mb-1" onclick="suono('eccomiqua');"><i class="bi bi-play-fill"></i> Eccomi qua</button>
 			<button class="btn btn-sm btn-info mb-1" onclick="suono('classico');"><i class="bi bi-play-fill"></i> È un classico</button>
-			<button class="btn btn-sm btn-info mb-1" onclick="suono('zolia');"><i class="bi bi-play-fill"></i> Zolia</button>
 			<button class="btn btn-sm btn-info mb-1" onclick="suono('disonore');"><i class="bi bi-play-fill"></i> Disonore</button>
 			<br>
 			<button class="btn btn-sm btn-danger mb-1" onclick="suono('nientediniente');"><i class="bi bi-play-fill"></i> Niente di niente</button>
