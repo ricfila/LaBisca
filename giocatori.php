@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it-IT" data-bs-theme="<?php echo $_COOKIE['tema'] ?: 'auto'; ?>">
+<html lang="it-IT" data-bs-theme="<?php echo (isset($_COOKIE['tema']) ? $_COOKIE['tema'] : 'auto'); ?>">
 <head>
 	<title>I giocatori della Bi$ca</title>
 	<?php include "php/bootstrap.php"; ?>
