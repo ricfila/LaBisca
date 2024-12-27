@@ -43,7 +43,7 @@
 					'Preparazione', 'Caduta_bomba', 'Impatto', 'Tuono', 'Allarme', 'Un_demone', 'Un_mostro', 'Mio_Dio', 'Psyco', 'Tan_tan_tan'
 				),
 				'film' => array(
-					'Carica', 'Tutto_mio', 'Tombola', 'Bisbigliare', 'Oh_no', 'Disgrazie', 'Eccomi_qua', 'Classico', 'Disonore', 'Niente_di_niente', 'Rilevante', 'Minatore', 'Mangiafuoco'
+					'Carica', 'Oh_no', 'Classico', 'Disonore', 'Eccomi_qua', 'Tombola', 'Mangiafuoco', 'Tutto_mio', 'Disgrazie', 'Niente_di_niente', 'Rilevante', 'Bisbigliare',  'Minatore'
 				)
 			);
 
@@ -72,7 +72,7 @@
 		}
 
 		function suono(nome) {
-			var audio = document.getElementById(nome);
+			let audio = document.getElementById(nome);
 			audio.currentTime = 0;
 			audio.play();
 		}
