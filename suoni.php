@@ -11,28 +11,25 @@
 	<div class="row"><div class="col-lg-1"></div>
 	<div class="col-sm-8 col-lg-7">
 		
-		<audio id="inizio"><source src="media/suoni/mixkit-bonus-extra-in-a-video-game-2064.mp3" type="audio/mp3"></audio>
-		<audio id="punti"><source src="media/suoni/mixkit-player-recharging-in-video-game-2041.mp3" type="audio/mp3"></audio>
-		<audio id="applausi"><source src="media/suoni/mixkit-ending-show-audience-clapping-478.mp3" type="audio/mp3"></audio>
+		<!--audio id="inizio"><source src="media/suoni/Inizio.mp3" type="audio/mp3"></audio>
+		<audio id="punti"><source src="media/suoni/Punti.mp3" type="audio/mp3"></audio>
+		<audio id="applausi"><source src="media/suoni/Applausi.mp3" type="audio/mp3"></audio>
 		<audio id="clacson"><source src="media/suoni/Clacson.mp3" type="audio/mp3"></audio>
 		
-		<audio id="delusione"><source src="media/suoni/mixkit-arcade-space-shooter-dead-notification-272.mp3" type="audio/mp3"></audio>
-		<audio id="fallimento"><source src="media/suoni/mixkit-player-losing-or-failing-2042.mp3" type="audio/mp3"></audio>
-		<audio id="schiaffo"><source src="media/suoni/mixkit-axe-hits-to-a-plate-2774.mp3" type="audio/mp3"></audio>
+		<audio id="delusione"><source src="media/suoni/Delusione.mp3" type="audio/mp3"></audio>
+		<audio id="fallimento"><source src="media/suoni/Fallimento.mp3" type="audio/mp3"></audio>
+		<audio id="schiaffo"><source src="media/suoni/Schiaffo.mp3" type="audio/mp3"></audio>
 		<audio id="trombone"><source src="media/suoni/Trombone.mp3" type="audio/mp3"></audio>
 		
-		<audio id="preparazione"><source src="media/suoni/mixkit-arcade-rising-231.mp3" type="audio/mp3"></audio>
+		<audio id="preparazione"><source src="media/suoni/Preparazione.mp3" type="audio/mp3"></audio>
 		<audio id="psyco"><source src="media/suoni/Psyco.mp3" type="audio/mp3"></audio>
 		<audio id="tantantan"><source src="media/suoni/Tan_tan_tan.mp3" type="audio/mp3"></audio>
 		
-		<audio id="impatto"><source src="media/suoni/mixkit-dramatic-metal-explosion-impact-1687.mp3" type="audio/mp3"></audio>
-		<audio id="cadutabomba"><source src="media/suoni/mixkit-bomb-drop-impact-2804.mp3" type="audio/mp3"></audio>
-		<audio id="esplosione"><source src="media/suoni/mixkit-low-explosion-indoors-2187.mp3" type="audio/mp3"></audio>
-		<audio id="tuono"><source src="media/suoni/mixkit-distant-thunder-explosion-1278.mp3" type="audio/mp3"></audio>
-		<audio id="allarme"><source src="media/suoni/mixkit-facility-alarm-sound-999.mp3" type="audio/mp3"></audio>
+		<audio id="impatto"><source src="media/suoni/Impatto.mp3" type="audio/mp3"></audio>
+		<audio id="cadutabomba"><source src="media/suoni/Caduta_bomba.mp3" type="audio/mp3"></audio>
+		<audio id="tuono"><source src="media/suoni/Tuono.mp3" type="audio/mp3"></audio>
+		<audio id="allarme"><source src="media/suoni/Allarme.mp3" type="audio/mp3"></audio>
 		
-		<audio id="six3"><source src="media/suoni/Si_si_e_si.mp3" type="audio/mp3"></audio>
-		<audio id="siii"><source src="media/suoni/Siii.mp3" type="audio/mp3"></audio>
 		<audio id="carica"><source src="media/suoni/Carica.mp3" type="audio/mp3"></audio>
 		<audio id="ohno"><source src="media/suoni/Oh_no.mp3" type="audio/mp3"></audio>
 		<audio id="eccomiqua"><source src="media/suoni/Eccomi_qua.mp3" type="audio/mp3"></audio>
@@ -48,62 +45,66 @@
 		<audio id="rilevante"><source src="media/suoni/Rilevante.mp3" type="audio/mp3"></audio>
 		<audio id="minatore"><source src="media/suoni/Minatore.mp3" type="audio/mp3"></audio>
 		<audio id="mangiafuoco"><source src="media/suoni/Mangiafuoco.mp3" type="audio/mp3"></audio>
-		<audio id="zolia"><source src="media/suoni/Zolia_carte.mp3" type="audio/mp3"></audio>
 		<audio id="disonore"><source src="media/suoni/Disonore.mp3" type="audio/mp3"></audio>
-		<audio id="bisbigliare"><source src="media/suoni/Bisbigliare.mp3" type="audio/mp3"></audio>
-		<audio id="chevedo"><source src="media/suoni/Che_vedo.mp3" type="audio/mp3"></audio>
+		<audio id="bisbigliare"><source src="media/suoni/Bisbigliare.mp3" type="audio/mp3"></audio-->
+
 		
 		<h4>Effetti sonori</h4>
-		<p style="text-align: left;">
-			<button class="btn btn-sm btn-success mb-1" onclick="suono('inizio');"><i class="bi bi-play-fill"></i> Inizio</button>
-			<button class="btn btn-sm btn-success mb-1" onclick="suono('punti');"><i class="bi bi-play-fill"></i> Punti</button>
-			<button class="btn btn-sm btn-success mb-1" onclick="suono('applausi');"><i class="bi bi-play-fill"></i> Applausi</button>
-			<button class="btn btn-sm btn-success mb-1" onclick="suono('clacson');"><i class="bi bi-play-fill"></i> Clacson</button>
-			<br>
-			<button class="btn btn-sm btn-warning mb-1" onclick="suono('delusione');"><i class="bi bi-play-fill"></i> Delusione</button>
-			<button class="btn btn-sm btn-warning mb-1" onclick="suono('fallimento');"><i class="bi bi-play-fill"></i> Fallimento</button>
-			<button class="btn btn-sm btn-warning mb-1" onclick="suono('schiaffo');"><i class="bi bi-play-fill"></i> Schiaffo</button>
-			<button class="btn btn-sm btn-warning mb-1" onclick="suono('trombone');"><i class="bi bi-play-fill"></i> Trombone</button>
-			<br>
-			<button class="btn btn-sm btn-secondary mb-1" onclick="suono('preparazione');"><i class="bi bi-play-fill"></i> Preparazione</button>
-			<button class="btn btn-sm btn-secondary mb-1" onclick="suono('psyco');"><i class="bi bi-play-fill"></i> Psyco</button>
-			<button class="btn btn-sm btn-secondary mb-1" onclick="suono('tantantan');"><i class="bi bi-play-fill"></i> Tan tan tan</button>
-			<br>
-			<button class="btn btn-sm btn-danger mb-1" onclick="suono('cadutabomba');"><i class="bi bi-play-fill"></i> Caduta bomba</button>
-			<button class="btn btn-sm btn-danger mb-1" onclick="suono('esplosione');"><i class="bi bi-play-fill"></i> Esplosione</button><br>
-			<button class="btn btn-sm btn-dark mb-1" onclick="suono('impatto');"><i class="bi bi-play-fill"></i> Impatto</button>
-			<button class="btn btn-sm btn-dark mb-1" onclick="suono('tuono');"><i class="bi bi-play-fill"></i> Tuono</button>
-			<button class="btn btn-sm btn-dark mb-1" onclick="suono('allarme');"><i class="bi bi-play-fill"></i> Allarme</button>
-		</p>
-		<h4>Voci e versi</h4>
-		<p style="text-align: left;">
-			<button class="btn btn-sm btn-success mb-1" onclick="suono('six3');"><i class="bi bi-play-fill"></i> Sì... sì e sì</button>
-			<button class="btn btn-sm btn-success mb-1" onclick="suono('siii');"><i class="bi bi-play-fill"></i> Sììì</button>
-			<button class="btn btn-sm btn-success mb-1" onclick="suono('zolia');"><i class="bi bi-play-fill"></i> Zolia</button>
-			<button class="btn btn-sm btn-success mb-1" onclick="suono('chevedo');"><i class="bi bi-play-fill"></i> Che vedo</button>
-			<button class="btn btn-sm btn-success mb-1" onclick="suono('carica');"><i class="bi bi-play-fill"></i> Carica</button>
-			<button class="btn btn-sm btn-success mb-1" onclick="suono('tuttomio');"><i class="bi bi-play-fill"></i> Tutto mio</button>
-			<button class="btn btn-sm btn-success mb-1" onclick="suono('tombola');"><i class="bi bi-play-fill"></i> Tombola</button>
-			<button class="btn btn-sm btn-success mb-1" onclick="suono('bisbigliare');"><i class="bi bi-play-fill"></i> Bisbigliare</button>
-			<br>
-			<button class="btn btn-sm btn-info mb-1" onclick="suono('ohno');"><i class="bi bi-play-fill"></i> Oh no</button>
-			<button class="btn btn-sm btn-info mb-1" onclick="suono('disgrazie');"><i class="bi bi-play-fill"></i> Disgrazie</button>
-			<button class="btn btn-sm btn-info mb-1" onclick="suono('eccomiqua');"><i class="bi bi-play-fill"></i> Eccomi qua</button>
-			<button class="btn btn-sm btn-info mb-1" onclick="suono('classico');"><i class="bi bi-play-fill"></i> È un classico</button>
-			<button class="btn btn-sm btn-info mb-1" onclick="suono('disonore');"><i class="bi bi-play-fill"></i> Disonore</button>
-			<br>
-			<button class="btn btn-sm btn-danger mb-1" onclick="suono('nientediniente');"><i class="bi bi-play-fill"></i> Niente di niente</button>
-			<button class="btn btn-sm btn-danger mb-1" onclick="suono('rilevante');"><i class="bi bi-play-fill"></i> Rilevante</button>
-			<button class="btn btn-sm btn-danger mb-1" onclick="suono('minatore');"><i class="bi bi-play-fill"></i> Minatore</button>
-			<button class="btn btn-sm btn-danger mb-1" onclick="suono('miodio');"><i class="bi bi-play-fill"></i> Mio Dio</button>
-			<br>
-			<button class="btn btn-sm btn-warning mb-1" onclick="suono('cavallo');"><i class="bi bi-play-fill"></i> Cavallo</button>
-			<button class="btn btn-sm btn-warning mb-1" onclick="suono('mangiafuoco');"><i class="bi bi-play-fill"></i> Mangiafuoco</button>
-			<button class="btn btn-sm btn-dark mb-1" onclick="suono('demone');"><i class="bi bi-play-fill"></i> Un demone</button>
-			<button class="btn btn-sm btn-dark mb-1" onclick="suono('mostro');"><i class="bi bi-play-fill"></i> Un mostro</button>
+		<div class="text-end">
+			<button class="btn btn-sm btn-outline-dark" onclick="stop();"><i class="bi bi-stop-fill"></i> Ferma tutto</button>
+		</div>
+
+		<ul class="nav nav-tabs" role="tablist">
+			<li class="nav-item" role="presentation">
+				<a class="nav-link active" data-bs-toggle="tab" href="#suoni" aria-selected="true" role="tab"><i class="bi bi-volume-up-fill"></i></a>
+			</li>
+			<li class="nav-item" role="presentation">
+				<a class="nav-link" data-bs-toggle="tab" href="#allarmi" aria-selected="false" role="tab" tabindex="-1"><i class="bi bi-exclamation-triangle-fill"></i></a>
+			</li>
+			<li class="nav-item" role="presentation">
+				<a class="nav-link" data-bs-toggle="tab" href="#film" aria-selected="false" role="tab" tabindex="-1"><i class="bi bi-chat-dots"></i></a>
+			</li>
+			<?php if (isset($_SESSION['id'])) { ?>
+			<li class="nav-item" role="presentation">
+				<a class="nav-link" data-bs-toggle="tab" href="#voci" aria-selected="false" role="tab" tabindex="-1"><i class="bi bi-mic-fill"></i></a>
+			</li>
+			<?php } ?>
+		</ul>
+		<div class="tab-content">
 			
-			<br><br><button class="btn btn-outline-dark" onclick="stop();"><i class="bi bi-stop-fill"></i> Ferma tutto</button>
-		</p>
+			<?php
+			$suoni = array(
+				'suoni' => array(
+					'Inizio', 'Punti', 'Applausi', 'Clacson', 'Delusione', 'Fallimento', 'Schiaffo', 'Trombone', 'Cavallo'
+				),
+				'allarmi' => array(
+					'Preparazione', 'Psyco', 'Tan_tan_tan', 'Caduta_bomba', 'Impatto', 'Tuono', 'Allarme', 'Un_demone', 'Un_mostro', 'Mio_Dio'
+				),
+				'film' => array(
+					'Carica', 'Tutto_mio', 'Tombola', 'Bisbigliare', 'Oh_no', 'Disgrazie', 'Eccomi_qua', 'Classico', 'Disonore', 'Niente_di_niente', 'Rilevante', 'Minatore', 'Mangiafuoco'
+				)
+			);
+
+			if (isset($_SESSION['id'])) {
+				$suoni['voci'] = array(
+					'Si_si_e_si', 'Siii', 'Zolia_carte', 'Che_vedo', 'Falso', 'Par_carita', 'Piacere'
+				);
+			}
+
+			foreach ($suoni as $categoria => $lista) {
+				echo '<div class="tab-pane fade text-start pt-2' . ($categoria == 'suoni' ? ' active show' : '') . '" id="' . $categoria . '" role="tabpanel">';
+				foreach ($lista as $s) {
+					//echo '<div class="col-3">';
+					echo '<audio id="' . $s . '"><source src="media/suoni/' . $s . '.mp3" type="audio/mp3"></audio>';
+					echo '<img src="media/suoni/img/' . $s . '.jpg" onclick="suono(\'' . $s . '\');" class="img_suono" alt="' . $s . '" title="' . $s . '">';
+					//echo '</div>';
+				}
+				echo '</div>';
+			}
+			?>
+		</div>
+
+		
 		
 		
 		<script>
