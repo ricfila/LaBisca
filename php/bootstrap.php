@@ -64,6 +64,18 @@ function head() {
 <link href="css/partite.css?d=<?php echo $r; ?>" rel="stylesheet" />
 <link href="css/generico.css?d=<?php echo $r; ?>" rel="stylesheet" />
 
+<?php
+if (isset($_COOKIE['egg']) ||
+	(date("j") == 1 && date("n") == 4) || // 1 aprile
+	(date("j") == 28 && date("n") == 12) // Santi martiri innocenti
+	) {
+	?>
+	<link href="css/egg.css?d=<?php echo $r; ?>" rel="stylesheet" />
+	<script src="js/egg.js"></script>
+	<?php
+}
+?>
+
 <script>
 var nomealias = <?php echo ($nomealias == 'Nome' ? '0' : '1'); ?>;
 
@@ -128,4 +140,5 @@ function aggiornalogo() {
 	if (logo != null)
 		logo.setAttribute("src", (dark ? 'media/img/Bisca_index_bianco.png' : 'media/img/Bisca_index.png'));
 }
+
 </script>

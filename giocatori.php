@@ -261,7 +261,7 @@
 		}
 	} else {
 		?>
-		<h1 style="font-family: Vivaldi; font-size: 40px;" class="text-center mb-0"><span style="white-space: nowrap;">i Giuocatori</span> <span style="white-space: nowrap;">della tavola rotonda</span></h1>
+		<h1 style="font-family: Vivaldi; font-size: 40px;" class="text-center mb-0 toggle-easter-egg"><span style="white-space: nowrap;">i Giuocatori</span> <span style="white-space: nowrap;">della tavola rotonda</span></h1>
 		<p class="text-center">Di chi vuoi conoscere le epiche gesta?</p>
 		
 		<?php

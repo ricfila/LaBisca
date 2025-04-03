@@ -26,9 +26,11 @@
 				<div class="row">
 					<div class="col-lg-1"></div>
 					<div class="col">
-						<h1 style="font-family: Vivaldi; font-weight: bold; font-size: 70px;" class="d-none d-md-block">il Giuoco del Due</h1>
-						<h1 style="font-family: Vivaldi; font-weight: bold; font-size: 60px;" class="d-none d-sm-block d-md-none">il Giuoco del Due</h1>
-						<h1 style="font-family: Vivaldi; font-weight: bold; font-size: 40px;" class="d-sm-none">il Giuoco del Due</h1>
+						<span class="toggle-easter-egg">
+							<h1 style="font-family: Vivaldi; font-weight: bold; font-size: 70px;" class="d-none d-md-block">il Giuoco del Due</h1>
+							<h1 style="font-family: Vivaldi; font-weight: bold; font-size: 60px;" class="d-none d-sm-block d-md-none">il Giuoco del Due</h1>
+							<h1 style="font-family: Vivaldi; font-weight: bold; font-size: 40px;" class="d-sm-none">il Giuoco del Due</h1>
+						</span>
 						<?php
 						$edit = isset($_SESSION['id']) && $_SESSION['editor'] && isset($_GET['edit']);
 						echo mostra_partita($res->fetch_assoc(), $edit);
@@ -62,7 +64,7 @@
 			}
 		} else {
 			?>
-			<h1 style="font-family: Vivaldi; font-size: 50px;" class="mb-0">Almanacco</h1>
+			<h1 style="font-family: Vivaldi; font-size: 50px;" class="mb-0 toggle-easter-egg">Almanacco</h1>
 			<p>L'archivio dei tornei al Giuoco del Due</p>
 			
 			<?php
