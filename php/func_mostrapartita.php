@@ -14,9 +14,9 @@ function mostra_partita($row, $edit) {
 	
 	// Giocatori
 	$out .= '<div style="position: relative;">';
-	$out .= '<div class="sticky-top" style="top: 55px;"><div class="row m-0" style="background: var(--sfondo);"><div class="col-2 col-sm-1 pad-alto border-end border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
+	$out .= '<div class="sticky-top" style="top: 55px; z-index: 100;"><div class="row m-0" style="background: var(--sfondo);"><div class="col-2 col-sm-1 pad-alto border-end border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
 	foreach ($partita[2][0] as $i => $idg) {
-		$out .= '<div class="col pad-alto border border-start-0 border-primary text-truncate" style="background: var(--sfondo); z-index: 1020; position: relative; height: ' . ($edit ? 31 : 23) . 'px;">';
+		$out .= '<div class="col pad-alto border border-start-0 border-primary text-truncate" style="background: var(--sfondo); position: relative; height: ' . ($edit ? 31 : 23) . 'px;">';
 		if ($idg == null) {
 			if ($edit) {
 				$out .= '<button class="btn btn-warning p-0" style="width: 95%;" onclick="primogioc(' . ($i + 1) . ', false);"><i class="bi bi-person-plus-fill"></i></button>';
@@ -39,7 +39,7 @@ function mostra_partita($row, $edit) {
 	foreach ($partita[0] as $i => $parz) {
 		// Cambi di giocatori
 		if ($i > 0 && isset($partita[2][$i])) {
-			$out .= '<div class="sticky-top" style="pointer-events: none; top: 55px; z-index: ' . (1020 + $i) . ';"><div class="row m-0"><div class="col-2 col-sm-1 pad-alto' . (isset($partita[2][$i][0]) ? ' border-end' : '') . ' border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
+			$out .= '<div class="sticky-top" style="pointer-events: none; top: 55px; z-index: ' . (100 + $i) . '; margin-top: 1px;"><div class="row m-0"><div class="col-2 col-sm-1 pad-alto' . (isset($partita[2][$i][0]) ? ' border-end' : '') . ' border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
 			for ($j = 0; $j < 5; $j++) {
 				if (isset($partita[2][$i][$j])) {
 					$nome = nomedi($partita[2][$i][$j]);
@@ -52,7 +52,7 @@ function mostra_partita($row, $edit) {
 					}
 					$out .= '</div>';
 				} else {
-					$out .= '<div class="col border-bottom' . (isset($partita[2][$i][$j + 1]) != 0 ? ' border-end' : '') . ' border-primary pad-alto"></div>';
+					$out .= '<div class="col border-bottom' . (isset($partita[2][$i][$j + 1]) != 0 ? ' border-end' : '') . ' border-primary pad-alto" style="height: ' . ($edit ? 31 : 23) . 'px;">&nbsp;</div>';
 				}
 			}
 			$out .= '</div></div>';
@@ -64,28 +64,39 @@ function mostra_partita($row, $edit) {
 			$tot = ($totali[$j] > 0 ? '+' : '') . $totali[$j];
 
 			$sfondo = '';
+			$suono = '';
 			if ($partita[6][$i][0] == ($j + 1)) { // È il chiamante
 				if ($partita[6][$i][1] == ($j + 1)) { // Si è autochiamato
 					if ($partita[6][$i][2] == 1 || $partita[6][$i][2] == null) { // Vittoria o pareggio
 						$sfondo = 'cerchi_luce2';
+						$suono = '+4';
 					} else { // Sconfitta
 						$sfondo = 'cimitero';
+						$suono = '-4';
 					}
 				} else { // Chiamata normale
 					if ($partita[6][$i][2] == 1 || $partita[6][$i][2] == null) { // Vittoria o pareggio
 						$sfondo = 'fuoco2';
+						$suono = 'chiamatavinta';
 					} else { // Sconfitta
 						$sfondo = 'fuoco_blu2';
+						$suono = 'chiamatapersa';
 					}
 				}
 			} else if ($partita[6][$i][1] == ($j + 1)) { // È il socio
 				if ($partita[6][$i][4] == 1) { // Vecia
 					$sfondo = 'fulmini2';
+					$suono = 'vecia';
 				} else {
 					$sfondo = 'cerchi_verdi2';
+					$suono = 'socio';
 				}
 			}
-			$out .= '<div class="col border-end border-bottom border-primary sfondo"' . (!empty($sfondo) ? ' style="background-image: url(\'media/img/gif/' . $sfondo . '.gif\');"' : '') . '>';
+			if ($partita[6][$i][3] == 1 && $suono != '+4' && $suono != '-4' && $suono != 'vecia') { // Cappotto
+				$suono = 'cappotto';
+			}
+
+			$out .= '<div class="col border-end border-bottom border-primary sfondo' . (!empty($sfondo) ? ' eggcasella" style="background-image: url(\'media/img/gif/' . $sfondo . '.gif\'); cursor: pointer;" onclick="tableEgg(this, \'' . $suono . '\');"' : '"') . '>';
 
 				$out .= '<div class="row d-none d-md-flex">';
 					$out .= '<div class="col-4 bordo4 pad-alto small pt-1 sfondo"' . (!empty($sfondo) ? ' style="background-image: url(\'media/img/gif/' . $sfondo . '.gif\');"' : '') . '><i class="d-block' . (!empty($sfondo) ? ' ptsfondo' . ($partita[6][$i][3] == 1 ? ' ptcappotto' : '') : '') . '">' . $parz . '</i></div>';
@@ -114,7 +125,7 @@ function mostra_partita($row, $edit) {
 		$out .= '<div class="row" style="margin: 0px;"><div class="col-2 col-sm-1"></div>';
 
 		for ($j = 0; $j < 5; $j++) {
-			$out .= '<div class="col no-pad"><img src="media/img/Medaglia' . $partita[5][$j] . '.png" height="40px"' . (count($partita[0]) < $minimomedaglie ? ' class="img-bn"' : '') . '></div>';
+			$out .= '<div class="col no-pad"><img src="media/img/Medaglia' . $partita[5][$j] . '.png" height="40px" onclick="suonomedaglia(' . $partita[5][$j] . ');"' . (count($partita[0]) < $minimomedaglie ? ' class="img-bn"' : '') . '></div>';
 		}
 		$out .= '</div>';
 		$out .= '<div class="row mt-4"><div class="col-lg-2"></div><div class="col">';
@@ -181,7 +192,7 @@ function mostra_partita($row, $edit) {
 				$min = min($medaglie);
 				$gg = array_keys($medaglie, $min);
 				foreach ($gg as $g) {
-					$out .= '<img src="media/img/Medaglia' . $min . '.png" height="25px" />&nbsp;' . nomedi($g) . '<br>';
+					$out .= '<img src="media/img/Medaglia' . $min . '.png" height="25px" onclick="suonomedaglia(' . $min . ');" />&nbsp;' . nomedi($g) . '<br>';
 					unset($medaglie[$g]);
 				}
 			}

@@ -11,8 +11,6 @@
 		return new bootstrap.Tooltip(tooltipTriggerEl)
 	})
 	*/
-	let toggleclick = 0;
-	
 	$(document).ready(function(){
 		$('[data-bs-toggle="tooltip"]').each(function(i) {
 			let cont = $(this).attr('data-container');
@@ -23,14 +21,5 @@
 			});
 		});
 		aggiornalogo();
-
-		$(".toggle-easter-egg").each(function (i, e) {
-			e.addEventListener("click", function (e) {
-				if (++toggleclick > 4) {
-					setCookie("egg", "true", <?php echo isset($_COOKIE['egg']) ? -1 : 365; ?>);
-					location.reload();
-				}
-			});
-		});
 	});
 </script>

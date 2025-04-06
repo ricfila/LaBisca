@@ -24,3 +24,14 @@
 #randomButton:active {
 	filter: drop-shadow(5px 5px 5px #222) brightness(30%);
 }
+
+#fisarmonica {
+	transition: all .2s ease;
+}
+#fisarmonica:active {
+	filter: brightness(30%);
+}
+
+.eggcasella:active {
+	filter: brightness(30%);
+}

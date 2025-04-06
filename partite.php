@@ -58,6 +58,7 @@
 					var id = <?php echo $id; ?>;
 				</script>
 				<script src="js/partite.js"></script>
+				<script src="js/eggpartite.js"></script>
 				<?php
 			} else {
 				echo 'La partita cercata non esiste.';

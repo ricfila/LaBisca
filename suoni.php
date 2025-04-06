@@ -40,7 +40,7 @@
 					'Inizio', 'Punti', 'Applausi', 'Clacson', 'Delusione', 'Fallimento', 'Schiaffo', 'Trombone', 'Cavallo', 'Attesa'
 				),
 				'allarmi' => array(
-					'Preparazione', 'Caduta_bomba', 'Impatto', 'Tuono', 'Allarme', 'Un_demone', 'Un_mostro', 'Mio_Dio', 'Psyco', 'Tan_tan_tan'
+					'Preparazione', 'Caduta_bomba', 'Impatto', 'Tuono', 'Allarme', 'Un_demone', 'Un_mostro', 'Mio_Dio', 'Psyco', 'Tan_tan_tan', 'Urlo1'
 				),
 				'film' => array(
 					'Carica', 'Oh_no', 'Classico', 'Disonore', 'Eccomi_qua', 'Tombola', 'Mangiafuoco', 'Tutto_mio', 'Disgrazie', 'Niente_di_niente', 'Rilevante', 'Bisbigliare',  'Minatore'
@@ -72,6 +72,7 @@
 		}
 
 		function suono(nome) {
+			if (nome == 'Clacson') zigozago();
 			let audio = document.getElementById(nome);
 			audio.currentTime = 0;
 			audio.play();
@@ -84,6 +85,7 @@
 			});
 		}
 		</script>
+		<script src="js/eggsuoni.js"></script>
 		
 	</div><div class="col-sm-4 col-lg-3"><hr class="d-sm-none" />
 		<h4>La Biscarmonica</h4>
