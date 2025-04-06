@@ -90,16 +90,16 @@
 		
 	</div><div class="col-sm-4 col-lg-3"><hr class="d-sm-none" />
 		<div class="card border-primary bg-primary mb-3">
-			<h4 class="card-header text-white bg-primary">Colonna sonora</h4>
+			<h4 class="card-header text-white bg-primary">La Biscarmonica</h4>
 			<div class="card-body sfondo m-1" style="border-radius: .4rem;">
-				<p class="card-text">Migliora le partite con il giusto accompagnamento musicale.<br>Clicca sul pulsante per accedere alla nostra colonna sonora:</p>
+				<p class="card-text">Migliora le partite con il giusto accompagnamento musicale e divertenti effetti speciali.<br>Scopri la nostra colonna sonora:</p>
 				<a class="btn btn-primary" href="suoni.php"><i class="bi bi-music-note-beamed"></i> Musica</a>
 			</div>
 		</div>
 		
 		<a name="segnapunti"></a>
 		<div class="card border-info bg-info mb-3">
-			<h4 class="card-header text-white bg-info">Segnapunti</h4>
+			<h4 class="card-header text-white bg-info">I segnapunti</h4>
 			<div class="card-body sfondo m-1" style="border-radius: .4rem;">
 				<p class="card-text">Scarica e stampa le tabelle per segnare i punti su carta:
 				<ul style="text-align: justify;">
@@ -110,7 +110,7 @@
 					<li class="linkn"><a href="media/segnapunti/2019-breve.pdf" target="_blank">Versione 2019 breve</a></li>
 					<li class="linkn"><a href="media/segnapunti/2016.2.2.pdf" target="_blank">Versione 2016</a></li>
 				</ul>
-				<a href="#segnapunti" onclick="togglelink();">Mostra tutti</a>
+				<a id="togglesegnapunti" href="#segnapunti" onclick="togglelink();">Mostra tutti</a>
 				</p>
 			</div>
 		</div>
@@ -120,10 +120,13 @@
 			$('.linkn').hide();
 
 			function togglelink() {
-				if (show)
+				if (show) {
 					$('.linkn').hide();
-				else
+					$('#togglesegnapunti').html('Mostra tutti');
+				} else {
 					$('.linkn').show();
+					$('#togglesegnapunti').html('Mostra meno');
+				}
 				show = !show;
 			}
 		</script>
