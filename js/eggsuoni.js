@@ -26,7 +26,7 @@ function zigozago() {
 	t.style.left = (dir == 1 ? -110 : width + 10) + "px";
 	t.style.bottom = road + "px";
 	t.style.transition = "left " + time + "ms linear";
-	t.style.pointerEvents = "none";
+	t.style.pointerEvents = "auto";
 	t.style.cursor = "pointer";
 	document.body.appendChild(t);
 
@@ -79,20 +79,25 @@ setInterval(() => {
 }, 50);
 
 function showExplosion(x, y, dir=0) {
-	let explosion = document.createElement("img");
-	explosion.src = "media/egg/boom.gif?rand=" + Math.random();
+	const explosion = document.createElement("video");
+	explosion.src = "media/egg/boom.webm";
+	explosion.autoplay = true;
+	explosion.muted = true;
+	explosion.playsInline = true;
 	explosion.style.width = "150px";
 	explosion.style.position = "fixed";
 	explosion.style.left = x + "px";
 	explosion.style.bottom = y + "px";
 	explosion.style.zIndex = "10000";
-
+	explosion.style.pointerEvents = "none";
 	explosion.style.transition = "left 1000ms ease-out";
+	explosion.style.objectFit = "contain";
+
+	document.body.appendChild(explosion);
+
 	window.setTimeout(() => {
 		explosion.style.left = (x + dir*window.innerWidth/10) + "px";
 	}, 0);
-
-	document.body.appendChild(explosion);
 
 	setTimeout(() => {
 		explosion.remove();

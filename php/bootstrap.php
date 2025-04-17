@@ -64,17 +64,8 @@ function head() {
 <link href="css/partite.css?d=<?php echo $r; ?>" rel="stylesheet" />
 <link href="css/generico.css?d=<?php echo $r; ?>" rel="stylesheet" />
 
-<?php
-if (isset($_COOKIE['egg']) ||
-	(date("j") == 1 && date("n") == 4) || // 1 aprile
-	(date("j") == 28 && date("n") == 12) // Santi martiri innocenti
-	) {
-	?>
-	<link href="css/egg.css?d=<?php echo $r; ?>" rel="stylesheet" />
-	<script src="js/egg.js"></script>
-	<?php
-}
-?>
+<link href="css/egg.css?d=<?php echo $r; ?>" rel="stylesheet" />
+<script src="js/egg.js"></script>
 
 <script>
 var nomealias = <?php echo ($nomealias == 'Nome' ? '0' : '1'); ?>;
