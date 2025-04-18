@@ -2,11 +2,6 @@
 //https://bootswatch.com/minty/
 
 include "func.php";
-setlocale(LC_TIME, 'it_IT');
-$fmt1 = new IntlDateFormatter('it_IT', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
-$fmt2 = new IntlDateFormatter('it_IT', IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE, null, null, 'd MMM');
-$fmt3 = new IntlDateFormatter('it_IT', IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE, null, null, 'd MMMM');
-//$conn->set_charset("utf-8");
 
 function head() {
 	$out = '<nav class="navbar navbar-expand-sm fixed-top navbar-dark bg-primary" style="height: 56px; z-index: 1050;">

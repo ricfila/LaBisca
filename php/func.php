@@ -4,6 +4,12 @@ include "func_partite.php";
 include "func_mostrapartita.php";
 include "func_giocatori.php";
 
+setlocale(LC_TIME, 'it_IT');
+$fmt1 = new IntlDateFormatter('it_IT', IntlDateFormatter::LONG, IntlDateFormatter::NONE);
+$fmt2 = new IntlDateFormatter('it_IT', IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE, null, null, 'd MMM');
+$fmt3 = new IntlDateFormatter('it_IT', IntlDateFormatter::MEDIUM, IntlDateFormatter::NONE, null, null, 'd MMMM');
+//$conn->set_charset("utf-8");
+
 // Gestione (e ripristino) del login
 session_start();
 if (isset($_COOKIE['login']) && isset($_COOKIE['pwd'])) {
