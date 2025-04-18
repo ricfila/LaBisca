@@ -111,6 +111,32 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 		}
 		$out .= '</div>';
 	}
+
+	// Mostra eventuali cambi giocatori già in programma
+	if ($edit) {
+		$turni = count($partita[0]);
+		$gioc = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio > " . $turni . " ORDER BY Inizio, Colonna;");
+
+		$rowg = $gioc->fetch_assoc();
+		while ($rowg != null) {
+			$out .= '<div class="sticky-top" style="pointer-events: none; top: 55px; z-index: ' . (100 + $turni + $rowg['Inizio']) . '; margin-top: 1px;"><div class="row m-0"><div class="col-2 col-sm-1 pad-alto' . ($rowg['Colonna'] == 1 ? ' border-end' : '') . ' border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
+			$actualrow = $rowg['Inizio'];
+			for ($j = 0; $j < 5; $j++) {
+				if ($rowg != null && $rowg['Colonna'] == $j + 1 && $actualrow == $rowg['Inizio']) {
+					$nome = nomedi($rowg['Giocatore']);
+					$nomi = nomedi($rowg['Giocatore'], true);
+					$out .= '<div class="col pad-alto border-end border-bottom border-primary text-truncate" style="pointer-events: auto; background: var(--sfondo); position: relative; height: ' . 31 . 'px;">';
+					$out .= '<button class="btn btn-outline-dark btn-sm atext-truncate" style="width: 100%; padding: 2px 0px;" onclick="modalannullacambio(' . $rowg['Inizio'] . ', ' . $rowg['Colonna'] . ', [\'' . addslashes($nomi[0]) . '\', \'' . addslashes($nomi[1]) . '\']);">&nbsp;<span class="longx">' . $nome . '</span></button>';
+					$out .= '</div>';
+
+					$rowg = $gioc->fetch_assoc();
+				} else {
+					$out .= '<div class="col border-bottom' . ($rowg != null && $rowg['Colonna'] == $j + 2 ? ' border-end' : '') . ' border-primary pad-alto" style="height: ' . 31 . 'px;">&nbsp;</div>';
+				}
+			}
+			$out .= '</div></div>';
+		}
+	}
 	
 	// Conclusioni
 	if (count($partita[0]) > 0) {
