@@ -158,7 +158,6 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 		$out .= '<div class="form-check form-switch d-md-none" style="text-align: left;"><input class="form-check-input" type="checkbox" value="" id="cparziali" onchange="parziali(this);"' . (isset($_COOKIE['parziali']) ? ($_COOKIE['parziali'] == 'true' ? 'checked=""': '') : 'checked=""') . '><label class="form-check-label" for="cparziali">Punteggi parziali</label></div>';
 		$out .= checkalias();
 		$out .= '</div><div class="col-auto">';
-		$out .= ($edit ? '<a class="btn btn-sm btn-info" target="_blank" href="suoni.php"><i class="bi bi-music-note-beamed"></i> Musica</a>' : '');
 		$out .= '</div><div class="col-lg-2"></div></div>';
 	}
 	
