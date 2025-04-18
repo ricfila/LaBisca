@@ -31,11 +31,12 @@ function salvainfo() {
 	var note = document.getElementById('note').value;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (isNaN(parseInt(this.responseText))) {
-				document.getElementById('erroreinfo').innerHTML = this.responseText;
+		if (this.readyState == 4) {
+			if (this.status == 200) {
+				chiudi();
+				mostrapartita(this.responseText);
 			} else {
-				window.location.href = 'partite.php?id=' + id + '&edit=true';
+				document.getElementById('erroreinfo').innerHTML = this.responseText;
 			}
 		}
 	};
@@ -75,7 +76,8 @@ function salvagioc(idg) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			location.reload();
+			chiudi();
+			mostrapartita(this.responseText);
 		}
 	};
 	xhttp.open("POST", "php/ajax.php", true);
@@ -154,11 +156,18 @@ function salvaturno(numero) {
 	} else {
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
-			if (this.readyState == 4 && this.status == 200) {
-				if (isNaN(parseInt(this.responseText))) {
-					document.getElementById('erroreturno').innerHTML = this.responseText;
+			if (this.readyState == 4) {
+				if (this.status == 200) {
+					let json = JSON.parse(this.responseText);
+					chiudi();
+					mostrapartita(json.partita);
+					audioEgg.src = "media/egg/" + (codice.charAt(2) == '0' ? 'chiamatapersa' : 'chiamatavinta') + ".mp3";
+					audioEgg.paused && audioEgg.play();
+					//document.getElementById("riga" + json.numero).scrollIntoView();
+					let scrollDiv = document.getElementById("riga" + json.numero).offsetTop;
+					window.scrollTo({ top: scrollDiv-(window.innerHeight/5), behavior: 'smooth'});
 				} else {
-					location.reload();
+					document.getElementById('erroreturno').innerHTML = this.responseText;
 				}
 			}
 		};
@@ -173,7 +182,8 @@ function spostaturno(numero) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			location.reload();
+			chiudi();
+			mostrapartita(this.responseText);
 		}
 	};
 	xhttp.open("POST", "php/ajax.php", true);
@@ -189,7 +199,8 @@ function eliminaturno(numero) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
 		if (this.readyState == 4 && this.status == 200) {
-			location.reload();
+			chiudi();
+			mostrapartita(this.responseText);
 		}
 	};
 	xhttp.open("POST", "php/ajax.php", true);
@@ -223,11 +234,12 @@ function modalannullacambio(inizio, colonna, nome) {
 function annullacambio(inizio, colonna) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (isNaN(parseInt(this.responseText))) {
-				document.getElementById('erroreannulla').innerHTML = this.responseText;
+		if (this.readyState == 4) {
+			if (this.status == 200) {
+				chiudi();
+				mostrapartita(this.responseText);
 			} else {
-				location.reload();
+				document.getElementById('erroreannulla').innerHTML = this.responseText;
 			}
 		}
 	};
@@ -332,11 +344,12 @@ function salvaturni() {
 	var codici = document.getElementById("codici").value;
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			if (isNaN(parseInt(this.responseText))) {
-				document.getElementById('erroreturni').innerHTML = this.responseText;
+		if (this.readyState == 4) {
+			if (this.status == 200) {
+				chiudi();
+				mostrapartita(this.responseText);
 			} else {
-				location.reload();
+				document.getElementById('erroreturni').innerHTML = this.responseText;
 			}
 		}
 	};
@@ -359,4 +372,8 @@ function eliminapartita() {
 	xhttp.open("POST", "php/ajax_admin.php", true);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.send("ajax=eliminapartita&id=" + id);
+}
+
+function mostrapartita(text) {
+	$('#partita').html(text);
 }

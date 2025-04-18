@@ -45,8 +45,9 @@ switch ($ajax) {
 	break;
 	case 'salvainfopartita':
 		if ($conn->query("update partite Set Occasione = '$occasione', Data = '$data', Note = '$note' where IdPartita = $id;")) {
-			echo 1;
+			echo mostra_partita($id, true);
 		} else {
+			http_response_code(500);
 			echo 'Impossibile aggiornare.' . ($_SESSION['admin'] ? ' ' . $conn->error : '');
 		}
 		break;
@@ -114,6 +115,7 @@ switch ($ajax) {
 			}
 			$cols = array($colonna, $colonna2);
 			foreach ($cols as $i => $col) {
+				if ($col == null) continue;
 				$res = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Colonna = $col order by Inizio;");
 				$gioc = 0;
 				while ($row = $res->fetch_assoc()) {
@@ -125,14 +127,15 @@ switch ($ajax) {
 				}
 			}
 		}
+		echo mostra_partita($id, true);
 		break;
 	case 'modalturno':
 		$nuovo = false;
 		if ($numero == 'null') {
 			$nuovo = true;
-			$numero = $conn->query("select * from mani where Partita = $id;")->num_rows + 1;
+			$numero = $conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows + 1;
 		}
-		$resg = $conn->query("select * from partecipazioni where Partita = $id and Inizio <= $numero order by Inizio desc;");
+		$resg = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio <= $numero ORDER BY Inizio DESC;");
 		if ($resg->num_rows > 4) {
 			$gioc = array(null, null, null, null, null);
 			while (in_array(null, $gioc)) {
@@ -144,21 +147,22 @@ switch ($ajax) {
 				}
 			}
 			if (!$nuovo) {
-				$mano = $conn->query("select * from mani where Partita = $id and Numero = $numero;")->fetch_assoc();
+				$mano = $conn->query("SELECT * FROM mani WHERE Partita = $id AND Numero = $numero;")->fetch_assoc();
 				$nuovo = $mano == null;
 			}
-			echo 'Chiamante:<br><div class="btn-group" role="group" style="padding: 5px; width: 100%; overflow-x: auto;">';
+			echo '<div class="row mb-2"><div class="col">';
+			echo '<strong>Chiamante:</strong><br><div class="btn-group-vertical mt-1 w-100" role="group">';
 			foreach ($gioc as $i => $idg) {
 				echo '<input type="radio" class="btn-check chiamante" name="chiamante" id="c' . $idg . '" autocomplete="off"' . (!$nuovo ? ($mano['Chiamante'] == ($i + 1) ? ' checked=""' : '') : '') . ' onchange="checkcodice(\'' . ($i + 1) . 'nnn\');"><label class="btn btn-outline-dark btn-sm" for="c' . $idg . '">' . nomedi($idg) . '</label>';
 			}
-			echo '</div><br><br>';
-			echo 'Socio:<br><div class="btn-group" role="group" style="padding: 5px; width: 100%; overflow-x: auto;">';
+			echo '</div></div><div class="col">';
+			echo '<strong>Socio:</strong><br><div class="btn-group-vertical mt-1 w-100" role="group">';
 			foreach ($gioc as $i => $idg) {
 				echo '<input type="radio" class="btn-check socio" name="socio" id="s' . $idg . '" autocomplete="off"' . (!$nuovo ? ($mano['Socio'] == ($i + 1) ? ' checked=""' : '') : '') . ' onchange="checkcodice(\'n' . ($i + 1) . 'nn\');"><label class="btn btn-outline-dark btn-sm" for="s' . $idg . '">' . nomedi($idg) . '</label>';
 			}
-			echo '</div><br><br>';
+			echo '</div></div></div>';
 			
-			echo 'La chiamata è stata:<div class="row">';
+			echo '<strong>La chiamata è stata:</strong><div class="row">';
 			echo '<div class="col my-auto">';
 			echo '<div class="form-check"><label class="form-check-label"><input type="radio" class="form-check-input" name="vittoria" id="vinta" value="1"' . (!$nuovo ? ($mano['Vittoria'] == 1 ? ' checked=""' : '') : '') . ' onchange="checkcodice(\'nn1n\');">Vinta</label></div>';
 			echo '<div class="form-check"><label class="form-check-label"><input type="radio" class="form-check-input" name="vittoria" id="persa" value="0"' . (!$nuovo ? ($mano['Vittoria'] == 0 ? ' checked=""' : '') : '') . ' onchange="checkcodice(\'nn0n\');">Persa</label></div>';
@@ -171,10 +175,10 @@ switch ($ajax) {
 			echo '</div>';
 			echo '</div><br>';
 			
-			echo '<div class="row"><div class="col-auto">Codice:</div>';
-			echo '<div class="col"><input type="text" class="form-control" id="codice"' . (!$nuovo ? ' value="' . $mano['Chiamante'] . $mano['Socio'] . ($mano['Vittoria'] == null ? '--' : $mano['Vittoria'] . $mano['Cappotto']) . '"' : '') . ' onkeyup="if(event.keyCode == 13) salvaturno(' . ($nuovo ? '\'nuovo\'' : $numero) . ');"></div></div>';
+			echo '<div class="row"><div class="col-auto my-auto"><strong>Codice:</strong></div>';
+			echo '<div class="col"><input type="text" class="form-control m-0" id="codice"' . (!$nuovo ? ' value="' . $mano['Chiamante'] . $mano['Socio'] . ($mano['Vittoria'] == null ? '--' : $mano['Vittoria'] . $mano['Cappotto']) . '"' : '') . ' onkeyup="if(event.keyCode == 13) salvaturno(' . ($nuovo ? '\'nuovo\'' : $numero) . ');"></div></div>';
 			if (!$nuovo) {
-				echo '<hr><div class="input-group mb-3"><button class="btn btn-sm btn-info" onclick="spostaturno(' . $numero . ');"><i class="bi bi-arrow-down-up"></i> Sposta in posizione</button><input class="form-control" type="number" min="1" max="' . $conn->query("select * from mani where Partita = $id;")->num_rows . '" id="posizione" style="margin: 0px;" value="' . $numero . '"></div>';
+				echo '<hr><div class="input-group mb-3"><button class="btn btn-sm btn-info" onclick="spostaturno(' . $numero . ');"><i class="bi bi-arrow-down-up"></i> Sposta in posizione</button><input class="form-control" type="number" min="1" max="' . $conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows . '" id="posizione" style="margin: 0px;" value="' . $numero . '"></div>';
 				echo '<button class="btn btn-danger" onclick="modalelimina('. $numero . ');"><i class="bi bi-trash"></i> Elimina questo turno</button><br>';
 			}
 			echo '<span class="text-danger" id="erroreturno"></span>';
@@ -188,55 +192,66 @@ switch ($ajax) {
 		$vittoria = (substr($codice, 2, 1) == '-' ? "null" : substr($codice, 2, 1));
 		$cappotto = (substr($codice, 3, 1) == '-' ? "null" : substr($codice, 3, 1));
 		if ($numero == 'nuovo') {
-			if ($conn->query("INSERT INTO mani (Partita, Numero, Chiamante, Socio, Vittoria, Cappotto, Vecia) VALUES ($id, " . ($conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows + 1) . ", $chiamante, $socio, $vittoria, $cappotto, $vecia);")) {
-				echo 1;
+			$numero = $conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows + 1;
+			if ($conn->query("INSERT INTO mani (Partita, Numero, Chiamante, Socio, Vittoria, Cappotto, Vecia) VALUES ($id, " . $numero . ", $chiamante, $socio, $vittoria, $cappotto, $vecia);")) {
+				echo json_encode(array('numero' => $numero, 'partita' => mostra_partita($id, true, $numero)));
 			} else {
+				http_response_code(500);
 				echo $conn->error;
 			}
 		} else {
 			if ($conn->query("UPDATE mani SET Chiamante = $chiamante, Socio = $socio, Vittoria = $vittoria, Cappotto = $cappotto, Vecia = $vecia WHERE Partita = $id AND Numero = $numero;")) {
-				echo 1;
+				echo json_encode(array('numero' => $numero, 'partita' => mostra_partita($id, true, $numero)));
 			} else {
+				http_response_code(500);
 				echo $conn->error;
 			}
 		}
 		break;
 	case 'salvaturni':
 		$turni = explode(" ", $codici);
+		$ok = true;
 		foreach ($turni as $i => $codice) {
 			$chiamante = substr($codice, 0, 1);
 			$socio = substr($codice, 1, 1);
 			$vittoria = (substr($codice, 2, 1) == '-' ? "null" : substr($codice, 2, 1));
 			$cappotto = (substr($codice, 3, 1) == '-' ? "null" : substr($codice, 3, 1));
-			if ($conn->query("insert into mani (Partita, Numero, Chiamante, Socio, Vittoria, Cappotto) values ($id, " . ($conn->query("select * from mani where Partita = $id;")->num_rows + 1) . ", $chiamante, $socio, $vittoria, $cappotto);")) {
-				echo 1;
-			} else {
-				echo $conn->error;
+			if (!$conn->query("INSERT INTO mani (Partita, Numero, Chiamante, Socio, Vittoria, Cappotto) VALUES ($id, " . ($conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows + 1) . ", $chiamante, $socio, $vittoria, $cappotto);")) {
+				$ok = false;
+				break;
 			}
+		}
+		if ($ok) {
+			echo mostra_partita($id, true);
+		} else {
+			http_response_code(500);
+			echo $conn->error;
 		}
 		break;
 	case 'spostaturno':
-		$turni = $conn->query("select * from mani where Partita = $id;")->num_rows;
+		$turni = $conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows;
 		if ($posizione <= $turni && $posizione != $numero) {
-			$conn->query("update mani set Numero = " . ($turni + 1) . " where Partita = $id and Numero = $numero;");
+			$conn->query("UPDATE mani SET Numero = " . ($turni + 1) . " WHERE Partita = $id AND Numero = $numero;");
 			if ($posizione < $numero) {
 				for ($i = $numero; $i > $posizione; $i--) {
-					$conn->query("update mani set Numero = $i where Partita = $id and Numero = " . ($i - 1) . ";");
+					$conn->query("UPDATE mani SET Numero = $i WHERE Partita = $id AND Numero = " . ($i - 1) . ";");
 				}
 			} else {
 				for ($i = $numero; $i < $posizione; $i++) {
-					$conn->query("update mani set Numero = $i where Partita = $id and Numero = " . ($i + 1) . ";");
+					$conn->query("UPDATE mani SET Numero = $i WHERE Partita = $id AND Numero = " . ($i + 1) . ";");
 				}
 			}
-			$conn->query("update mani set Numero = $posizione where Partita = $id and Numero = " . ($turni + 1) . ";");
+			$conn->query("UPDATE mani SET Numero = $posizione WHERE Partita = $id AND Numero = " . ($turni + 1) . ";");
 		}
+		echo mostra_partita($id, true);
 		break;
 	case 'eliminaturno':
-		$turni = $conn->query("select * from mani where Partita = $id;")->num_rows;
-		$conn->query("delete from mani where Partita = $id and Numero = $numero;");
+		$turni = $conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows;
+		$conn->query("DELETE FROM mani WHERE Partita = $id AND Numero = $numero;");
 		for ($i = $numero; $i < $turni; $i++) {
-			$conn->query("update mani set Numero = $i where Partita = $id and Numero = " . ($i + 1) . ";");
+			$conn->query("UPDATE mani SET Numero = $i WHERE Partita = $id AND Numero = " . ($i + 1) . ";");
 		}
+		echo mostra_partita($id, true);
 		break;
 	case 'modalcambio':
 		$resg = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id;");
@@ -251,20 +266,21 @@ switch ($ajax) {
 		}
 		break;
 	case 'annullacambio':
-		if ($conn->query("delete from partecipazioni where Partita = $id and Inizio = $inizio and Colonna = $colonna;")) {
-			$res = $conn->query("select * from partecipazioni where Partita = $id and Inizio < $inizio order by Inizio;");
+		if ($conn->query("DELETE FROM partecipazioni WHERE Partita = $id AND Inizio = $inizio AND Colonna = $colonna;")) {
+			$res = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio < $inizio ORDER BY Inizio;");
 			$gioc = array(null, null, null, null, null);
 			while ($row = $res->fetch_assoc()) {
 				$gioc[$row['Colonna'] - 1] = $row['Giocatore'];
 			}
-			$res = $conn->query("select * from partecipazioni where Partita = $id and Inizio = $inizio;");
+			$res = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio = $inizio;");
 			while ($row = $res->fetch_assoc()) {
 				if (in_array($row['Giocatore'], $gioc)) {
-					$conn->query("delete from partecipazioni where Partita = $id and Inizio = $inizio and Giocatore = " . $row['Giocatore'] . ";");
+					$conn->query("DELETE FROM partecipazioni WHERE Partita = $id AND Inizio = $inizio AND Giocatore = " . $row['Giocatore'] . ";");
 				}
 			}
-			echo 1;
+			echo mostra_partita($id, true);
 		} else {
+			http_response_code(500);
 			echo $conn->error;
 		}
 		break;

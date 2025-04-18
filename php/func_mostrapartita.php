@@ -1,14 +1,14 @@
 <?php
 
-function mostra_partita($row, $edit) {
+function mostra_partita($id, $edit, $nuovariga = false) {
 	global $conn, $fmt1, $minimomedaglie;
-	$id = $row['IdPartita'];
+	$res = $conn->query("SELECT * FROM partite WHERE IdPartita = $id;");
+	$row = $res->fetch_assoc();
 	$partita = partita($id);
 	$out = '';
 
 	// Incipit
-	$out .= '<div id="partita">';
-	$out .= '<div class="row"><div class="col-md-9"><h5 style="text-align: left;">Bi$ca in occasione di: <strong><i id="occasione0">' . $row['Occasione'] . '</i></strong>' . (isset($_SESSION['id']) && $_SESSION['editor'] ? ($edit ? '&nbsp;<button class="btn btn-primary btn-sm" onclick="info();"><i class="bi bi-pencil-fill"></i></button>&nbsp;<a href="partite.php?id=' . $id . '" class="btn btn-info btn-sm"><i class="bi bi-eye-fill"></i> Torna alla visualizzazione</a>' : '&nbsp;<a href="partite.php?id=' . $id . '&edit=true" class="btn btn-primary btn-sm"><i class="bi bi-pencil-fill"></i> Modifica la partita</a>') : '') . '</h5></div>';
+	$out .= '<div class="row"><div class="col-md-9"><h5 style="text-align: left;">Bi$ca in occasione di: <strong><i id="occasione0">' . $row['Occasione'] . '</i></strong>' . ($edit ? '&nbsp;<button class="btn btn-primary btn-sm" onclick="info();"><i class="bi bi-pencil-fill"></i></button>' : '') . '</h5></div>';
 	$out .= '<div class="col-md-3"><h5 style="text-align: right;">' . $fmt1->format(strtotime($row['Data'])) . '</h5><span class="d-none" id="data0">' . date("o-m-d", strtotime($row['Data'])) . '</span></div></div>';
 	$out .= '<hr>';
 	
@@ -57,7 +57,7 @@ function mostra_partita($row, $edit) {
 			}
 			$out .= '</div></div>';
 		}
-		$out .= '<div class="row m-0"><div class="col-2 col-sm-1 border-end border-primary pad-alto pe-2 text-end">' . ($edit ? '<button class="btn btn-primary no-pad" style="width: 90%;" onclick="turno(' . ($i + 1) . ');">' : '') . '<i class="bi bi-hash"></i>' . ($i + 1) . ($edit ? '</button>' : '') . '</div>';
+		$out .= '<div id="riga' . ($i + 1) . '" class="row m-0 rigatabella' . ($nuovariga == $i + 1 ? ' nuovariga' : '') . '"><div class="col-2 col-sm-1 border-end border-primary pad-alto pe-2 text-end">' . ($edit ? '<button class="btn btn-primary no-pad" style="width: 90%;" onclick="turno(' . ($i + 1) . ');">' : '') . '<i class="bi bi-hash"></i>' . ($i + 1) . ($edit ? '</button>' : '') . '</div>';
 		for ($j = 0; $j < 5; $j++) {
 			$totali[$j] += $partita[0][$i][$j];
 			$parz = ($partita[0][$i][$j] > 0 ? '+' : '') . $partita[0][$i][$j];
@@ -96,9 +96,9 @@ function mostra_partita($row, $edit) {
 				$suono = 'cappotto';
 			}
 
-			$out .= '<div class="col border-end border-bottom border-primary sfondo' . (!empty($sfondo) ? ' eggcasella" style="background-image: url(\'media/img/gif/' . $sfondo . '.gif\'); cursor: pointer;" onclick="tableEgg(this, \'' . $suono . '\');"' : '"') . '>';
+			$out .= '<div class="col border-end border-bottom border-primary sfondo' . (!empty($sfondo) ? ' eggcasella" style="background-image: url(\'media/img/gif/' . $sfondo . '.gif\'); cursor: pointer; height: inherit; overflow: hidden;" onclick="tableEgg(this, \'' . $suono . '\');"' : '"') . '>';
 
-				$out .= '<div class="row d-none d-md-flex">';
+				$out .= '<div class="row d-none d-md-flex" style="height: inherit;">';
 					$out .= '<div class="col-4 bordo4 pad-alto small pt-1 sfondo"' . (!empty($sfondo) ? ' style="background-image: url(\'media/img/gif/' . $sfondo . '.gif\');"' : '') . '><i class="d-block' . (!empty($sfondo) ? ' ptsfondo' . ($partita[6][$i][3] == 1 ? ' ptcappotto' : '') : '') . '">' . $parz . '</i></div>';
 					$out .= '<div class="col-8 pad-alto" style="font-size: 20px; background-color: var(--sfondo);"><strong>' . $tot . '</strong></div>';
 				$out .= '</div>';
@@ -219,7 +219,6 @@ function mostra_partita($row, $edit) {
 		}
 	}
 	$out .= '</div><div class="col-lg-2"></div></div>';
-	$out .= '</div>';
 	
 	return $out;
 }

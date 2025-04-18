@@ -22,6 +22,8 @@
 			$id = $conn->real_escape_string(stripslashes($_GET['id']));
 			$res = $conn->query("SELECT * FROM partite WHERE IdPartita = $id;");
 			if ($res->num_rows == 1) {
+				$logged = isset($_SESSION['id']) && $_SESSION['editor'];
+				$edit = $logged && isset($_GET['edit']);
 				?>
 				<div class="row">
 					<div class="col-lg-1"></div>
@@ -31,9 +33,20 @@
 							<h1 style="font-family: Vivaldi; font-weight: bold; font-size: 60px;" class="d-none d-sm-block d-md-none">il Giuoco del Due</h1>
 							<h1 style="font-family: Vivaldi; font-weight: bold; font-size: 40px;" class="d-sm-none">il Giuoco del Due</h1>
 						</span>
+
+						<div id="partita" class="mb-4">
+							<?php echo mostra_partita($id, $edit); ?>
+						</div>
+
 						<?php
-						$edit = isset($_SESSION['id']) && $_SESSION['editor'] && isset($_GET['edit']);
-						echo mostra_partita($res->fetch_assoc(), $edit);
+						// Pulsante modifica/torna in visualizzazione
+						if ($logged) {
+							?>
+							<div style="position: fixed; bottom: 10px; right: 10px;">
+								<a class="btn btn-lg btn-<?php echo ($edit ? 'info' : 'success'); ?>" href="partite.php?id=<?php echo $id . (!$edit ? '&edit=true' : ''); ?>" style="width: 60px; height: 60px; line-height: 45px; border-radius: 50%; box-shadow: #222 3px 3px 10px; font-size: 1.5em;"><i class="bi bi-<?php echo ($edit ? 'check-lg' : 'pencil-fill'); ?>"></i></a>
+							</div>
+							<?php
+						}
 
 						// Modifiche
 						if ($edit) {
@@ -56,6 +69,7 @@
 				</div>
 				<script>
 					var id = <?php echo $id; ?>;
+					var edit = <?php echo ($edit ? 'true' : 'false'); ?>;
 				</script>
 				<script src="js/partite.js"></script>
 				<script src="js/eggpartite.js"></script>
