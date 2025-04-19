@@ -15,13 +15,13 @@ function head() {
 					<div class="col-auto text-end p-0">
 						<ul class="navbar-nav ms-auto justify-content-end d-inline ad-sm-none">
 							<li class="nav-item d-inline lead">
-								<a class="nav-link' . (basename($_SERVER['PHP_SELF'], '.php') == 'partite' ? ' active' : '') . ' d-inline" style="padding: 0px 10px;" href="partite.php" alt="Almanacco"><i class="bi bi-book"></i><span class="d-none d-md-inline"> Almanacco</span></a>
+								<a class="nav-link' . (basename($_SERVER['PHP_SELF'], '.php') == 'partite' ? ' active' : '') . ' d-inline" style="padding: 0px 15px;" href="partite.php" alt="Almanacco"><i class="bi bi-book"></i><span class="d-none d-md-inline ms-2">Almanacco</span></a>
 							</li>
 							<li class="nav-item d-inline lead">
-								<a class="nav-link' . (basename($_SERVER['PHP_SELF'], '.php') == 'suoni' ? ' active' : '') . ' d-inline" style="padding: 0px 10px;" href="suoni.php" alt="Biscarmonica"><i class="bi bi-music-note-beamed"></i><span class="d-none d-md-inline"> Biscarmonica</span></a>
+								<a class="nav-link' . (basename($_SERVER['PHP_SELF'], '.php') == 'suoni' ? ' active' : '') . ' d-inline" style="padding: 0px 15px;" href="suoni.php" alt="Biscarmonica"><i class="bi bi-music-note-beamed"></i><span class="d-none d-md-inline ms-2">Biscarmonica</span></a>
 							</li>
 							<li class="nav-item d-inline lead dropdown">
-								<a class="nav-link' . (basename($_SERVER['PHP_SELF'], '.php') == 'giocatori' ? ' active' : '') . ' d-inline dropdown" data-bs-toggle="dropdown" style="padding: 0px 10px;" href="#" alt="Giocatori" role="button" aria-haspopup="true" aria-expanded="false"><i class="bi bi-people-fill"></i><span class="d-none d-md-inline"> Giuocatori</span></a>
+								<a class="nav-link' . (basename($_SERVER['PHP_SELF'], '.php') == 'giocatori' ? ' active' : '') . ' d-inline dropdown" data-bs-toggle="dropdown" style="padding: 0px 15px;" href="#" alt="Giocatori" role="button" aria-haspopup="true" aria-expanded="false"><i class="bi bi-people-fill"></i><span class="d-none d-md-inline ms-2">Giuocatori</span></a>
 								<div class="dropdown-menu position-absolute dropdown-menu-end mt-2" data-bs-popper="static">
 									<a class="dropdown-item" href="giocatori.php"><i class="bi bi-people-fill"></i> Tutti i giuocatori</a>
 									<hr class="dropdown-divider">';

@@ -8,8 +8,8 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 	$out = '';
 
 	// Incipit
-	$out .= '<div class="row"><div class="col-md-9"><h5 style="text-align: left;">Bi$ca in occasione di: <strong><i id="occasione0">' . $row['Occasione'] . '</i></strong>' . ($edit ? '&nbsp;<button class="btn btn-primary btn-sm" onclick="info();"><i class="bi bi-pencil-fill"></i></button>' : '') . '</h5></div>';
-	$out .= '<div class="col-md-3"><h5 style="text-align: right;">' . $fmt1->format(strtotime($row['Data'])) . '</h5><span class="d-none" id="data0">' . date("o-m-d", strtotime($row['Data'])) . '</span></div></div>';
+	$out .= '<div class="row"><div class="col-md-9"><h5 style="text-align: left;"><small>Bi$ca in occasione di:</small><br /><strong><i id="occasione0">' . $row['Occasione'] . '</i></strong>' . ($edit ? '&nbsp;<button class="btn btn-primary btn-sm" onclick="info();"><i class="bi bi-pencil-fill"></i></button>' : '') . '</h5></div>';
+	$out .= '<div class="col-md-3 mt-auto"><h5 style="text-align: right;">' . $fmt1->format(strtotime($row['Data'])) . '</h5><span class="d-none" id="data0">' . date("o-m-d", strtotime($row['Data'])) . '</span></div></div>';
 	$out .= '<hr>';
 	
 	// Giocatori
@@ -113,8 +113,8 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 	}
 
 	// Mostra eventuali cambi giocatori già in programma
-	if ($edit) {
-		$turni = count($partita[0]);
+	$turni = count($partita[0]);
+	if ($edit && $turni > 0) {
 		$gioc = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio > " . $turni . " ORDER BY Inizio, Colonna;");
 
 		$rowg = $gioc->fetch_assoc();

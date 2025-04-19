@@ -6,6 +6,7 @@
 	--colore-titoli: #5a5a5a;
 	--sfondo-dropdown: var(--bs-info);
 	--sfondo-dropdown-active: var(--bs-primary);
+	--ombra: var(--bs-gray-700);
 }
 
 [data-bs-theme=dark] {
@@ -15,6 +16,7 @@
 	--colore-titoli: var(--bs-white);
 	--sfondo-dropdown: var(--bs-gray-700);
 	--sfondo-dropdown-active: #3a6855;
+	--ombra: var(--bs-gray-900);
     
 	.btn-outline-dark, .btn-outline-dark:hover, .btn-dark, .btn-dark:hover {
 		color: var(--bs-light)!important;

@@ -98,5 +98,5 @@ function aggiornapermessi() {
 	};
 	xhttp.open("POST", "php/ajax_admin.php", true);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("ajax=aggiornapermessi&id=" + id + "'&login=" + ($('#login').is(':checked')?1:0) + "&editor=" + ($('#editor').is(':checked')?1:0) + "&admin=" + ($('#admin').is(':checked')?1:0));
+	xhttp.send("ajax=aggiornapermessi&id=" + id + "&login=" + ($('#login').is(':checked')?1:0) + "&editor=" + ($('#editor').is(':checked')?1:0) + "&admin=" + ($('#admin').is(':checked')?1:0));
 }
