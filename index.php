@@ -12,59 +12,68 @@
 	<div class="col-sm-8 col-lg-7">
 		<h4 style="padding: 0 40 0 40;" class="text-primary">Benvenuti nel sito del <strong class="vivaldi" style="white-space: nowrap;">Giuoco del Due</strong></h4>
 		<p style="text-align: justify;">Il Giuoco del Due è una variante della Briscola per cinque giocatori. Questo sito è stato realizzato per archiviare i punteggi della famiglia Barzon, grande appassionata di questo gioco. La consultazione è aperta a tutti!</p>
-		<?php
-		$proverbi = array(
-		'Se vi sono cinque persone in una casa, saranno divise tre contro due e due contro tre',
-		'Fidati di tutti, ma taglia tu il mazzo',
-		'Giocare è sperimentare il rischio',
-		'Bisogna sempre giocare lealmente quando si hanno in mano carte vincenti',
-		'Devo lamentare che le carte sono mischiate male fin quando non ho una buona mano',
-		'La sorte distribuisce le carte e noi giuochiamo',
-		'L\'amore è come il Giuoco: se non hai un buon partner, meglio che tu abbia una buona mano',
-		'È sempre colpa del compagno',
-		'Le carte sono una guerra, sotto le mentite spoglie di un gioco',
-		'Non ti fidar di me se il cuor ti manca',
-		'Se ti perdi tuo danno',
-		'Non val saper a chi ha fortuna contrà',
-		'Per un punto Martin perse la capa',
-		'Spade: chi sta in piè no cade',
-		'Bastoni: persege e mełoni',
-		'Denari: chi i ga fissi e chi i ga ciari',
-		'Coppe: co pì se xe manco se fa',
-		'Il giuoco della spada a molti non aggrada',
-		'Molto spesso le giuocate van finire a bastonate',
-		'Son gli amici molto rari quando non si ha danari',
-		'Carta in toea no se discoła',
-		'Vede mejo quei che varda de quei che zuga',
-		'Chi zuga par bisogno perde par necesità',
-		'No metarte a zugar se no te voi pericołar',
-		'No importa łe carte che te ghè, importa come che te łe zughi',
-		'Acetà un zugo te ghe da acetar le regołe',
-		'Co\' te ghe perso, de guadagnar no gh\'è pì verso',
-		'Gh\'è tre tipi de zugadori de carte: i poco bòni, i mia bòni e i gnente bòni',
-		'Chi vinze ła prima man, el va casa co\' łe braghe in man',
-		'Chi ha fortuna in amore, non giochi a carte',
-		'Il segreto della vita non è avere delle buone carte, ma giocare bene una cattiva mano',
-		'I punti sui punti ce li mettono i tonti',
-		'Briscola vecchia un carico aspetta',
-		'Carta mancante partita a monte',
-		'Le carte son femmine: fanno sempre come vogliono');
-		$autori = array(
-		'(Lc <font style="font-family: Vivaldi; font-weight: bold; font-size: 22px;">12, 52</font>)',
-		'Arthur Bloch',
-		'Novalis',
-		'Oscar Wilde',
-		'Jonathan Swift',
-		'Arthur Schopenhauer',
-		'Charles Pierce',
-		'Arthur Block',
-		'Charles Lamb');
-		$num = rand(1, count($proverbi)) - 1;
-		echo '<p class="lead text-primary" style="font-family: WhiteDream; font-size: 26px; padding: 20px;">' . $proverbi[$num] . '.' . (isset($autori[$num]) ? '<br><font style="font-size: 20px;">' . $autori[$num] . '</font>' : '') . '</p>';
-		?>
+
+		<div class="row" style="min-height: 120px;">
+			<div class="col text-center pe-0">
+				<?php
+				$proverbi = array(
+				'Se vi sono cinque persone in una casa, saranno divise tre contro due e due contro tre',
+				'Fidati di tutti, ma taglia tu il mazzo',
+				'Giocare è sperimentare il rischio',
+				'Bisogna sempre giocare lealmente quando si hanno in mano carte vincenti',
+				'Devo lamentare che le carte sono mischiate male fin quando non ho una buona mano',
+				'La sorte distribuisce le carte e noi giuochiamo',
+				'L\'amore è come il Giuoco: se non hai un buon partner, meglio che tu abbia una buona mano',
+				'È sempre colpa del compagno',
+				'Le carte sono una guerra, sotto le mentite spoglie di un gioco',
+				'Non ti fidar di me se il cuor ti manca',
+				'Se ti perdi tuo danno',
+				'Non val saper a chi ha fortuna contrà',
+				'Per un punto Martin perse la capa',
+				'Spade: chi sta in piè no cade',
+				'Bastoni: persege e mełoni',
+				'Denari: chi i ga fissi e chi i ga ciari',
+				'Coppe: co pì se xe manco se fa',
+				'Il giuoco della spada a molti non aggrada',
+				'Molto spesso le giuocate van finire a bastonate',
+				'Son gli amici molto rari quando non si ha danari',
+				'Carta in toea no se discoła',
+				'Vede mejo quei che varda de quei che zuga',
+				'Chi zuga par bisogno perde par necesità',
+				'No metarte a zugar se no te voi pericołar',
+				'No importa łe carte che te ghè, importa come che te łe zughi',
+				'Acetà un zugo te ghe da acetar le regołe',
+				'Co\' te ghe perso, de guadagnar no gh\'è pì verso',
+				'Gh\'è tre tipi de zugadori de carte: i poco bòni, i mia bòni e i gnente bòni',
+				'Chi vinze ła prima man, el va casa co\' łe braghe in man',
+				'Chi ha fortuna in amore, non giochi a carte',
+				'Il segreto della vita non è avere delle buone carte, ma giocare bene una cattiva mano',
+				'I punti sui punti ce li mettono i tonti',
+				'Briscola vecchia un carico aspetta',
+				'Carta mancante partita a monte',
+				'Le carte son femmine: fanno sempre come vogliono');
+				$autori = array(
+				'(Lc <font style="font-family: Vivaldi; font-weight: bold; font-size: 22px;">12, 52</font>)',
+				'Arthur Bloch',
+				'Novalis',
+				'Oscar Wilde',
+				'Jonathan Swift',
+				'Arthur Schopenhauer',
+				'Charles Pierce',
+				'Arthur Block',
+				'Charles Lamb');
+				$num = rand(1, count($proverbi)) - 1;
+				echo '<p class="lead text-primary m-0" style="font-family: WhiteDream; font-size: 26px; padding: 20px 10px 20px 20px;">' . $proverbi[$num] . '.' . (isset($autori[$num]) ? '<br><font style="font-size: 20px;">' . $autori[$num] . '</font>' : '') . '</p>';
+				?>
+			</div>
+			<div class="col-auto text-end p-0 align-self-end">
+				<audio id="fisarmonica_audio"><source src="" type="audio/mp3"></audio>
+				<img id="fisarmonica" src="media/egg/fisarmonica.png" style="width: 150px; right: 0; bottom: 0; cursor: pointer;" onclick="toggleFisarmonica();">
+			</div>
+		</div>
 		
-		<hr>
-		<h4>Le partite</h4>
+		<hr class="mt-0 mb-4">
+		
 		<?php
 		$res = $conn->query("SELECT * FROM partite ORDER BY Data desc;");
 		do {
@@ -128,6 +137,26 @@
 					$('#togglesegnapunti').html('Mostra meno');
 				}
 				show = !show;
+			}
+
+			let playing = false;
+			let k = 0;
+			let fisa = [0,1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+			function toggleFisarmonica() {
+				let audio = document.getElementById('fisarmonica_audio');
+				let img = document.getElementById('fisarmonica');
+				if (playing) {
+					audio.pause();
+					audio.currentTime = 0;
+					img.src = "media/egg/fisarmonica.png";
+				} else {
+					audio.src = "media/egg/fisa" + fisa[k++] + ".mp3";
+					if (k >= fisa.length) k = 0;
+					audio.play();
+					audio.loop = true;
+					img.src = "media/egg/fisarmonica.gif";
+				}
+				playing = !playing;
 			}
 		</script>
 		

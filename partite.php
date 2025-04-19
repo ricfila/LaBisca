@@ -42,7 +42,7 @@
 						// Pulsante modifica/torna in visualizzazione
 						if ($logged) {
 							?>
-							<div style="position: fixed; bottom: 20px; right: 20px;">
+							<div style="position: fixed; bottom: 20px; right: 20px; z-index: 10;">
 								<a class="btn btn-lg btn-<?php echo ($edit ? 'info' : 'success'); ?>" href="partite.php?id=<?php echo $id . (!$edit ? '&edit=true' : ''); ?>" style="width: 60px; height: 60px; line-height: 45px; border-radius: 50%; box-shadow: var(--ombra) 3px 3px 10px; font-size: 1.5em;"><i class="bi bi-<?php echo ($edit ? 'check-lg' : 'pencil-fill'); ?>"></i></a>
 							</div>
 							<?php
