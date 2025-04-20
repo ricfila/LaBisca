@@ -130,4 +130,17 @@ function aggiornalogo() {
 		logo.setAttribute("src", (dark ? 'media/img/Bisca_index_bianco.png' : 'media/img/Bisca_index.png'));
 }
 
+function initializecarousel() {
+	let carousels = document.getElementsByClassName('carousel');
+	for (let i = 0; i < carousels.length; i++) {
+		let carousel = new bootstrap.Carousel(carousels[i]);
+		carousels[i].addEventListener('slide.bs.carousel', function(e) {
+			let nextH = $(e.relatedTarget).height();
+			$('#' + carousels[i].id + '-inner').animate({
+				height: nextH
+			}, 600);
+		});
+	}
+}
+
 </script>

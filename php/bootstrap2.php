@@ -21,5 +21,6 @@
 			});
 		});
 		aggiornalogo();
+		initializecarousel();
 	});
 </script>

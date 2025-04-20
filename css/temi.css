@@ -7,6 +7,7 @@
 	--sfondo-dropdown: var(--bs-info);
 	--sfondo-dropdown-active: var(--bs-primary);
 	--ombra: var(--bs-gray-700);
+	--ombrascura: var(--bs-gray-400);
 }
 
 [data-bs-theme=dark] {
@@ -17,6 +18,7 @@
 	--sfondo-dropdown: var(--bs-gray-700);
 	--sfondo-dropdown-active: #3a6855;
 	--ombra: var(--bs-gray-900);
+	--ombrascura: var(--bs-black);
     
 	.btn-outline-dark, .btn-outline-dark:hover, .btn-dark, .btn-dark:hover {
 		color: var(--bs-light)!important;
@@ -52,6 +54,7 @@ body, .sfondo, .sfondo2, .btn, .form-check-input {
 .dropdown-item:hover {
 	color: var(--bs-light);
 	background-color: var(--sfondo-dropdown);
+	text-decoration: none;
 }
 
 a.dropdown-item {

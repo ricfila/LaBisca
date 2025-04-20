@@ -75,26 +75,23 @@
 		<hr class="mt-0 mb-4">
 		
 		<?php
-		$res = $conn->query("SELECT * FROM partite ORDER BY Data desc;");
+		// Ultima partita
+		$res = $conn->query("SELECT * FROM partite ORDER BY Data DESC;");
 		do {
 			$row = $res->fetch_assoc();
 		} while ($conn->query("SELECT * FROM mani WHERE Partita = " . $row['IdPartita'] . ";")->num_rows == 0);
-		echo '<p style="text-align: justify;">Nell\'archivio sono presenti ' . $res->num_rows . ' partite. L\'ultima di queste è stata disputata il ' . $fmt1->format(strtotime($row['Data'])) . ' in occasione di <i>' . $row['Occasione'] . '</i>.</p> ';
-		$partita = partita($row['IdPartita']);
-		$totali = $partita[1];
-		$max = max($totali);
-		$vincitori = array();
-		for ($i = 0; $i < 5; $i++) {
-			if ($totali[$i] == $max) {
-				$vincitori[] = $i;
-			}
+		echo '<h4 class="text-primary">L\'ultima bi$ca disputata</h4>';
+		echo mostra_partita_breve($row['IdPartita']);
+		
+		// Partite disputate questo giorno
+		$numeri = array('Zero', 'Un', 'Due', 'Tre', 'Quattro', 'Cinque', 'Sei', 'Sette', 'Otto', 'Nove', 'Dieci', 'Undici', 'Dodici', 'Tredici', 'Quattordici', 'Quindici', 'Sedici', 'Diciassette', 'Diciotto', 'Diciannove', 'Venti', 'Ventuno', 'Ventidue', 'Ventitré', 'Ventiquattro', 'Venticinque', 'Ventisei', 'Ventisette', 'Ventotto', 'Ventinove', 'Trenta');
+		$res = $conn->query("SELECT IdPartita, YEAR(Data) AS Anno FROM partite WHERE DAY(Data) = DAY(CURDATE()) AND MONTH(Data) = MONTH(CURDATE()) ORDER BY Data DESC;");
+		while ($row = $res->fetch_assoc()) {
+			$ago = date("Y") - $row['Anno'];
+			echo '<h4 class="text-primary">' . (count($numeri) > $ago ? $numeri[$ago] : $ago) . ' ' . ($ago == 1 ? 'anno' : 'anni') . ' fa...</h4>';
+			echo mostra_partita_breve($row['IdPartita']);
 		}
-		/*echo 'Ha' . (count($vincitori) == 1 ? '' : 'nno') . ' vinto ';
-		foreach ($vincitori as $i => $g) {
-			echo '<a href="giocatori.php?id=' . $partita[2][$vincitori[$i]] . '">' . nomedi($partita[2][$vincitori[$i]]) . '</a>' . ($i == count($vincitori) - 1 ? '' : ($i == count($vincitori) - 2 ? ' e ' : ', '));
-		}
-		echo ' con <strong>' . $max . '</strong> punti.</p>';*/
-		echo '<a href="partite.php?id=' . $row['IdPartita'] . '" class="btn btn-primary"><i class="bi bi-arrow-right-circle-fill"></i> Vai alla partita</a>';
+
 		?>
 		
 	</div><div class="col-sm-4 col-lg-3"><hr class="d-sm-none" />

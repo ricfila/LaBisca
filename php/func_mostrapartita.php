@@ -162,39 +162,18 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 	}
 	
 	if ($edit) {
-		$out .= '<br><div class="row"><div class="col-lg-2"></div><div class="col-sm-6 col-lg-4"><button class="btn btn-lg btn-primary mb-1" style="width: 95%;" onclick="turno();"><i class="bi bi-patch-plus-fill"></i> Nuovo turno</button></div>';
-		$out .= '<div class="col-sm-6 col-lg-4"><button class="btn btn-lg btn-warning mb-1" style="width: 95%;" onclick="cambio();"><i class="bi bi-person-plus-fill"></i> Cambio giocatore</button></div><div class="col-lg-2"></div></div><br>';
+		$out .= '<div class="row my-3"><div class="col-lg-2"></div><div class="col-sm-6 col-lg-4"><button class="btn btn-lg btn-primary mb-1" style="width: 95%;" onclick="turno();"><i class="bi bi-patch-plus-fill"></i> Nuovo turno</button></div>';
+		$out .= '<div class="col-sm-6 col-lg-4"><button class="btn btn-lg btn-warning mb-1" style="width: 95%;" onclick="cambio();"><i class="bi bi-person-plus-fill"></i> Cambio giocatore</button></div><div class="col-lg-2"></div></div>';
 	}
 	
 	// Note e foto
-	$out .= '<br>';
-	$foto = false;
-	if (isset($_SESSION['id'])) {
-		$outf = '';
-		$files;
-		if ($files = listafoto($id)) {
-			if (count($files) > 0) {
-				$foto = true;
-				for ($i = 0; $i < count($files); $i++) {
-					$outf .= '<div class="carousel-item' . ($i == 0 ? ' active' : '') . '"><img src="media/foto/' . $id . '/' . $files[$i] . '" class="d-block" style="max-height: 50vh; max-width: 100%;"></div>';
-				}
-				$outf = '<h3 class="text-primary">Foto ricordo</h3><div id="carousel" class="carousel slide" style="padding: 10px; border: 1px solid #8f8f8f;"><div id="carousel-inner" class="carousel-inner" style="background-image: linear-gradient(#d1d1d1, #8f8f8f);">' . $outf . '</div>';
-				if (count($files) > 1)
-					$outf .= '<button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
-						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Precedente</span>
-						</button>
-						<button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
-						<span class="carousel-control-next-icon" aria-hidden="true"></span>
-						<span class="visually-hidden">Successiva</span>
-						</button>';
-				$outf .= '</div>';
-			}
-		}
-	}
+	$outf = carousel_foto($id);
+	$foto = !empty($outf);
+	$outf = '<h3 class="text-primary">Foto ricordo</h3>' . $outf;
+
 	$note = (!empty($row['Note']) ? '<h3 class="text-primary">Note sulle giuocate</h3><p id="note0" style="text-align: justify;">' . $row['Note'] . '</p>' : '<span id="note0"></span>');
 	
-	$out .= '<div class="row">';
+	$out .= '<div class="row mt-4">';
 	if ($foto && !empty($row['Note'])) {
 		$out .= '<div class="col-lg-8">' . $note . '</div><div class="col-lg-4">' . $outf . '</div>';
 	} else if ($foto) {
@@ -207,21 +186,11 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 	$out .= '<div class="row"><div class="col-lg-2"></div><div class="col">';
 	
 	if (count($partita[0]) > 1) {
-		$out .= '<br><h3 class="text-primary">Classifiche</h3><hr><div class="row" style="text-align: left;">';
+		$out .= '<h3 class="text-primary mt-4">Classifiche</h3><hr><div class="row" style="text-align: left;">';
 
 		// Medaglie
 		if (count($partita[0]) >= $minimomedaglie) {
-			$out .= '<div class="col-sm mb-4"><h5><i class="bi bi-award"></i> Medaglie</h5><p style="text-align: justify;">';
-			$medaglie = medaglie($partita);
-			while (count($medaglie) > 0) {
-				$min = min($medaglie);
-				$gg = array_keys($medaglie, $min);
-				foreach ($gg as $g) {
-					$out .= '<img src="media/img/Medaglia' . $min . '.png" height="25px" onclick="suonomedaglia(' . $min . ');" />&nbsp;' . nomedi($g) . '<br>';
-					unset($medaglie[$g]);
-				}
-			}
-			$out .= '</p></div>';
+			$out .= '<div class="col-sm mb-4">' . mostra_medaglie($partita) . '</div>';
 		}
 
 		// Chiamate
@@ -389,6 +358,53 @@ function mostra_coppie($partita) {
 	return $out;
 }
 
+function mostra_medaglie($partita) {
+	$medaglie = medaglie($partita);
+	$altri = $partita[3][0];
+	$solopartecipanti = true;
+	$out = '';
+
+	if (count($medaglie) > 0) {
+		$solopartecipanti = false;
+		$out .= '<h5><i class="bi bi-award"></i> Medaglie</h5><p style="text-align: justify;">';
+		$totali = $partita[1];
+		$colonne = $partita[5];
+		while (count($medaglie) > 0) {
+			$min = min($medaglie);
+			$gg = array_keys($medaglie, $min);
+			$score = $totali[array_search($min, $colonne)];
+			foreach ($gg as $g) {
+				$out .= '<span class="badge bg-' . ($score >= 0 ? 'success' : 'danger') . ' ps-0 mb-1 text-end" style="position: relative; width: 52px;" onclick="suonomedaglia(' . $min . ');">';
+				$out .= '<img src="media/img/Medaglia' . $min . '.png" height="25px" style="position: absolute; top: 0; left: 0; filter: drop-shadow(1px 2px 2px var(--ombra));" />';
+				$actualscore = $partita[3][16][$g];
+				$out .= (($score > 0 ? '+' : '') . $score) . '</span>&nbsp;<a href="giocatori.php?id=' . $g . '">' . nomedi($g) . '</a>' . ($actualscore != $score ? ' <small>(' . ($actualscore > 0 ? '+' : '') . $actualscore . ')</small>' : '') . '<br>';
+				unset($medaglie[$g]);
+				unset($altri[$g]);
+			}
+		}
+		$out .= '</p>';
+	}
+
+	if (count($altri) > 0) {
+		$score = array();
+		foreach($altri as $g => $turni) {
+			$altri[$g] = array_sum($turni);
+			$score[$g] = $partita[3][16][$g];
+		}
+		$out .= '<h5><i class="bi bi-people-fill"></i> ' . ($solopartecipanti ? 'Partecipanti' : 'Altri partecipanti') . '</h5><p class="text-justify">';
+		while (count($altri) > 0) {
+			$maxs = max($score);
+			$g = array_keys($score, $maxs)[0];
+			$turni = $altri[$g];
+			$out .= $turni . ' <i class="bi bi-play-fill"></i>&nbsp;<a href="giocatori.php?id=' . $g . '">' . nomedi($g) . '</a> <small>(' . (($maxs > 0 ? '+' : '') . $maxs) . ')</small><br>';
+			unset($altri[$g]);
+			unset($score[$g]);
+		}
+		$out .= '</p>';
+	}
+	return $out;
+}
+
 function gettooltip($gstat, $g, $socio, $score, $best) {
 	$offsetsocio = $socio ? 9 : 0;
 	$vinte = $gstat[$offsetsocio + 1][$g];
@@ -442,6 +458,64 @@ function tooltip_coppia($coppie, $coppia) {
 
 	$out .= '</div>';
 	//$out .= '' . punti($coppie[1][$coppia]) . ' punt' . (abs($coppie[1][$coppia]) == 1 ? 'o' : 'i');
+	return $out;
+}
+
+function carousel_foto($id) {
+	$foto = false;
+	if (isset($_SESSION['id'])) {
+		$outf = '';
+		$files;
+		if ($files = listafoto($id)) {
+			if (count($files) > 0) {
+				$foto = true;
+				for ($i = 0; $i < count($files); $i++) {
+					$outf .= '<div class="carousel-item' . ($i == 0 ? ' active' : '') . '"><img src="media/foto/' . $id . '/' . $files[$i] . '" class="d-block mx-auto" style="max-height: 50vh; max-width: 100%;"></div>';
+				}
+				$outf = '<div id="carousel' . $id . '" class="carousel slide" style="padding: 15px; padding-bottom: 60px; border: 1px solid #8f8f8f; background: #FFF; filter: drop-shadow(3px 3px 5px var(--ombrascura));"><div id="carousel' . $id . '-inner" class="carousel-inner rounded" style="background-image: linear-gradient(#d1d1d1, #8f8f8f);">' . $outf . '</div>';
+				if (count($files) > 1)
+					$outf .= '<button class="carousel-control-prev" type="button" data-bs-target="#carousel' . $id . '" data-bs-slide="prev" style="margin-top: 15px; margin-bottom: 60px;">
+						<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Precedente</span>
+					</button>
+					<button class="carousel-control-next" type="button" data-bs-target="#carousel' . $id . '" data-bs-slide="next" style="margin-top: 15px; margin-bottom: 60px;">
+						<span class="carousel-control-next-icon" aria-hidden="true"></span>
+						<span class="visually-hidden">Successiva</span>
+					</button>';
+				$outf .= '</div>';
+			}
+		}
+	}
+
+	return $foto ? $outf : '';
+}
+
+function mostra_partita_breve($id) {
+	global $conn, $fmt1, $minimomedaglie;
+	$res = $conn->query("SELECT * FROM partite WHERE IdPartita = $id;");
+	$row = $res->fetch_assoc();
+	$partita = partita($id);
+	$out = '';
+
+	$out .= '<div class="border border-2 rounded p-3 mb-4"><div class="text-start">';
+	$out .= '<h5><a href="partite.php?id=' . $id . '">' . $row['Occasione'] . '</a></h5>';
+	$out .= '<h6 class="mb-2 text-muted"><i>' . $fmt1->format(strtotime($row['Data'])) . '</i></h6>';
+	$out .= '<p>';
+
+
+	$outm = mostra_medaglie($partita);
+	$outf = carousel_foto($id);
+
+	if (!empty($outf)) {
+		$out .= '<div class="row">';
+		$out .= '<div class="col-sm-6">' . $outm . '</div>';
+		$out .= '<div class="col-sm-6">' . $outf . '</div>';
+		$out .= '</div>';
+	} else {
+		$out .= $outm;
+	}
+	
+	$out .= '</p></div></div>';
 	return $out;
 }
 ?>

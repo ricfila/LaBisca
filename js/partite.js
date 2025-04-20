@@ -1,14 +1,4 @@
 
-var carousel = document.getElementById('carousel');
-if (carousel != null) {
-	carousel.addEventListener('slide.bs.carousel', function (e) {
-		var nextH = $(e.relatedTarget).height();
-		$('#carousel-inner').animate({
-			height: nextH
-		}, 600);
-	});
-}
-
 function parziali(check) {
 	setCookie('parziali', check.checked, 365);
 	var parziali = document.getElementsByClassName('parziale');
@@ -376,4 +366,5 @@ function eliminapartita() {
 
 function mostrapartita(text) {
 	$('#partita').html(text);
+	initializecarousel();
 }
