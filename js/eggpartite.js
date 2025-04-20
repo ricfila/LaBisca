@@ -175,8 +175,3 @@ function tableEgg(el, tipo) {
 		default: break;
 	}
 }
-
-function suonomedaglia(n) {
-	audioEgg.src = "media/egg/med" + n + ".mp3";
-	audioEgg.paused && audioEgg.play();
-}

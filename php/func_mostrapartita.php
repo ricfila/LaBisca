@@ -151,7 +151,7 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 		$out .= '<div class="row" style="margin: 0px;"><div class="col-2 col-sm-1"></div>';
 
 		for ($j = 0; $j < 5; $j++) {
-			$out .= '<div class="col no-pad"><img src="media/img/Medaglia' . $partita[5][$j] . '.png" height="40px" onclick="suonomedaglia(' . $partita[5][$j] . ');"' . (count($partita[0]) < $minimomedaglie ? ' class="img-bn"' : '') . '></div>';
+			$out .= '<div class="col no-pad"><img src="media/img/Medaglia' . $partita[5][$j] . '.png" height="40px"' . (count($partita[0]) < $minimomedaglie ? ' class="img-bn"' : ' onclick="suonomedaglia(' . $partita[5][$j] . ');"') . '></div>';
 		}
 		$out .= '</div>';
 		$out .= '<div class="row mt-4"><div class="col-lg-2"></div><div class="col">';

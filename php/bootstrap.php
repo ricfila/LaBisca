@@ -143,4 +143,10 @@ function initializecarousel() {
 	}
 }
 
+const audioMed = new Audio;
+function suonomedaglia(n) {
+	audioMed.src = "media/egg/med" + n + ".mp3";
+	audioMed.paused && audioMed.play();
+}
+
 </script>
