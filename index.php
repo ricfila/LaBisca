@@ -75,6 +75,7 @@
 		<hr class="mt-0 mb-4">
 		
 		<?php
+		$stampate = array();
 		// Ultima partita
 		$res = $conn->query("SELECT * FROM partite ORDER BY Data DESC;");
 		do {
@@ -82,16 +83,28 @@
 		} while ($conn->query("SELECT * FROM mani WHERE Partita = " . $row['IdPartita'] . ";")->num_rows == 0);
 		echo '<h4 class="text-primary">L\'ultima bi$ca disputata</h4>';
 		echo mostra_partita_breve($row['IdPartita']);
+		$stampate[] = $row['IdPartita'];
 		
 		// Partite disputate questo giorno
 		$numeri = array('Zero', 'Un', 'Due', 'Tre', 'Quattro', 'Cinque', 'Sei', 'Sette', 'Otto', 'Nove', 'Dieci', 'Undici', 'Dodici', 'Tredici', 'Quattordici', 'Quindici', 'Sedici', 'Diciassette', 'Diciotto', 'Diciannove', 'Venti', 'Ventuno', 'Ventidue', 'Ventitré', 'Ventiquattro', 'Venticinque', 'Ventisei', 'Ventisette', 'Ventotto', 'Ventinove', 'Trenta');
 		$res = $conn->query("SELECT IdPartita, YEAR(Data) AS Anno FROM partite WHERE DAY(Data) = DAY(CURDATE()) AND MONTH(Data) = MONTH(CURDATE()) ORDER BY Data DESC;");
 		while ($row = $res->fetch_assoc()) {
 			$ago = date("Y") - $row['Anno'];
-			echo '<h4 class="text-primary">' . (count($numeri) > $ago ? $numeri[$ago] : $ago) . ' ' . ($ago == 1 ? 'anno' : 'anni') . ' fa...</h4>';
-			echo mostra_partita_breve($row['IdPartita']);
+			if ($ago > 0) {
+				echo '<h4 class="text-primary">' . (count($numeri) > $ago ? $numeri[$ago] : $ago) . ' ' . ($ago == 1 ? 'anno' : 'anni') . ' fa...</h4>';
+				echo mostra_partita_breve($row['IdPartita']);
+				$stampate[] = $row['IdPartita'];
+			}
 		}
 
+		$res = $conn->query("SELECT count(*) AS turni, partite.IdPartita, partite.Data FROM partite JOIN mani ON mani.Partita = partite.IdPartita GROUP BY partite.IdPartita HAVING turni >= 50 ORDER BY Data DESC, turni DESC;");
+		while ($row = $res->fetch_assoc()) {
+			if (!in_array($row['IdPartita'], $stampate)) {
+				echo '<h4 class="text-primary">L\'ultima epica impresa</h4>';
+				echo mostra_partita_breve($row['IdPartita']);
+				break;
+			}
+		}
 		?>
 		
 	</div><div class="col-sm-4 col-lg-3"><hr class="d-sm-none" />

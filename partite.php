@@ -27,7 +27,7 @@
 				?>
 				<div class="row">
 					<div class="col-lg-1"></div>
-					<div class="col">
+					<div class="col" style="margin-bottom: <?php echo $logged ? '4rem;' : '2rem;'; ?>">
 						<span class="toggle-easter-egg">
 							<h1 style="font-family: Vivaldi; font-weight: bold; font-size: 70px;" class="d-none d-md-block">il Giuoco del Due</h1>
 							<h1 style="font-family: Vivaldi; font-weight: bold; font-size: 60px;" class="d-none d-sm-block d-md-none">il Giuoco del Due</h1>
@@ -60,10 +60,8 @@
 								<button class="btn btn-danger mb-1" onclick="modaleliminapartita();"><i class="bi bi-trash"></i> Elimina la partita</button>
 								<?php
 							}
-							echo '<br>';
 						}
 						?>
-						<br>
 					</div>
 					<div class="col-lg-1"></div>
 				</div>

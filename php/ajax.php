@@ -14,13 +14,21 @@ foreach ($_POST as $key => $value) {
 
 switch ($ajax) {
 	case 'nuovogiocatore':
-		if ($conn->query("SELECT * FROM giocatori WHERE Nome = '$nome';")->num_rows == 0) {
-			if ($conn->query("INSERT INTO giocatori (Nome, Alias) VALUES ('$nome', '$alias');")) {
+		$parti = explode(' ', $nome);
+		$nome = $parti[0];
+		$cognome = '';
+		for ($i = 1; $i < count($parti); $i++) {
+			$cognome .= $parti[$i] . ($i != count($parti) - 1 ? ' ' : '');
+		}
+		if ($conn->query("SELECT * FROM giocatori WHERE Nome = '$nome' AND Cognome = '$cognome';")->num_rows == 0) {
+			if ($conn->query("INSERT INTO giocatori (Nome, Cognome, Alias) VALUES ('$nome', '$cognome', '');")) {
 				echo $conn->insert_id;
 			} else {
+				http_response_code(500);
 				echo 'Errore durante l\'inserimento';
 			}
 		} else {
+			http_response_code(500);
 			echo 'Un giocatore con questo nome esiste già!';
 		}
 		break;
@@ -83,7 +91,7 @@ switch ($ajax) {
 					$conn->query("INSERT INTO partecipazioni (Giocatore, Partita, Inizio, Colonna) VALUES (" . $row2['Giocatore'] . ", $id, $inizio, $colonna2);");
 				} else {// Il giocatore da inserire non è nella riga, aggiornare il posto...
 					$ingioco = false;
-					$presenze = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Giocatore = $idg order by Inizio;");
+					$presenze = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Giocatore = $idg ORDER BY Inizio;");
 					while ($rowp = $presenze->fetch_assoc()) {
 						if ($rowp['Inizio'] < $inizio) {// Controllare se non è attualmente in gioco altrove
 							if ($conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Colonna = " . $rowp['Colonna'] . " AND Inizio > " . $rowp['Inizio'] . " AND Inizio <= $inizio AND Giocatore <> $idg;")->num_rows == 0) {
@@ -183,7 +191,8 @@ switch ($ajax) {
 			}
 			echo '<span class="text-danger" id="erroreturno"></span>';
 		} else {
-			echo '<span class="text-danger">Definire prima i cinque giocatori partecipanti</span>';
+			http_response_code(500);
+			echo 'Definire prima i cinque giocatori partecipanti.';
 		}
 		break;
 	case 'salvaturno':

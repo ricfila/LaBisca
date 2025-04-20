@@ -78,21 +78,28 @@ function salvagioc(idg) {
 function nuovogioc(nome) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			salvagioc(this.responseText);
+		if (this.readyState == 4) {
+			if (this.status == 200)
+				salvagioc(this.responseText);
+			else
+				modal('Errore', '<span class="text-danger">' + this.responseText + '</span>', null);
 		}
 	};
 	xhttp.open("POST", "php/ajax.php", true);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("ajax=nuovogiocatore&nome=" + nome + "&alias=");
+	xhttp.send("ajax=nuovogiocatore&nome=" + nome);
 }
 
 function turno(numero) {
 	var xhttp = new XMLHttpRequest();
 	xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-			modal((numero == null ? 'Nuovo turno' : 'Modifica turno ' + numero), this.responseText, '<button class="btn btn-success" onclick="salvaturno(' + (numero == null ? '\'nuovo\'' : numero) + ');"><i class="bi bi-check-circle-fill"></i> Salva</button>');
-			//setTimeout(function(){document.getElementById('codice').focus()}, 200);
+		if (this.readyState == 4) {
+			if (this.status == 200) {
+				modal((numero == null ? 'Nuovo turno' : 'Modifica turno ' + numero), this.responseText, '<button class="btn btn-success" onclick="salvaturno(' + (numero == null ? '\'nuovo\'' : numero) + ');"><i class="bi bi-check-circle-fill"></i> Salva</button>');
+				//setTimeout(function(){document.getElementById('codice').focus()}, 200);
+			} else {
+				modal('Errore', '<span class="text-danger">' + this.responseText + '</span>', null);
+			}
 		}
 	};
 	xhttp.open("POST", "php/ajax.php", true);
