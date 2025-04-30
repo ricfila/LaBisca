@@ -28,7 +28,7 @@
 			</li>
 			<?php if (isset($_SESSION['id'])) { ?>
 			<li class="nav-item" role="presentation">
-				<a class="nav-link" data-bs-toggle="tab" href="#voci" aria-selected="false" role="tab" tabindex="-1"><i class="bi bi-mic-fill"></i></a>
+				<a class="nav-link" data-bs-toggle="tab" href="#priv" aria-selected="false" role="tab" tabindex="-1"><i class="bi bi-mic-fill"></i></a>
 			</li>
 			<?php } ?>
 		</ul>
@@ -43,14 +43,22 @@
 					'Preparazione', 'Caduta_bomba', 'Impatto', 'Tuono', 'Allarme', 'Un_demone', 'Un_mostro', 'Mio_Dio', 'Psyco', 'Tan_tan_tan', 'Urlo1'
 				),
 				'film' => array(
-					'Carica', 'Oh_no', 'Classico', 'Disonore', 'Eccomi_qua', 'Tombola', 'Mangiafuoco', 'Tutto_mio', 'Disgrazie', 'Niente_di_niente', 'Rilevante', 'Bisbigliare',  'Minatore'
+					'Carica', 'Oh_no_Baymax', 'Classico', 'Disonore', 'Eccomi_qua', 'Tombola', 'Mangiafuoco', 'Tutto_mio', 'Disgrazie', 'Niente_di_niente', 'Rilevante', 'Bisbigliare',  'Minatore'
 				)
 			);
 
 			if (isset($_SESSION['id'])) {
-				$suoni['voci'] = array(
-					'Si_si_e_si', 'Siii', 'Zolia_carte', 'Che_vedo', 'Falso', 'Par_carita', 'Piacere'
-				);
+				$priv = array();
+				if (is_dir('media/suoni/priv')) {
+					$files = scandir('media/suoni/priv');
+					array_shift($files);
+					array_shift($files);
+
+					foreach ($files as $f) {
+						$priv[] = 'priv/' . basename($f, ".mp3");
+					}
+				}
+				$suoni['priv'] = $priv;
 			}
 
 			foreach ($suoni as $categoria => $lista) {
