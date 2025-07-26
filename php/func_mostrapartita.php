@@ -498,7 +498,7 @@ function mostra_partita_breve($id) {
 	$out = '';
 
 	$out .= '<div class="border border-2 rounded p-3 mb-4"><div class="text-start">';
-	$out .= '<h5><a href="partite.php?id=' . $id . '">' . $row['Occasione'] . '</a></h5>';
+	$out .= '<h5><a href="partite.php?id=' . $id . '">' . (empty($row['Occasione']) || $row['Occasione'] == null ? '<i class="text-muted">Occasione sconosciuta</i>' : $row['Occasione']) . '</a></h5>';
 	$out .= '<h6 class="mb-2 text-muted"><i>' . $fmt1->format(strtotime($row['Data'])) . '</i> <i class="bi bi-dot"></i> ' . count($partita[0]) . ' turni giocati</h6>';
 	$out .= '<p>';
 

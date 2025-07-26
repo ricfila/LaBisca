@@ -37,13 +37,13 @@
 			<?php
 			$suoni = array(
 				'suoni' => array(
-					'Inizio', 'Punti', 'Applausi', 'Clacson', 'Delusione', 'Fallimento', 'Schiaffo', 'Trombone', 'Cavallo', 'Attesa'
+					'Inizio', 'Punti', 'Applausi', 'Clacson', 'Delusione', 'Fallimento', 'Schiaffo', 'Trombone', 'Cavallo', 'Attesa', 'Intervallo', 'Carmen'
 				),
 				'allarmi' => array(
-					'Preparazione', 'Caduta_bomba', 'Impatto', 'Tuono', 'Allarme', 'Un_demone', 'Un_mostro', 'Mio_Dio', 'Psyco', 'Tan_tan_tan', 'Urlo1'
+					'Preparazione', 'Caduta_bomba', 'Impatto', 'Tuono', 'Allarme', 'Un_demone', 'Un_mostro', 'Mio_Dio', 'Psyco', 'Tan_tan_tan', 'Urlo1', 'Quinto_sacrificio', 'Tutti_e_5'
 				),
 				'film' => array(
-					'Carica', 'Oh_no_Baymax', 'Classico', 'Disonore', 'Eccomi_qua', 'Tombola', 'Mangiafuoco', 'Tutto_mio', 'Disgrazie', 'Niente_di_niente', 'Rilevante', 'Bisbigliare',  'Minatore'
+					'Carica', 'Oh_no_Baymax', 'No', 'Classico', 'Disonore', 'Eccomi_qua', 'Tombola', 'Mangiafuoco', 'Tutto_mio', 'Disgrazie', 'Maledizione', 'Niente_di_niente', 'Rilevante', 'Bisbigliare',  'Minatore'
 				)
 			);
 
@@ -65,7 +65,7 @@
 				echo '<div class="tab-pane fade text-start pt-2' . ($categoria == 'suoni' ? ' active show' : '') . '" id="' . $categoria . '" role="tabpanel">';
 				foreach ($lista as $s) {
 					echo '<audio id="' . $s . '"><source src="media/suoni/' . $s . '.mp3" type="audio/mp3"></audio>';
-					echo '<img src="media/suoni/img/' . $s . '.jpg" onclick="suono(\'' . $s . '\');" class="img_suono" alt="' . $s . '" title="' . $s . '">';
+					echo '<img src="media/suoni/img/' . $s . '.jpg" onclick="suono(\'' . $s . '\');" class="img_suono" alt="' . $s . '" title="' . $s . '" id="img_' . $s . '">';
 				}
 				echo '</div>';
 			}
@@ -73,6 +73,8 @@
 		</div>
 		
 		<script>
+		var nextSignal = null;
+
 		function load() {
 			$('audio').each(function() {
 				this.preload = "auto";
@@ -91,7 +93,46 @@
 				this.pause();
 				this.currentTime = 0;
 			});
+			$('#img_Carmen').attr('src', 'media/suoni/img/Carmen.jpg');
 		}
+		
+		function toggle_segnaleorario() {
+			if (nextSignal != null) {
+				$('#btn_toggle_segnaleorario')
+					.removeClass('btn-outline-danger')
+					.addClass('btn-outline-success')
+					.html('<i class="bi bi-clock-fill"></i> Attiva segnale orario');
+				clearTimeout(nextSignal);
+				nextSignal = null;
+			} else {
+				$('#btn_toggle_segnaleorario')
+					.removeClass('btn-outline-success')
+					.addClass('btn-outline-danger')
+					.html('<i class="bi bi-clock-fill"></i> Disattiva segnale orario');
+				
+				var nextDate = new Date();
+				if (nextDate.getMinutes() === 0) {
+					play_segnaleorario();
+				} else {
+					nextDate.setHours(nextDate.getHours() + 1);
+					nextDate.setMinutes(0);
+					nextDate.setSeconds(0);
+
+					var difference = nextDate - new Date();
+					nextSignal = setTimeout(play_segnaleorario, difference);
+				}
+			}
+		}
+
+		function play_segnaleorario() {
+			// suona
+			nextSignal = setTimeout(play_segnaleorario, 1000 * 60 * 60);
+		}
+
+		$('#Carmen')
+			.on('playing', function() {$('#img_Carmen').attr('src', 'media/suoni/img/Carmen.gif');})
+			.on('ended', function() {$('#img_Carmen').attr('src', 'media/suoni/img/Carmen.jpg');});
+		
 		</script>
 		<script src="js/eggsuoni.js"></script>
 		
