@@ -2,6 +2,9 @@
 body {
 	padding-top: 70px;
 }
+.offcanvas {
+	padding-top: 70px;
+}
 
 .card {
 	border-width: 2px;
