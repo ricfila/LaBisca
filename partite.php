@@ -83,8 +83,7 @@
 			<?php
 			if (isset($_SESSION['id']) && $_SESSION['editor']) {
 				?>
-				<button class="btn btn-primary" onclick="nuova();"><i class="bi bi-journal-plus"></i> Nuova partita</button>
-				<br><br>
+				<button class="btn btn-primary mb-3" onclick="nuova();"><i class="bi bi-journal-plus"></i> Nuova partita</button>
 				<script>
 				function nuova() {
 					var xhttp = new XMLHttpRequest();
@@ -104,21 +103,19 @@
 				</script>
 				<?php
 			}
-			$res = $conn->query("SELECT * FROM partite ORDER BY Data desc, IdPartita desc;");
+			$res = $conn->query("SELECT partite.IdPartita, partite.Data, partite.Occasione, COUNT(mani.Numero) AS Turni FROM partite LEFT JOIN mani ON partite.IdPartita = mani.Partita GROUP BY partite.IdPartita ORDER BY partite.Data desc, IdPartita DESC;");
 			if ($res->num_rows > 0) {
 				echo '<div class="row"><div class="col-lg-2"></div><div class="col-lg">';
 				$anno = false;
 				while ($row = $res->fetch_assoc()) {
 					if (substr($row['Data'], 0, 4) != $anno) {
 						$anno = substr($row['Data'], 0, 4);
-						echo '<br><h3>' . $anno . '</h3><hr>';
+						echo '<h3 class="mt-3"><a href="anni.php?anno=' . $anno . '">' . $anno . '</a></h3><hr>';
 					}
-					$partita = partita($row['IdPartita']);
-					$turni = ($partita[4][0] + $partita[4][1] + $partita[4][2]);
 					echo '<a class="dropdown-item" href="partite.php?id=' . $row['IdPartita'] . '"><div class="row">';
-					echo '<div class="col-1 no-pad" style="text-align: right;">' . ($turni < 10 ? '&nbsp;&nbsp;' : '') . $turni . '<i class="bi bi-play-fill"></i></div>';
-					echo '<div class="col d-inline-block text-truncate" style="text-align: left;">' . (empty($row['Occasione']) ? '<span class="chiaro"><i>Occasione sconosciuta</i></span>' : $row['Occasione']) . '</div>';
-					echo '<div class="col-auto text-left px-0 px-sm-3" style="text-align: right;"><small class="chiaro"><i class="d-block d-sm-none">' . $fmt2->format(strtotime($row['Data'])) . '</i><i class="d-none d-sm-block">' . $fmt3->format(strtotime($row['Data'])) . '</i></small></div></div></a>';
+					echo '<div class="col-1 no-pad text-end">' . ($row['Turni'] < 10 ? '&nbsp;&nbsp;' : '') . $row['Turni'] . '<i class="bi bi-play-fill"></i></div>';
+					echo '<div class="col text-start d-inline-block text-truncate">' . (empty($row['Occasione']) ? '<span class="chiaro"><i>Occasione sconosciuta</i></span>' : $row['Occasione']) . '</div>';
+					echo '<div class="col-auto text-end px-0 px-sm-3"><small class="chiaro"><i class="d-block d-sm-none">' . $fmt2->format(strtotime($row['Data'])) . '</i><i class="d-none d-sm-block">' . $fmt3->format(strtotime($row['Data'])) . '</i></small></div></div></a>';
 				}
 				echo '</div><div class="col-lg-2"></div></div><br>';
 			}

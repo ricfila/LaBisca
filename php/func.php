@@ -38,7 +38,7 @@ $esitoupload = '';
 function nomedi($id, $array = false) {
 	global $conn;
 	global $nomealias;
-	$res = $conn->query("select * from giocatori where IdGiocatore = $id;");
+	$res = $conn->query("SELECT * FROM giocatori WHERE IdGiocatore = $id;");
 	if ($res->num_rows != 1)
 		return null;
 	$row = $res->fetch_assoc();

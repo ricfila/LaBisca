@@ -43,7 +43,7 @@
 					'Preparazione', 'Caduta_bomba', 'Impatto', 'Tuono', 'Allarme', 'Un_demone', 'Un_mostro', 'Mio_Dio', 'Psyco', 'Tan_tan_tan', 'Urlo1', 'Quinto_sacrificio', 'Tutti_e_5'
 				),
 				'film' => array(
-					'Carica', 'Oh_no_Baymax', 'No', 'Classico', 'Disonore', 'Eccomi_qua', 'Tombola', 'Mangiafuoco', 'Tutto_mio', 'Disgrazie', 'Maledizione', 'Niente_di_niente', 'Rilevante', 'Bisbigliare',  'Minatore'
+					'Carica', 'Oh_no_Baymax', 'No', 'Classico', 'Disonore', 'Eccomi_qua', 'Tombola', 'Mangiafuoco', 'Tutto_mio', 'Disgrazie', 'Strano', 'Maledizione', 'Niente_di_niente', 'Rilevante', 'Bisbigliare',  'Minatore'
 				)
 			);
 

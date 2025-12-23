@@ -133,10 +133,10 @@ function partita($id) {
 			$gstat[16][$giocatori[$j]] += $parziali[$i][$j];
 
 			$totali[$j] += $parziali[$i][$j];
-			if ($totali[$j] > $stat[6])
-				$stat[6] = $totali[$j];
 			if ($totali[$j] < $stat[5])
 				$stat[5] = $totali[$j];
+			if ($totali[$j] > $stat[6])
+				$stat[6] = $totali[$j];
 		}
 		$i++;
 	}
@@ -193,7 +193,7 @@ function partita($id) {
 		[4] Cappotto
 		[5] Punteggio minimo
 		[6] Punteggio massimo
-	[5] classifica: array[5] con la medaglia di ogni colonna
+	[5] classifica: array[5] con la medaglia di ogni colonna (numeri da 1 a 5)
 	[6] codici: matrice [n][5], con n numero di partite (chiamante, socio, vittoria, cappotto, Vecia)
 	[7] colonne: array[5] di array, con un array associativo per ogni giocatore che vi ha giocato riportante il turno in cui ci è entrato ['inizio'] e il numero di turni ['turni']
 	*/
@@ -282,9 +282,12 @@ function medaglie($partita) {
 	}
 
 	return $medaglie;
+	/* Output:
+	Array associativo [id_giocatore] => medaglia (1-5)
+	*/
 }
 
-function coppie($partita) {
+function coppie($cambi, $codici) {
 	$coppie = array();
 	$punti = array();
 	$vinte = array();
@@ -294,13 +297,13 @@ function coppie($partita) {
 	$benedizioni = array();
 	$maledizioni = array();
 
-	$giocatori = $partita[2][0];
-	foreach ($partita[6] as $i => $cod) {
+	$giocatori = $cambi[0];
+	foreach ($codici as $i => $cod) {
 		// Cambi di giocatori
-		if ($i > 0 && isset($partita[2][$i])) {
+		if ($i > 0 && isset($cambi[$i])) {
 			for ($j = 0; $j < 5; $j++) {
-				if (isset($partita[2][$i][$j])) {
-					$giocatori[$j] = $partita[2][$i][$j];
+				if (isset($cambi[$i][$j])) {
+					$giocatori[$j] = $cambi[$i][$j];
 				}
 			}
 		}

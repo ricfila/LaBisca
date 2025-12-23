@@ -157,84 +157,39 @@
 					<h2 class="vivaldi text-center">La carriera del Giuocatore</h2>
 					<div class="row">
 						<div class="col-md mb-4">
-							<div class="row">
-								<div class="col text-end">
-									Bi$che disputate<br>
-									Partite giocate<br>
-									Punteggio realizzato
-								</div>
-								<div class="col">
-									<strong><?php echo $res2->num_rows; ?></strong><br>
-									<strong><i class="bi bi-play-fill"></i>&nbsp;<?php echo $chiamatetot[12]; ?></strong><br>
-									<strong><?php echo ($chiamatetot[11] >= 0 ? '<span class="text-success">' : '<span class="text-danger">') . punti($chiamatetot[11]) . '</span>'; ?></strong>
-								</div>
+							<div class="row mb-2">
+								<div class="col text-end">Bi$che disputate</div>
+								<div class="col my-auto"><strong><?php echo $res2->num_rows; ?></strong></div>
+							</div>
+							<div class="row mb-2">
+								<div class="col text-end">Partite giocate</div>
+								<div class="col my-auto"><strong><i class="bi bi-play-fill"></i>&nbsp;<?php echo $chiamatetot[12]; ?></strong></div>
+							</div>
+							<div class="row mb-2">
+								<div class="col text-end">Punteggio realizzato</div>
+								<div class="col my-auto"><strong><?php echo ($chiamatetot[11] >= 0 ? '<span class="text-success">' : '<span class="text-danger">') . punti($chiamatetot[11]) . '</span>'; ?></strong></div>
 							</div>
 							<?php if (array_sum($medaglietot) > 0) { ?>
 								<div class="text-center"><h6 class="mt-3">Medaglie</h6><?php echo medagliere_giocatore($medaglietot); ?></div>
 							<?php } ?>
 						</div>
-						<div class="col-md mb-4">
-							<div class="text-center">
-								<h6>Chiamate</h6>
-								<strong class="text-success">
-									<i class="bi bi-hand-thumbs-up"></i> <?php echo $chiamatetot[0]; ?>
-								</strong>
-								<?php
-								$sum = $chiamatetot[0] + $chiamatetot[1] + $chiamatetot[2];
-								echo ($sum > 0 ? '<small>(' . floor(($chiamatetot[0] / $sum) * 100) . '%)</small>' : '');
-								?>&nbsp;&nbsp;
-								<strong class="text-danger">
-									<i class="bi bi-hand-thumbs-down"></i>&nbsp;<?php echo $chiamatetot[1]; ?>
-								</strong>&nbsp;&nbsp;
-								<?php if ($chiamatetot[2] > 0) {?>
-									<strong class="text-warning"><i class="bi bi-arrows-collapse"></i>&nbsp;<?php echo $chiamatetot[2]; ?></strong>
-								<?php } ?>
-							</div>
+						<div class="col-md mb-lg-4">
+							<?php
+							echo specchietto_chiamate($chiamatetot);
 							
-							<?php if (($chiamatetot[3] + $chiamatetot[4] + $chiamatetot[5]) > 0) { ?>
-								<div class="text-center">
-									<h6 class="mt-3">Chiamate in mano</h6>
-									<strong class="text-success">
-										<i class="bi bi-hand-thumbs-up"></i> <?php echo $chiamatetot[3]; ?>
-									</strong>&nbsp;&nbsp;
-									<strong class="text-danger">
-										<i class="bi bi-hand-thumbs-down"></i>&nbsp;<?php echo $chiamatetot[4]; ?>
-									</strong>&nbsp;&nbsp;
-									<?php if ($chiamatetot[5] > 0) {?>
-										<strong class="text-warning"><i class="bi bi-arrows-collapse"></i>&nbsp;<?php echo $chiamatetot[5]; ?></strong>
-									<?php } ?>
-								</div>
-							<?php } ?>
+							if (($chiamatetot[3] + $chiamatetot[4] + $chiamatetot[5]) > 0) { 
+								echo specchietto_chiamate_inmano([$chiamatetot[3], $chiamatetot[4], $chiamatetot[5]]);
+							}
+							?>
 						</div>
 						<div class="col-md">
-							<div class="text-center">
-								<h6><i class="bi bi-incognito"></i> Alleanze</h6>
-								<strong class="text-success">
-									<i class="bi bi-hand-thumbs-up"></i> <?php echo $chiamatetot[6]; ?>
-								</strong>
-								<?php
-								$sum = $chiamatetot[6] + $chiamatetot[7] + $chiamatetot[8];
-								echo ($sum > 0 ? '<small>(' . floor(($chiamatetot[6] / $sum) * 100) . '%)</small>' : '');
-								?>&nbsp;&nbsp;
-								<strong class="text-danger">
-									<i class="bi bi-hand-thumbs-down"></i>&nbsp;<?php echo $chiamatetot[7]; ?>
-								</strong>&nbsp;&nbsp;
-								<?php if ($chiamatetot[8] > 0) {?>
-									<strong class="text-warning"><i class="bi bi-arrows-collapse"></i>&nbsp;<?php echo $chiamatetot[8]; ?></strong>
-								<?php } ?>
-							</div>
+							<?php
+							echo specchietto_alleanze([$chiamatetot[6], $chiamatetot[7], $chiamatetot[8]]);
 							
-							<?php if (($chiamatetot[9] + $chiamatetot[10]) > 0) { ?>
-								<div class="text-center">
-									<h6 class="mt-3"><i class="bi bi-star-fill"></i> Cappotti</h6>
-									<strong class="text-success">
-										<i class="bi bi-hand-thumbs-up"></i> <?php echo $chiamatetot[9]; ?>
-									</strong>&nbsp;&nbsp;
-									<strong class="text-danger">
-										<i class="bi bi-hand-thumbs-down"></i>&nbsp;<?php echo $chiamatetot[10]; ?>
-									</strong>
-								</div>
-							<?php } ?>
+							if (($chiamatetot[9] + $chiamatetot[10]) > 0) {
+								echo specchietto_cappotti([$chiamatetot[9], $chiamatetot[10]]);
+							}
+							?>
 						</div>
 					</div>
 
