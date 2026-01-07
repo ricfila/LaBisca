@@ -171,22 +171,36 @@ switch ($ajax) {
 			echo '</div></div></div>';
 			
 			echo '<strong>La chiamata è stata:</strong><div class="row">';
+
+			// Colonna sinistra: vinta, persa o patta
 			echo '<div class="col my-auto">';
 			echo '<div class="form-check"><label class="form-check-label"><input type="radio" class="form-check-input" name="vittoria" id="vinta" value="1"' . (!$nuovo ? ($mano['Vittoria'] == 1 ? ' checked=""' : '') : '') . ' onchange="checkcodice(\'nn1n\');">Vinta</label></div>';
 			echo '<div class="form-check"><label class="form-check-label"><input type="radio" class="form-check-input" name="vittoria" id="persa" value="0"' . (!$nuovo ? ($mano['Vittoria'] == 0 ? ' checked=""' : '') : '') . ' onchange="checkcodice(\'nn0n\');">Persa</label></div>';
 			echo '<div class="form-check"><label class="form-check-label"><input type="radio" class="form-check-input" name="vittoria" id="pareggiata" value="-"' . (!$nuovo ? ($mano['Vittoria'] == null ? ' checked=""' : '') : '') . ' onchange="checkcodice(\'nn--\');">Pareggiata</label></div>';
 			echo '</div>';
+
+			// Colonna destra: con o senza cappotto
 			echo '<div class="col my-auto">';
 			echo '<div class="form-check"><label class="form-check-label"><input type="radio" class="form-check-input" name="cappotto" id="concappotto" value="1"' . (!$nuovo ? ($mano['Cappotto'] == 1 ? ' checked=""' : '') : '') . ' onchange="checkcodice(\'nnn1\');">Con cappotto</label></div>';
 			echo '<div class="form-check"><label class="form-check-label"><input type="radio" class="form-check-input" name="cappotto" id="senzacappotto" value="0"' . (!$nuovo ? ($mano['Cappotto'] == 0 || $mano['Cappotto'] == null ? ' checked=""' : '') : '') . ' onchange="checkcodice(\'nnn0\');">Senza cappotto</label></div>';
-			echo '<hr class="my-2"><div class="form-check"><input class="form-check-input" type="checkbox" id="vecia" onchange="vecia(this.checked);"' . (!$nuovo && $mano['Vecia'] == 1 ? ' checked=""' : '') . '><label class="form-check-label" for="vecia">Fante di Spade</label></div>';
+
+			// Altre opzioni
+			echo '<hr class="my-2">';
+			echo '<div class="form-check"><input class="form-check-input" type="checkbox" id="salva_orario" onchange="salva_orario(this.checked);"' . (!$nuovo && $mano['Ora'] == null ? '' : ' checked=""') . '><label class="form-check-label" for="salva_orario">Salva orario</label></div>';
+			echo '<div class="form-check"><input class="form-check-input" type="checkbox" id="vecia" onchange="vecia(this.checked);"' . (!$nuovo && $mano['Vecia'] == 1 ? ' checked=""' : '') . '><label class="form-check-label" for="vecia">Fante di Spade</label></div>';
 			echo '</div>';
 			echo '</div><br>';
 			
 			echo '<div class="row"><div class="col-auto my-auto"><strong>Codice:</strong></div>';
 			echo '<div class="col"><input type="text" class="form-control m-0" id="codice"' . (!$nuovo ? ' value="' . $mano['Chiamante'] . $mano['Socio'] . ($mano['Vittoria'] == null ? '--' : $mano['Vittoria'] . $mano['Cappotto']) . '"' : '') . ' onkeyup="if(event.keyCode == 13) salvaturno(' . ($nuovo ? '\'nuovo\'' : $numero) . ');"></div></div>';
+
 			if (!$nuovo) {
-				echo '<hr><div class="input-group mb-3"><button class="btn btn-sm btn-info" onclick="spostaturno(' . $numero . ');"><i class="bi bi-arrow-down-up"></i> Sposta in posizione</button><input class="form-control" type="number" min="1" max="' . $conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows . '" id="posizione" style="margin: 0px;" value="' . $numero . '"></div>';
+				echo '<hr>';
+				echo '<div class="row mb-3"><div class="col-auto my-auto"><strong>Orario di salvataggio:</strong></div>';
+				echo '<div class="col"><input type="time" class="form-control m-0" id="orario" value="' . ($mano['Ora'] != null ? $mano['Ora'] : date('H:i')) . '"' . ($mano['Ora'] == null ? ' disabled' : '') . '></div></div>';
+
+				echo '<div class="input-group mb-3"><button class="btn btn-sm btn-info" onclick="spostaturno(' . $numero . ');"><i class="bi bi-arrow-down-up"></i> Sposta in posizione</button><input class="form-control" type="number" min="1" max="' . $conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows . '" id="posizione" style="margin: 0px;" value="' . $numero . '"></div>';
+
 				echo '<button class="btn btn-danger" onclick="modalelimina('. $numero . ');"><i class="bi bi-trash"></i> Elimina questo turno</button><br>';
 			}
 			echo '<span class="text-danger" id="erroreturno"></span>';
@@ -200,16 +214,17 @@ switch ($ajax) {
 		$socio = substr($codice, 1, 1);
 		$vittoria = (substr($codice, 2, 1) == '-' ? "null" : substr($codice, 2, 1));
 		$cappotto = (substr($codice, 3, 1) == '-' ? "null" : substr($codice, 3, 1));
+		$orario = ($orario == 'false' ? "null" : ($orario == 'true' ? "DATE_FORMAT(NOW(), '%H:%i')" : "'" . $orario . "'"));
 		if ($numero == 'nuovo') {
 			$numero = $conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows + 1;
-			if ($conn->query("INSERT INTO mani (Partita, Numero, Chiamante, Socio, Vittoria, Cappotto, Vecia) VALUES ($id, " . $numero . ", $chiamante, $socio, $vittoria, $cappotto, $vecia);")) {
+			if ($conn->query("INSERT INTO mani (Partita, Numero, Chiamante, Socio, Vittoria, Cappotto, Vecia, Ora) VALUES ($id, " . $numero . ", $chiamante, $socio, $vittoria, $cappotto, $vecia, $orario);")) {
 				echo json_encode(array('numero' => $numero, 'partita' => mostra_partita($id, true, $numero)));
 			} else {
 				http_response_code(500);
 				echo $conn->error;
 			}
 		} else {
-			if ($conn->query("UPDATE mani SET Chiamante = $chiamante, Socio = $socio, Vittoria = $vittoria, Cappotto = $cappotto, Vecia = $vecia WHERE Partita = $id AND Numero = $numero;")) {
+			if ($conn->query("UPDATE mani SET Chiamante = $chiamante, Socio = $socio, Vittoria = $vittoria, Cappotto = $cappotto, Vecia = $vecia, Ora = $orario WHERE Partita = $id AND Numero = $numero;")) {
 				echo json_encode(array('numero' => $numero, 'partita' => mostra_partita($id, true, $numero)));
 			} else {
 				http_response_code(500);

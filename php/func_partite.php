@@ -54,7 +54,7 @@ function partita($id) {
 			}
 		}
 		$parziali[] = array(0, 0, 0, 0, 0);
-		$codici[] = array($rowm['Chiamante'], $rowm['Socio'], $rowm['Vittoria'], $rowm['Cappotto'], $rowm['Vecia']);
+		$codici[] = array($rowm['Chiamante'], $rowm['Socio'], $rowm['Vittoria'], $rowm['Cappotto'], $rowm['Vecia'], $rowm['Ora']);
 		$palio = 0;
 		$palio2 = 0;
 		$vittoria = 0;
@@ -194,7 +194,7 @@ function partita($id) {
 		[5] Punteggio minimo
 		[6] Punteggio massimo
 	[5] classifica: array[5] con la medaglia di ogni colonna (numeri da 1 a 5)
-	[6] codici: matrice [n][5], con n numero di partite (chiamante, socio, vittoria, cappotto, Vecia)
+	[6] codici: matrice [n][6], con n numero di partite (chiamante, socio, vittoria, cappotto, Vecia, ora)
 	[7] colonne: array[5] di array, con un array associativo per ogni giocatore che vi ha giocato riportante il turno in cui ci è entrato ['inizio'] e il numero di turni ['turni']
 	*/
 }

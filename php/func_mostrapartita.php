@@ -14,7 +14,24 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 	
 	// Giocatori
 	$out .= '<div style="position: relative;">';
-	$out .= '<div class="sticky-top" style="top: 55px; z-index: 100;"><div class="row m-0" style="background: var(--sfondo);"><div class="col-2 col-sm-1 pad-alto border-end border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
+	$out .= '<div class="sticky-top" style="top: 55px; z-index: 100;"><div class="row m-0" style="background: var(--sfondo);">';
+	
+	// Prima cella della prima riga dei giocatori: eventuale bottone di toggle degli orari se previsti
+	$orari = false;
+	foreach ($partita[6] as $codice) {
+		if ($codice[5] != null) {
+			$orari = true;
+			break;
+		}
+	}
+	$out .= '<div class="col-2 col-sm-1 border-end border-primary ps-0 pe-2 text-center" style="height: ' . ($edit ? 31 : 23) . 'px;">';
+	if ($orari) {
+		$out .= '<input type="checkbox" class="btn-check" id="toggle_orario" autocomplete="off" onclick="toggleOrari($(this).prop(\'checked\'));"' . (isset($_COOKIE['orari']) && $_COOKIE['orari'] == 'true' ? ' checked=""' : '') . '><label for="toggle_orario" class="btn btn-sm btn-outline-primary' . (!$edit ? ' py-0' : '') . '"' . (!$edit ? ' style="margin-top: -5px;"' : '') . '><i class="bi bi-clock"></i></label>';
+	} else {
+		$out .= '<h6 style="margin: 0px;">&nbsp;</h6>';
+	}
+	$out .= '</div>';
+
 	foreach ($partita[2][0] as $i => $idg) {
 		$out .= '<div class="col pad-alto border border-start-0 border-primary text-truncate" style="background: var(--sfondo); position: relative; height: ' . ($edit ? 31 : 23) . 'px;">';
 		if ($idg == null) {
@@ -25,7 +42,7 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 			$nome = nomedi($idg);
 			$nomi = nomedi($idg, true);
 			if ($edit) {
-				$out .= '<button class="btn btn-outline-dark btn-sm atext-truncate" style="width: 100%; padding: 2px 0px;" onclick="primogioc(' . ($i + 1) . ', [\'' . addslashes($nomi[0]) . '\', \'' . addslashes($nomi[1]) . '\']);">&nbsp;<span class="longx">' . $nome . '</span></button>';
+				$out .= '<button class="btn btn-outline-dark btn-sm" style="width: 100%; padding: 2px 0px;" onclick="primogioc(' . ($i + 1) . ', [\'' . addslashes($nomi[0]) . '\', \'' . addslashes($nomi[1]) . '\']);">&nbsp;<span class="longx">' . $nome . '</span></button>';
 			} else {
 				$out .= '<h6 style="margin: 0px; overflow-x: hidden;"><a class="longx text-tema text-decoration-none" href="giocatori.php?id=' . $idg . '">' . $nome . '</a></h6>';
 			}
@@ -46,7 +63,7 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 					$nomi = nomedi($partita[2][$i][$j], true);
 					$out .= '<div class="col pad-alto border-end border-bottom border-primary text-truncate" style="pointer-events: auto; background: var(--sfondo); position: relative; height: ' . ($edit ? 31 : 23) . 'px;">';
 					if ($edit) {
-						$out .= '<button class="btn btn-outline-dark btn-sm atext-truncate" style="width: 100%; padding: 2px 0px;" onclick="modalannullacambio(' . ($i + 1) . ', ' . ($j + 1) . ', [\'' . addslashes($nomi[0]) . '\', \'' . addslashes($nomi[1]) . '\']);">&nbsp;<span class="longx">' . $nome . '</span></button>';
+						$out .= '<button class="btn btn-outline-dark btn-sm" style="width: 100%; padding: 2px 0px;" onclick="modalannullacambio(' . ($i + 1) . ', ' . ($j + 1) . ', [\'' . addslashes($nomi[0]) . '\', \'' . addslashes($nomi[1]) . '\']);">&nbsp;<span class="longx">' . $nome . '</span></button>';
 					} else {
 						$out .= '<h6 style="margin: 0px;"><a class="longx text-tema text-decoration-none" href="giocatori.php?id=' . $partita[2][$i][$j] . '">' . $nome . '</a></h6>';
 					}
@@ -57,7 +74,12 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 			}
 			$out .= '</div></div>';
 		}
-		$out .= '<div id="riga' . ($i + 1) . '" class="row m-0 rigatabella' . ($nuovariga == $i + 1 ? ' nuovariga' : '') . '"><div class="col-2 col-sm-1 border-end border-primary pad-alto pe-2 text-end">' . ($edit ? '<button class="btn btn-primary no-pad" style="width: 90%;" onclick="turno(' . ($i + 1) . ');">' : '') . '<i class="bi bi-hash"></i>' . ($i + 1) . ($edit ? '</button>' : '') . '</div>';
+		$out .= '<div id="riga' . ($i + 1) . '" class="row m-0 rigatabella' . ($nuovariga == $i + 1 ? ' nuovariga' : '') . '">';
+		
+		// Indice di turno o orario
+		$out .= '<div class="col-2 col-sm-1 border-end border-primary pad-alto pe-2"><span class="index_turno text-end" style="display: ' . ($orari && isset($_COOKIE['orari']) && $_COOKIE['orari'] == 'true' ? 'none' : 'block') . ';">' . ($edit ? '<button class="btn btn-primary no-pad" style="width: 90%;" onclick="turno(' . ($i + 1) . ');">' : '') . '<i class="bi bi-hash"></i>' . ($i + 1) . ($edit ? '</button>' : '') . '</span>';
+		$out .= '<span class="orario_turno" style="display: ' . ($orari && isset($_COOKIE['orari']) && $_COOKIE['orari'] == 'true' ? 'block' : 'none') . ';">' . ($partita[6][$i][5] != null ? substr($partita[6][$i][5], 0, 5) : '--:--') . '</span>';
+		$out .= '</div>';
 		for ($j = 0; $j < 5; $j++) {
 			$totali[$j] += $partita[0][$i][$j];
 			$parz = ($partita[0][$i][$j] > 0 ? '+' : '') . $partita[0][$i][$j];

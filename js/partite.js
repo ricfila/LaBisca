@@ -15,6 +15,17 @@ function info() {
 	modal('Modifica informazioni', 'Bi$ca in occasione di:<input class="form-control" type="text" id="occasione" value="' + document.getElementById('occasione0').innerHTML + '" onkeyup="if(event.keyCode == 13) salvainfo();">Data:<input type="date" class="form-control" id="data" value="' + document.getElementById('data0').innerHTML + '" onkeyup="if(event.keyCode == 13) salvainfo();">Note:<textarea class="form-control" id="note" rows="5">' + document.getElementById('note0').innerHTML + '</textarea><span class="text-danger" id="erroreinfo"></span>', '<button class="btn btn-success" onclick="salvainfo();"><i class="bi bi-check-circle-fill"></i> Salva</button>');
 }
 
+function toggleOrari(mostraOrari) {
+	setCookie('orari', mostraOrari, 365);
+	if (mostraOrari) {
+		$('.index_turno').css('display', 'none');
+		$('.orario_turno').css('display', 'block');
+	} else {
+		$('.index_turno').css('display', 'block');
+		$('.orario_turno').css('display', 'none');
+	}
+}
+
 function salvainfo() {
 	var occasione = document.getElementById('occasione').value;
 	var data = document.getElementById('data').value;
@@ -123,6 +134,10 @@ function vecia(check) {
 	}
 }
 
+function salva_orario(check) {
+	$('#orario').prop('disabled', !check);
+}
+
 function checkcodice(stringa) {
 	var codice = '';
 	var old = document.getElementById('codice');
@@ -170,7 +185,9 @@ function salvaturno(numero) {
 		};
 		xhttp.open("POST", "php/ajax.php", true);
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("ajax=salvaturno&id=" + id + "&numero=" + numero + "&codice=" + codice + "&vecia=" + ($('#vecia').is(':checked')?1:0));
+		let value_vecia = $('#vecia').is(':checked') ? 1 : 0;
+		let value_orario = $('#salva_orario').is(':checked') ? ($('#orario').val() != null ? $('#orario').val() : 'true') : 'false';
+		xhttp.send("ajax=salvaturno&id=" + id + "&numero=" + numero + "&codice=" + codice + "&vecia=" + value_vecia + "&orario=" + value_orario);
 	}
 }
 
