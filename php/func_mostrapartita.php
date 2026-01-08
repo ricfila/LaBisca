@@ -35,31 +35,9 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 		if ($turni_giocati > 0) {
 			$last = $conn->query("SELECT * FROM mani WHERE Partita = $id ORDER BY Numero DESC LIMIT 1;")->fetch_assoc();
 			$giocatori_attivi = giocatori_attivi_alturno($id, $turni_giocati);
-			$giocatori = $giocatori_attivi[0];
 
-			$out .= '<hr><h6 class="mb-4">Ultimo turno registrato' . ($last['Ora'] != null ? ' alle ore ' . substr($last['Ora'], 0, 5) : '') . ':</h6><span style="font-family: WhiteDream; font-size: 24px;" class="text-center">';
-			if ($last['Chiamante'] == $last['Socio']) {
-				$out .= '<p><a href="giocatori.php?id=' . $giocatori[$last['Chiamante'] - 1] . '">' . nomedi($giocatori[$last['Chiamante'] - 1]) . '</a> con risoluto ardimento, ebbe ad autochiamarsi in codesto evento.</p>';
-				if ($last['Vittoria'] == '1') {
-					$out .= '<p>Forte di sorte e maestria dalla sua parte, assurse alla vittoria con destrezza e arte.</p>';
-				} else if ($last['Vittoria'] == '0') {
-					$out .= '<p>Ma dopo una scabrosa difesa e un valoroso cimento, soccombette al fato avverso e alla sventura del momento.</p>';
-				}
-			} else {
-				$out .= '<p><a href="giocatori.php?id=' . $giocatori[$last['Chiamante'] - 1] . '">' . nomedi($giocatori[$last['Chiamante'] - 1]) . '</a> appellò <a href="giocatori.php?id=' . $giocatori[$last['Socio'] - 1] . '">' . nomedi($giocatori[$last['Socio'] - 1]) . '</a> in amicizia reticente, per compiere le imprese di un cammino avvincente.</p>';
-				if ($last['Vittoria'] == '1') {
-					$out .= '<p>Insieme, con acume e talento, trionfarono impavidi contro ogni avverso accadimento.</p>';
-				} else if ($last['Vittoria'] == '0') {
-					$out .= '<p>Tuttavia, nonostante il coraggio e la tenacia spesi, dovettero cedere agli alleati più forti e coesi.</p>';
-				}
-			}
-			if ($last['Vittoria'] == null) {
-				$out .= '<p>Al termine di un conteso conteggio, si evinse che la mano terminò con un pareggio.</p>';
-			}
-			if ($last['Cappotto'] == '1') {
-				$out .= '<p>Tale è l\'opulenza che al fato s\'accompagna, che si raggiunse inavvertitamente la cima della cuccagna.</p>';
-			}
-			$out .= '</span>';
+			$out .= '<hr><h6 class="mb-4">Ultimo turno registrato' . ($last['Ora'] != null ? ' alle ore ' . substr($last['Ora'], 0, 5) : '') . ':</h6>';
+			$out .= racconto_turno($giocatori_attivi[0], [$last['Chiamante'], $last['Socio'], $last['Vittoria'], $last['Cappotto'], $last['Vecia']]);
 		}
 	} else {
 		// Giocatori
@@ -83,6 +61,7 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 		$out .= '</div>';
 
 		// Prima riga dei giocatori
+		$giocatori = $partita[2][0];
 		foreach ($partita[2][0] as $i => $idg) {
 			$out .= '<div class="col pad-alto border border-start-0 border-primary text-truncate text-center" style="background: var(--sfondo); position: relative; height: ' . ($edit ? 31 : 23) . 'px;">';
 			if ($idg == null) {
@@ -104,12 +83,14 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 		
 		// Mani e punteggi
 		$totali = array(0, 0, 0, 0, 0);
+		$racconti = array();
 		foreach ($partita[0] as $i => $parz) {
 			// Cambi di giocatori
 			if ($i > 0 && isset($partita[2][$i])) {
 				$out .= '<div class="sticky-top" style="pointer-events: none; top: 55px; z-index: ' . (100 + $i) . '; margin-top: 1px;"><div class="row m-0"><div class="col-2 col-sm-1 pad-alto' . (isset($partita[2][$i][0]) ? ' border-end' : '') . ' border-primary"><h6 style="margin: 0px;">&nbsp;</h6></div>';
 				for ($j = 0; $j < 5; $j++) {
 					if (isset($partita[2][$i][$j])) {
+						$giocatori[$j] = $partita[2][$i][$j];
 						$nome = nomedi($partita[2][$i][$j]);
 						$nomi = nomedi($partita[2][$i][$j], true);
 						$out .= '<div class="col pad-alto border-end border-bottom border-primary text-truncate text-center" style="pointer-events: auto; background: var(--sfondo); position: relative; height: ' . ($edit ? 31 : 23) . 'px;">';
@@ -127,10 +108,16 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 			}
 			$out .= '<div id="riga' . ($i + 1) . '" class="row m-0 rigatabella' . ($nuovariga == $i + 1 ? ' nuovariga' : '') . '">';
 			
-			// Indice di turno o orario
-			$out .= '<div class="col-2 col-sm-1 border-end border-primary pad-alto pe-2"><span class="index_turno text-end" style="display: ' . ($orari && isset($_COOKIE['orari']) && $_COOKIE['orari'] == 'true' ? 'none' : 'block') . ';">' . ($edit ? '<button class="btn btn-primary no-pad" style="width: 90%;" onclick="turno(' . ($i + 1) . ');">' : '') . '<i class="bi bi-hash"></i>' . ($i + 1) . ($edit ? '</button>' : '') . '</span>';
+
+			$out .= '<div class="col-2 col-sm-1 border-end border-primary pad-alto pe-2">';
+			// Indice di turno
+			$out .= '<span class="index_turno text-end" style="display: ' . ($orari && isset($_COOKIE['orari']) && $_COOKIE['orari'] == 'true' ? 'none' : 'block') . ';">' . ($edit ? '<button class="btn btn-primary no-pad" style="width: 90%;" onclick="turno(' . ($i + 1) . ');">' : '<span onclick="apri_racconto(' . $i . ');">') . '<i class="bi bi-hash"></i>' . ($i + 1) . ($edit ? '</button>' : '</span>') . '</span>';
+			$racconti[] = racconto_turno($giocatori, $partita[6][$i]);
+
+			// Orario del turno
 			$out .= '<span class="orario_turno text-center" style="display: ' . ($orari && isset($_COOKIE['orari']) && $_COOKIE['orari'] == 'true' ? 'block' : 'none') . ';">' . ($partita[6][$i][5] != null ? substr($partita[6][$i][5], 0, 5) : '--:--') . '</span>';
 			$out .= '</div>';
+
 			for ($j = 0; $j < 5; $j++) {
 				$totali[$j] += $partita[0][$i][$j];
 				$parz = ($partita[0][$i][$j] > 0 ? '+' : '') . $partita[0][$i][$j];
@@ -228,6 +215,8 @@ function mostra_partita($id, $edit, $nuovariga = false) {
 			}
 			$out .= '</div>';
 		}
+
+		$out .= '<script>var racconti = ' . json_encode($racconti) . ';</script>';
 	}
 	
 	$out .= '<div class="row mt-4"><div class="col-lg-2"></div><div class="col">';
@@ -599,6 +588,33 @@ function mostra_partita_breve($id) {
 	}
 	
 	$out .= '</p></div></div>';
+	return $out;
+}
+
+function racconto_turno($giocatori, $codice) {
+	$out = '<span style="font-family: WhiteDream; font-size: 24px;" class="text-center">';
+	if ($codice[0] == $codice[1]) {
+		$out .= '<p><a href="giocatori.php?id=' . $giocatori[$codice[0] - 1] . '">' . nomedi($giocatori[$codice[0] - 1]) . '</a> con risoluto ardimento, ebbe ad autochiamarsi in codesto evento.</p>';
+		if ($codice[2] == '1') {
+			$out .= '<p>Forte di sorte e maestria dalla sua parte, assurse alla vittoria con destrezza e arte.</p>';
+		} else if ($codice[2] == '0') {
+			$out .= '<p>Ma dopo una scabrosa difesa e un valoroso cimento, soccombette al fato avverso e alla sventura del momento.</p>';
+		}
+	} else {
+		$out .= '<p><a href="giocatori.php?id=' . $giocatori[$codice[0] - 1] . '">' . nomedi($giocatori[$codice[0] - 1]) . '</a> appellò <a href="giocatori.php?id=' . $giocatori[$codice[1] - 1] . '">' . nomedi($giocatori[$codice[1] - 1]) . '</a> in amicizia reticente, per compiere le imprese di un cammino avvincente.</p>';
+		if ($codice[2] == '1') {
+			$out .= '<p>Insieme, con acume e talento, trionfarono impavidi contro ogni avverso accadimento.</p>';
+		} else if ($codice[2] == '0') {
+			$out .= '<p>Tuttavia, nonostante il coraggio e la tenacia spesi, dovettero cedere agli alleati più forti e coesi.</p>';
+		}
+	}
+	if ($codice[2] == null) {
+		$out .= '<p>Al termine di un conteso conteggio, si evinse che la mano terminò con un pareggio.</p>';
+	}
+	if ($codice[3] == '1') {
+		$out .= '<p>Tale è l\'opulenza che al fato s\'accompagna, che si raggiunse inavvertitamente la cima della cuccagna.</p>';
+	}
+	$out .= '</span>';
 	return $out;
 }
 ?>
