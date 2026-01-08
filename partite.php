@@ -18,11 +18,12 @@
 	<?php echo head(); ?>
 	<div class="container-fluid">
 		<?php
+		$logged = isset($_SESSION['id']) && $_SESSION['editor'];
+
 		if (isset($_GET['id'])) {
 			$id = $conn->real_escape_string(stripslashes($_GET['id']));
 			$res = $conn->query("SELECT * FROM partite WHERE IdPartita = $id;");
 			if ($res->num_rows == 1) {
-				$logged = isset($_SESSION['id']) && $_SESSION['editor'];
 				$edit = $logged && isset($_GET['edit']);
 				?>
 				<div class="row">
@@ -41,11 +42,7 @@
 						<?php
 						// Pulsante modifica/torna in visualizzazione
 						if ($logged) {
-							?>
-							<div style="position: fixed; bottom: 20px; right: 20px; z-index: 900;">
-								<a class="btn btn-lg btn-<?php echo ($edit ? 'info' : 'success'); ?>" href="partite.php?id=<?php echo $id . (!$edit ? '&edit=true' : ''); ?>" style="width: 60px; height: 60px; line-height: 45px; border-radius: 50%; box-shadow: var(--ombra) 3px 3px 10px; font-size: 1.5em;"><i class="bi bi-<?php echo ($edit ? 'check-lg' : 'pencil-fill'); ?>"></i></a>
-							</div>
-							<?php
+							echo btn_angolo($edit ? 'info' : 'success', 'partite.php?id=' . $id . (!$edit ? '&edit=true' : ''), $edit ? 'check-lg' : 'pencil-fill');
 						}
 
 						// Modifiche
@@ -114,21 +111,61 @@
 				?>
 			</div>
 			<?php
-			$res = $conn->query("SELECT partite.IdPartita, partite.Data, partite.Occasione, COUNT(mani.Numero) AS Turni FROM partite LEFT JOIN mani ON partite.IdPartita = mani.Partita GROUP BY partite.IdPartita ORDER BY partite.Data desc, IdPartita DESC;");
+			$res = $conn->query("SELECT partite.IdPartita, partite.Data, partite.Occasione, partite.Note, COUNT(mani.Numero) AS Turni FROM partite LEFT JOIN mani ON partite.IdPartita = mani.Partita GROUP BY partite.IdPartita ORDER BY partite.Data desc, IdPartita DESC;");
 			if ($res->num_rows > 0) {
 				echo '<div class="row"><div class="col-lg-2"></div><div class="col-lg">';
+				echo '<div class="position-relative">';
+				echo '<input type="text" id="cerca_partita" class="form-control w-100 my-4 mx-auto" placeholder="Cerca una partita..." onkeyup="cerca_partita();" />';
+				echo '<button class="btn btn-sm btn-outline-secondary h-100" onclick="$(\'#cerca_partita\').val(\'\'); cerca_partita();" style="position: absolute; top: 0px; right: 0px;"><i class="bi bi-x-lg"></i></button>';
+				echo '</div>';
+
 				$anno = false;
+				$partite = array();
+				$partite_anno = array();
 				while ($row = $res->fetch_assoc()) {
 					if (substr($row['Data'], 0, 4) != $anno) {
 						$anno = substr($row['Data'], 0, 4);
-						echo '<h3 class="mt-3 text-center"><a href="anni.php?anno=' . $anno . '">' . $anno . '</a></h3><hr>';
+						$partite_anno[$anno] = 0;
+						echo '<div id="anno_' . $anno . '"><h3 class="mt-3 text-center"><a href="anni.php?anno=' . $anno . '">' . $anno . '</a></h3><hr></div>';
 					}
-					echo '<a class="dropdown-item" href="partite.php?id=' . $row['IdPartita'] . '"><div class="row">';
+					$partite[] = array('id' => $row['IdPartita'], 'occasione' => $row['Occasione'], 'note' => $row['Note'], 'anno' => $anno);
+					$partite_anno[$anno]++;
+
+					echo '<a id="partita_' . $row['IdPartita'] . '" class="dropdown-item" href="partite.php?id=' . $row['IdPartita'] . '"><div class="row">';
 					echo '<div class="col-1 no-pad text-end">' . ($row['Turni'] < 10 ? '&nbsp;&nbsp;' : '') . $row['Turni'] . '<i class="bi bi-play-fill"></i></div>';
 					echo '<div class="col text-start d-inline-block text-truncate">' . (empty($row['Occasione']) ? '<span class="chiaro"><i>Occasione sconosciuta</i></span>' : $row['Occasione']) . '</div>';
 					echo '<div class="col-auto text-end px-0 px-sm-3"><small class="chiaro"><i class="d-block d-sm-none">' . $fmt2->format(strtotime($row['Data'])) . '</i><i class="d-none d-sm-block">' . $fmt3->format(strtotime($row['Data'])) . '</i></small></div></div></a>';
 				}
 				echo '</div><div class="col-lg-2"></div></div><br>';
+				?>
+				<script>
+				let partite = <?php echo json_encode($partite); ?>;
+				let partite_anno = <?php echo json_encode($partite_anno); ?>;
+
+				function cerca_partita() {
+					let input = $('#cerca_partita').val().toLowerCase();
+					$.each(partite_anno, function(anno) {
+						partite_anno[anno] = 0;
+					});
+					partite.forEach(function(p) {
+						let elem = $('#partita_' + p.id);
+						if (p.occasione.toLowerCase().includes(input) || (p.note != null && p.note.toLowerCase().includes(input))) {
+							elem.show();
+							partite_anno[p.anno]++;
+						} else {
+							elem.hide();
+						}
+					});
+					$.each(partite_anno, function(anno) {
+						if (partite_anno[anno] == 0) {
+							$('#anno_' + anno).hide();
+						} else {
+							$('#anno_' + anno).show();
+						}
+					});
+				}
+				</script>
+				<?php
 			}
 		}
 		?>

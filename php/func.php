@@ -128,4 +128,12 @@ function listafoto($id) {
 	}
 }
 
+function btn_angolo($colore, $target, $icona, $link = true) {
+	$out = '<div style="position: fixed; bottom: 20px; right: 20px; z-index: 900;">';
+	$out .= '<' . ($link ? 'a' : 'button') . ' class="btn btn-lg btn-' . $colore . '" ' . ($link ? 'href' : 'onclick') . '="' . $target . '" style="width: 60px; height: 60px; line-height: 45px; border-radius: 50%; box-shadow: var(--ombra) 3px 3px 10px; font-size: 1.5em;">';
+	$out .= '<i class="bi bi-' . $icona . '"></i>';
+	$out .= '</' . ($link ? 'a' : 'button') . '></div>';
+	return $out;
+}
+
 ?>
