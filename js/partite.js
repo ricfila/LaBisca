@@ -48,7 +48,7 @@ function salvainfo() {
 
 var colonna;
 function primogioc(col, nome) {
-	modal('Inserisci giocatore', 'Quale giocatore inserire ' + (nome == false ? 'nella colonna ' + col : 'al posto di <strong>' + nome[nomealias] + '</strong>') + '?<input class="form-control" type="text" id="primogioc" placeholder="Cerca..." onkeyup="cercagiocatori(this.value);" autofocus><div id="listag"></div>');
+	modal('Inserisci giocatore', 'Quale giocatore inserire ' + (nome == false ? 'nella colonna ' + col : 'al posto di <strong>' + nome[nomealias] + '</strong>') + '?<input class="form-control" type="text" autocomplete="off" id="primogioc" placeholder="Cerca..." onkeyup="cercagiocatori(this.value);" autofocus><div id="listag"></div>');
 	colonna = col;
 	cercagiocatori('');
 	document.getElementById('primogioc').focus();
@@ -370,6 +370,25 @@ function salvaturni() {
 	xhttp.open("POST", "php/ajax.php", true);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.send("ajax=salvaturni&id=" + id + "&codici=" + codici);
+}
+
+
+function mostrapunteggi() {
+	var xhttp = new XMLHttpRequest();
+	xhttp.onreadystatechange = function() {
+		if (this.readyState == 4) {
+			if (this.status == 200) {
+				mostrapartita(this.responseText);
+				$('#btnmostrapunteggi').html(puntegginascosti ? '<i class="bi bi-lock-fill"></i> Cela i punteggi' : '<i class="bi bi-unlock-fill"></i> Svela i punteggi');
+				puntegginascosti = !puntegginascosti;
+			} else {
+				modal('Errore', '<span class="text-danger">' + this.responseText + '</span>', null);
+			}
+		}
+	};
+	xhttp.open("POST", "php/ajax_admin.php", true);
+	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	xhttp.send("ajax=togglepuntegginascosti&id=" + id);
 }
 
 function modaleliminapartita() {

@@ -21,10 +21,10 @@
 					<div class="col"><h1 class="mb-3"><strong>Riepilogo <?php echo $anno; ?></strong></h1></div>
 					<div class="col-auto">
 						<?php
-							if ($conn->query("SELECT * FROM partite WHERE Data LIKE '" . ($anno-1) . "%';")->num_rows > 0) {
+							if ($conn->query("SELECT * FROM partite WHERE Data LIKE '" . ($anno-1) . "%' AND NOT PuntiNascosti;")->num_rows > 0) {
 								echo '<a id="link_prevyear" href="anni.php?anno=' . ($anno-1) . '" class="btn btn-primary me-2"><i class="bi bi-caret-left-fill"></i></a>';
 							}
-							$anno_dopo = ($conn->query("SELECT * FROM partite WHERE Data LIKE '" . ($anno+1) . "%';")->num_rows > 0);
+							$anno_dopo = ($conn->query("SELECT * FROM partite WHERE Data LIKE '" . ($anno+1) . "%' AND NOT PuntiNascosti;")->num_rows > 0);
 							echo '<a id="link_nextyear" href="anni.php?anno=' . ($anno+1) . '" class="btn btn-primary"' . (!$anno_dopo ? ' style="opacity: 0; pointer-events: none;"' : '') . '><i class="bi bi-caret-right-fill"></i></a>';
 						?>
 					</div>
@@ -32,9 +32,10 @@
 
 				<?php
 				$res = $conn->query("SELECT * FROM partite WHERE Data LIKE '" . $anno . "%' ORDER BY Data;");
+				$res2 = $conn->query("SELECT * FROM partite WHERE Data LIKE '" . $anno . "%' AND NOT PuntiNascosti ORDER BY Data;");
 				
 				$num_bische = $res->num_rows;
-				if ($num_bische > 0) {
+				if ($res2->num_rows > 0) {
 					$num_partite = 0;
 					$stat_chiamate = array(0, 0, 0); // Vinte, perse, patte
 					$stat_chiamate_inmano = array(0, 0, 0); // In mano vinte, in mano perse, in mano patte
@@ -65,6 +66,10 @@
 						$partita = partita($id);
 
 						$num_partite += count($partita[0]);
+						if ($partita[1] == null) {
+							continue;
+						}
+
 						$stat_chiamate[0] += $partita[4][0];
 						$stat_chiamate[1] += $partita[4][1];
 						$stat_chiamate[2] += $partita[4][2];

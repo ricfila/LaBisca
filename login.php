@@ -34,7 +34,7 @@
 			<div class="col">
 				<h4>Accesso al sito</h4><hr class="mb-3">
 				
-				<input id="inputg" type="text" class="form-control" placeholder="Nome del giuocatore" onkeyup="cercagiocatori(this.value);" autocomplete="off" />
+				<input id="inputg" type="text" class="form-control" autocomplete="off" placeholder="Nome del giuocatore" onkeyup="cercagiocatori(this.value);" autocomplete="off" />
 				<button id="btng" class="btn btn-outline-dark w-100 mb-2" style="display: none;" onclick="ripristinainput();"></button>
 				<div id="giocatori" class="mb-2" zstyle="max-height: 100vh; overflow-y: scroll;"></div>
 

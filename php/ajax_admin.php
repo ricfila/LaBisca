@@ -42,10 +42,18 @@ switch ($ajax) {
 			}
 		}
 		break;
+	case 'togglepuntegginascosti':
+		if ($conn->query("UPDATE partite SET PuntiNascosti = NOT PuntiNascosti WHERE IdPartita = $id;")) {
+			echo mostra_partita($id, true);
+		} else {
+			http_response_code(500);
+			echo $conn->error;
+		}
+		break;
 	case 'eliminapartita':
-		$conn->query("delete from partite where IdPartita = $id;");
-		$conn->query("delete from partecipazioni where Partita = $id;");
-		$conn->query("delete from mani where Partita = $id;");
+		$conn->query("DELETE FROM partite WHERE IdPartita = $id;");
+		$conn->query("DELETE FROM partecipazioni WHERE Partita = $id;");
+		$conn->query("DELETE FROM mani WHERE Partita = $id;");
 		break;
 	default:
 		exit;

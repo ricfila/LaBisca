@@ -143,17 +143,9 @@ switch ($ajax) {
 			$nuovo = true;
 			$numero = $conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows + 1;
 		}
-		$resg = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio <= $numero ORDER BY Inizio DESC;");
-		if ($resg->num_rows > 4) {
-			$gioc = array(null, null, null, null, null);
-			while (in_array(null, $gioc)) {
-				$rowg = $resg->fetch_assoc();
-				if ($rowg == null)
-					break;
-				if ($gioc[$rowg['Colonna'] - 1] == null) {
-					$gioc[$rowg['Colonna'] - 1] = $rowg['Giocatore'];
-				}
-			}
+
+		$gioc = giocatori_attivi_alturno($id, $numero)[0];
+		if ($gioc !== false) {
 			if (!$nuovo) {
 				$mano = $conn->query("SELECT * FROM mani WHERE Partita = $id AND Numero = $numero;")->fetch_assoc();
 				$nuovo = $mano == null;
@@ -192,7 +184,7 @@ switch ($ajax) {
 			echo '</div><br>';
 			
 			echo '<div class="row"><div class="col-auto my-auto"><strong>Codice:</strong></div>';
-			echo '<div class="col"><input type="text" class="form-control m-0" id="codice"' . (!$nuovo ? ' value="' . $mano['Chiamante'] . $mano['Socio'] . ($mano['Vittoria'] == null ? '--' : $mano['Vittoria'] . $mano['Cappotto']) . '"' : '') . ' onkeyup="if(event.keyCode == 13) salvaturno(' . ($nuovo ? '\'nuovo\'' : $numero) . ');"></div></div>';
+			echo '<div class="col"><input type="text" class="form-control m-0" autocomplete="off" id="codice"' . (!$nuovo ? ' value="' . $mano['Chiamante'] . $mano['Socio'] . ($mano['Vittoria'] == null ? '--' : $mano['Vittoria'] . $mano['Cappotto']) . '"' : '') . ' onkeyup="if(event.keyCode == 13) salvaturno(' . ($nuovo ? '\'nuovo\'' : $numero) . ');"></div></div>';
 
 			if (!$nuovo) {
 				echo '<hr>';
@@ -281,9 +273,9 @@ switch ($ajax) {
 		$resg = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id;");
 		if ($resg->num_rows > 4) {
 			$turno = $conn->query("SELECT * FROM mani WHERE Partita = $id;")->num_rows + 1;
-			echo '<div class="row"><div class="col-4">Al turno</div><div class="col"><input type="number" class="form-control" id="cturno" min="2" max="' . $turno . '" value="' . $turno . '"></div></div>';
+			echo '<div class="row"><div class="col-4">Al turno</div><div class="col"><input type="number" class="form-control" id="cturno" min="2" max="' . $turno . '" autocomplete="off" value="' . $turno . '"></div></div>';
 			echo '<div class="row"><div class="col-4">Nella colonna <strong id="outcolonna">1</strong></div><div class="col"><input type="range" class="form-range" id="ccolonna" min="1" max="5" step="1" value="1" onchange="aggiornaoutcolonna();"></div></div>';
-			echo '<div class="row"><div class="col-4">Entra in gioco</div><div class="col"><input class="form-control" type="text" id="primogioc" placeholder="Cerca..." onkeyup="cercagiocatori(this.value);" autofocus></div></div>';
+			echo '<div class="row"><div class="col-4">Entra in gioco</div><div class="col"><input class="form-control" type="text" id="primogioc" autocomplete="off" placeholder="Cerca..." onkeyup="cercagiocatori(this.value);" autofocus></div></div>';
 			echo '<div id="listag"></div>';
 		} else {
 			echo '<span class="text-danger">Definire prima i cinque giocatori partecipanti</span>';

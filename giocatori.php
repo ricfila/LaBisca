@@ -71,7 +71,7 @@
 					while (($row2 = $res2->fetch_assoc()) || !$last) {
 						if ($row2) {
 							$partita = partita($row2['IdPartita']);
-							$numturni = $partita[4][0] + $partita[4][1] + $partita[4][2];
+							$numturni = count($partita[0]);
 						}
 						
 						if (($row2 == null) || substr($row2['Data'], 0, 4) != $anno) { // Cambio anno
@@ -108,9 +108,10 @@
 							$medaglie = array(0, 0, 0, 0, 0);
 							$chiamate = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 						}
-						
+
+						$turnifatti = array_sum($partita[3][0][$id]);
 						$outanno .= '<a class="dropdown-item" href="partite.php?id=' . $row2['IdPartita'] . '"><div class="row">';
-						$outanno .= '<div class="col-1 no-pad d-inline-block my-auto text-end">' . array_sum($partita[3][0][$id]) . '<i class="bi bi-play-fill"></i></div>'; // Turni che ha giocato
+						$outanno .= '<div class="col-1 no-pad d-inline-block my-auto text-end">' . $turnifatti . '<i class="bi bi-play-fill"></i></div>'; // Turni che ha giocato
 						$outanno .= '<div class="col-9 ano-pad d-inline-block"><div class="row" style="max-width: 100%;">';
 							$outanno .= '<div class="col-md ano-pad text-truncate text-start">' . (empty($row2['Occasione']) ? '<span class="chiaro"><i>Occasione sconosciuta</i></span>' : $row2['Occasione']) . '</div>'; // Occasione
 							$outanno .= '<div class="col-md-3 text-start"><small class="chiaro d-block d-md-none" style="line-height: 15px;"><i>&nbsp;' . $fmt3->format(strtotime($row2['Data'])) . '</i></small><small class="chiaro d-none d-md-block"><i>&nbsp;' . $fmt3->format(strtotime($row2['Data'])) . '</i></small></div>'; // Data
@@ -118,32 +119,35 @@
 						
 						// Punteggio realizzato ed eventuale medaglia
 						$outanno .= '<div class="col no-pad my-auto text-end">';
-						$turnifatti = array_sum($partita[3][0][$id]);
-						$completo = $turnifatti == $numturni;
-						$punti = $partita[3][16][$id];
-						$outanno .= ($completo ? '<strong>' : '') . punti($punti) . ($completo ? '</strong>' : '');
-						$med = medaglie($partita);
-						if (isset($med[$id])) {
-							$outanno .= '<img src="media/img/Medaglia' . $med[$id] . '.png" height=25px>';
-							$medaglie[$med[$id] - 1]++;
-						} else if ($numturni >= $minimomedaglie) {
-							$outanno .= '&nbsp;<i class="bi bi-door-open"></i>&nbsp;';
+						if ($partita[1] == null) {
+							$outanno .= '<i class="bi bi-question-lg"></i>'; // Punteggi nascosti
 						} else {
-							$outanno .= '<img src="media/img/Medaglia0.png" height=25px>';
-						}
+							$completo = $turnifatti == $numturni;
+							$punti = $partita[3][16][$id];
+							$outanno .= ($completo ? '<strong>' : '') . punti($punti) . ($completo ? '</strong>' : '');
+							$med = medaglie($partita);
+							if (isset($med[$id])) {
+								$outanno .= '<img src="media/img/Medaglia' . $med[$id] . '.png" height=25px>';
+								$medaglie[$med[$id] - 1]++;
+							} else if ($numturni >= $minimomedaglie) {
+								$outanno .= '&nbsp;<i class="bi bi-door-open"></i>&nbsp;';
+							} else {
+								$outanno .= '<img src="media/img/Medaglia0.png" height=25px>';
+							}
 
-						$chiamate[0] += $partita[3][1][$id]; // Vinte
-						$chiamate[1] += $partita[3][2][$id]; // Perse
-						$chiamate[2] += $partita[3][3][$id]; // Patte
-						$chiamate[3] += $partita[3][4][$id]; // In mano vinte
-						$chiamate[4] += $partita[3][5][$id]; // In mano perse
-						$chiamate[5] += $partita[3][6][$id]; // In mano patte
-						$chiamate[6] += $partita[3][10][$id]; // Socio vinte
-						$chiamate[7] += $partita[3][11][$id]; // Socio perse
-						$chiamate[8] += $partita[3][12][$id]; // Socio patte
-						$chiamate[9] += $partita[3][7][$id] + $partita[3][13][$id]; // Cappotti vinti
-						$chiamate[10] += $partita[3][8][$id] + $partita[3][14][$id]; // Cappotti persi
-						$chiamate[11] += $punti; // Punteggio
+							$chiamate[0] += $partita[3][1][$id]; // Vinte
+							$chiamate[1] += $partita[3][2][$id]; // Perse
+							$chiamate[2] += $partita[3][3][$id]; // Patte
+							$chiamate[3] += $partita[3][4][$id]; // In mano vinte
+							$chiamate[4] += $partita[3][5][$id]; // In mano perse
+							$chiamate[5] += $partita[3][6][$id]; // In mano patte
+							$chiamate[6] += $partita[3][10][$id]; // Socio vinte
+							$chiamate[7] += $partita[3][11][$id]; // Socio perse
+							$chiamate[8] += $partita[3][12][$id]; // Socio patte
+							$chiamate[9] += $partita[3][7][$id] + $partita[3][13][$id]; // Cappotti vinti
+							$chiamate[10] += $partita[3][8][$id] + $partita[3][14][$id]; // Cappotti persi
+							$chiamate[11] += $punti; // Punteggio
+						}
 						$chiamate[12] += $turnifatti; // Turni
 
 						$outanno .= '</div>';

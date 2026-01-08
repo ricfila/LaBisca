@@ -151,7 +151,8 @@
 
 			let playing = false;
 			let k = 0;
-			let fisa = [0,1,2,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+			let fisa = [0,1,3,4,5,6,7,8,9].sort(() => Math.random() - 0.5);
+			fisa.splice(0, 0, 2);
 			function toggleFisarmonica() {
 				let audio = document.getElementById('fisarmonica_audio');
 				let img = document.getElementById('fisarmonica');

@@ -140,6 +140,16 @@ function partita($id) {
 		}
 		$i++;
 	}
+
+	// Aggiunta dei giocatori inseriti in fondo
+	while ($rowg != null && $rowg['Inizio'] == ($i + 1)) {
+		if (!array_key_exists($rowg['Giocatore'], $gstat[0])) {
+			$gstat[0][$rowg['Giocatore']] = array(0, 0, 0, 0, 0);
+			for ($z = 1; $z < count($gstat); $z++)
+				$gstat[$z][$rowg['Giocatore']] = 0;
+		}
+		$rowg = $gioc->fetch_assoc();
+	}
 	
 	// Conclusioni
 	$classifica = array(0, 0, 0, 0, 0);
@@ -162,7 +172,12 @@ function partita($id) {
 		}
 	}
 	
-	return array($parziali, $totali, $matgiocatori, $gstat, $stat, $classifica, $codici, $colonne);
+	// Controllo se punteggi nascosti
+	if ($conn->query("SELECT * FROM partite WHERE IdPartita = $id;")->fetch_assoc()['PuntiNascosti']) {
+		return array(array_fill(0, count($parziali), null), null, null, array($gstat[0]), null, null, null, null);
+	} else {
+		return array($parziali, $totali, $matgiocatori, $gstat, $stat, $classifica, $codici, $colonne);
+	}
 	/* Output:
 	[0] parziali: matrice [n][5], con n numero di partite
 	[1] totali: array[5]
@@ -350,5 +365,27 @@ function coppie($cambi, $codici) {
 	}
 
 	return array($coppie, $punti, $vinte, $perse, $patte, $cappotto, $benedizioni, $maledizioni);
+}
+
+function giocatori_attivi_alturno($id, $turno) {
+	global $conn;
+	$resg = $conn->query("SELECT * FROM partecipazioni WHERE Partita = $id AND Inizio <= $turno ORDER BY Inizio DESC;");
+	if ($resg->num_rows < 5) {
+		return false;
+	}
+
+	$gioc = array(null, null, null, null, null);
+	$inizi = array(null, null, null, null, null);
+	while (in_array(null, $gioc)) {
+		$rowg = $resg->fetch_assoc();
+		if ($rowg == null)
+			break;
+		if ($gioc[$rowg['Colonna'] - 1] == null) {
+			$gioc[$rowg['Colonna'] - 1] = $rowg['Giocatore'];
+			$inizi[$rowg['Colonna'] - 1] = $rowg['Inizio'];
+		}
+	}
+
+	return array($gioc, $inizi);
 }
 ?>
